@@ -2,41 +2,125 @@ import React, { CSSProperties } from "react";
 import mockCues from "../data/mockCues";
 import "./Timeline.css";
 import { Cue } from "../types/subtitles";
+import useWindowEvent from "../hooks/useWindowEvent";
 
-const TimelineCue: React.FC<{ cue: Cue }> = ({ cue }) => (
+type DragDetails = {
+  id: string;
+  start: boolean;
+  end: boolean;
+  min?: number;
+  max?: number;
+};
+
+const Timeline: React.FC<{ duration: number; scale: number }> = ({
+  duration,
+  scale,
+}) => {
+  const timelineRef = React.useRef<HTMLDivElement>(null);
+  const pointerRef = React.useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [dragDetails, setDraggingDetails] = React.useState<DragDetails | null>(
+    null
+  );
+
+  const handlePointerMove = (event: React.MouseEvent<HTMLElement>) => {
+    if (event.currentTarget === event.target) {
+      const { offsetX: x, offsetY: y } = event.nativeEvent;
+      pointerRef.current.x = x;
+      pointerRef.current.y = y;
+      timelineRef.current?.style.setProperty("--pointer-x", x.toString());
+      timelineRef.current?.style.setProperty("--pointer-y", y.toString());
+    }
+  };
+
+  useWindowEvent(
+    "pointerup",
+    () => {
+      if (dragDetails) {
+        console.log(
+          "Time to apply dragged position",
+          dragDetails,
+          pointerRef.current.x / scale
+        );
+        setDraggingDetails(null);
+      }
+    },
+    [dragDetails, scale]
+  );
+
+  return (
+    <div
+      ref={timelineRef}
+      className={`timeline ${dragDetails && "timeline--is-dragging"}`}
+    >
+      <div className="timeline__bumper" />
+      <section
+        className="timeline__content"
+        onPointerMove={handlePointerMove}
+        style={
+          {
+            "--timeline-duration": duration,
+            "--timeline-scale": scale,
+          } as CSSProperties
+        }
+      >
+        {mockCues.map((cue) => (
+          <TimelineCue
+            key={cue.id}
+            cue={cue}
+            dragDetails={cue.id === dragDetails?.id ? dragDetails : null}
+            onDragStart={setDraggingDetails}
+          />
+        ))}
+      </section>
+      <div className="timeline__bumper" />
+    </div>
+  );
+};
+
+const TimelineCue: React.FC<{
+  cue: Cue;
+  onDragStart: (dragDetails: DragDetails) => void;
+  dragDetails: DragDetails | null;
+}> = ({ cue, dragDetails, onDragStart }) => (
   <div
-    className="timeline-cue"
+    className={`timeline-cue ${
+      dragDetails?.start && "timeline-cue--dragging-start"
+    } ${dragDetails?.end && "timeline-cue--dragging-end"}`}
     style={
       {
         "--cue-start": cue.start,
         "--cue-end": cue.end,
-        "--cue-duration": cue.end - cue.start,
       } as CSSProperties
     }
   >
-    <span className="timeline-cue__first-line" title={cue.lines.join("\n")}>
-      {cue.lines[0] || <em>Blank</em>}
-    </span>
-  </div>
-);
-
-const Timeline: React.FC<{ duration: number }> = ({ duration }) => (
-  <div className="timeline">
-    <div className="timeline__bumper" />
-    <section
-      className="timeline__content"
-      style={
-        {
-          "--timeline-duration": duration,
-          "--timeline-scale": 0.1,
-        } as CSSProperties
+    <button
+      type="button"
+      className="timeline-cue__drag-handle"
+      aria-label="Adjust start time"
+      onPointerDown={() =>
+        onDragStart({
+          id: cue.id,
+          start: true,
+          end: false,
+          max: cue.end - 1,
+        })
       }
+    />
+    <button
+      type="button"
+      className="timeline-cue__first-line"
+      title={cue.lines.join("\n")}
     >
-      {mockCues.map((cue) => (
-        <TimelineCue key={cue.id} cue={cue} />
-      ))}
-    </section>
-    <div className="timeline__bumper" />
+      {cue.lines[0] || <em>Blank</em>}
+    </button>
+    <button
+      type="button"
+      className="timeline-cue__drag-handle"
+      aria-label="Adjust end time"
+      onPointerDown={() =>
+        onDragStart({ id: cue.id, start: false, end: true, min: cue.start + 1 })
+      }
+    />
   </div>
 );
 

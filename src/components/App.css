@@ -3,6 +3,14 @@
   display: grid;
   grid-template:
     "player details" 50vh
-    "timeline timeline" 50vh
+    "toolbar toolbar"
+    "timeline timeline" 2fr
     / 50vw 50vw;
+  height: 100vh;
+}
+.toolbar {
+  grid-area: toolbar;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

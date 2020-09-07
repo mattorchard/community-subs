@@ -2,6 +2,8 @@
   overflow-x: scroll;
   grid-area: timeline;
   display: flex;
+  --pointer-x: 0;
+  --pointer-y: 0;
 }
 
 .timeline__bumper {
@@ -25,15 +27,52 @@
 .timeline-cue {
   --cue-start: 0;
   --cue-end: 0;
-  --cue-duration: 0;
   position: absolute;
   left: calc(1px * var(--timeline-scale) * var(--cue-start));
-  width: calc(1px * var(--timeline-scale) * var(--cue-duration));
+  right: calc(100% - 1px * var(--timeline-scale) * var(--cue-end));
   background-color: var(--color-primary);
+  display: flex;
+  height: 2rem;
+}
+
+.timeline-cue--dragging-start {
+  left: calc(1px * var(--pointer-x));
+}
+.timeline-cue--dragging-end {
+  right: calc(100% - 1px * var(--pointer-x));
+}
+
+.timeline-cue:focus {
+  background-color: var(--color-focus);
+}
+.timeline-cue:focus-within {
+  background-color: var(--color-focus);
 }
 .timeline-cue__first-line {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   display: block;
+  flex-grow: 2;
+  flex-shrink: 1;
+}
+
+.timeline-cue__drag-handle {
+  flex-grow: 0;
+  flex-shrink: 0;
+  width: 1rem;
+  background-color: #1d1e2288;
+}
+.timeline-cue__drag-handle:first-child {
+  cursor: w-resize;
+}
+.timeline-cue__drag-handle:last-child {
+  cursor: e-resize;
+}
+
+.timeline--is-dragging > .timeline__content * {
+  pointer-events: none;
+}
+.timeline--is-dragging {
+  cursor: grabbing;
 }

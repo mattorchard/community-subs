@@ -12,6 +12,16 @@ body {
 :root {
   /*Named Colours*/
   --color-crimson: crimson;
+  --color-blue: dodgerblue;
   /*Semantic Colours*/
   --color-primary: var(--color-crimson);
+  --color-focus: var(--color-blue);
+}
+button {
+  font: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  line-height: 1;
+  color: currentColor;
 }
