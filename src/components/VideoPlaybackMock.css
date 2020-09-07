@@ -1,0 +1,8 @@
+.video-playback-mock {
+  height: 100%;
+  width: auto;
+  background-color: black;
+  grid-area: player;
+  align-self: center;
+  justify-self: center;
+}

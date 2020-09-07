@@ -1,0 +1,8 @@
+.app {
+  overflow: hidden;
+  display: grid;
+  grid-template:
+    "player details" 50vh
+    "timeline timeline" 50vh
+    / 50vw 50vw;
+}

@@ -1,0 +1,10 @@
+.timeline {
+  display: flex;
+  grid-area: timeline;
+}
+.timeline::before,
+.timeline::after {
+  content: "";
+  background-color: #ffffff11;
+  width: 50vw;
+}
