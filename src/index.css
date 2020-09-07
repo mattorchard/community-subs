@@ -5,8 +5,13 @@
 }
 body {
   font-family: sans-serif;
-  background-color: #1D1E22;
+  background-color: #1d1e22;
   color: white;
   min-height: 100vh;
 }
-
+:root {
+  /*Named Colours*/
+  --color-crimson: crimson;
+  /*Semantic Colours*/
+  --color-primary: var(--color-crimson);
+}

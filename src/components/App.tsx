@@ -8,7 +8,7 @@ const App = () => (
   <div className="app">
     <VideoPlaybackMock />
     <EditDetailsForm />
-    <Timeline />
+    <Timeline duration={60 * 1000} />
   </div>
 );
 export default App;

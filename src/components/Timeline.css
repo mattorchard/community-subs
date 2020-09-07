@@ -1,10 +1,39 @@
 .timeline {
-  display: flex;
+  overflow-x: scroll;
   grid-area: timeline;
+  display: flex;
 }
-.timeline::before,
-.timeline::after {
-  content: "";
+
+.timeline__bumper {
   background-color: #ffffff11;
   width: 50vw;
+}
+.timeline__bumper,
+.timeline__content {
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+.timeline__content {
+  position: relative;
+  display: flex;
+  --timeline-scale: 0.1;
+  --timeline-duration: 1000;
+  /* Used in calc, not expected to actual result in float < 1*/
+  /*noinspection CssFloatPxLength*/
+  width: calc(1px * var(--timeline-scale) * var(--timeline-duration));
+}
+.timeline-cue {
+  --cue-start: 0;
+  --cue-end: 0;
+  --cue-duration: 0;
+  position: absolute;
+  left: calc(1px * var(--timeline-scale) * var(--cue-start));
+  width: calc(1px * var(--timeline-scale) * var(--cue-duration));
+  background-color: var(--color-primary);
+}
+.timeline-cue__first-line {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: block;
 }
