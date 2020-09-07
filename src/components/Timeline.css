@@ -6,7 +6,7 @@
 }
 
 .timeline__bumper {
-  background-color: #ffffff11;
+  background-color: var(--gray-900);
   width: 50vw;
 }
 .timeline__bumper,
@@ -27,6 +27,7 @@
   --cue-start: 0;
   --cue-end: 0;
   position: absolute;
+  top: 10%;
   left: calc(1px * var(--timeline-scale) * var(--cue-start));
   right: calc(100% - 1px * var(--timeline-scale) * var(--cue-end));
   background-color: var(--color-primary);
@@ -60,7 +61,7 @@
   flex-grow: 0;
   flex-shrink: 0;
   width: 1rem;
-  background-color: #1d1e2288;
+  background-color: var(--color-darken);
 }
 .timeline-cue__drag-handle:first-child {
   cursor: w-resize;
