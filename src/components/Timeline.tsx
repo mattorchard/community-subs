@@ -1,8 +1,8 @@
 import React, { CSSProperties } from "react";
-import mockCues from "../data/mockCues";
 import "./Timeline.css";
 import { Cue } from "../types/subtitles";
 import useWindowEvent from "../hooks/useWindowEvent";
+import { CueMap, CueUpdate } from "../hooks/useCues";
 
 type DragDetails = {
   id: string;
@@ -12,10 +12,12 @@ type DragDetails = {
   max?: number;
 };
 
-const Timeline: React.FC<{ duration: number; scale: number }> = ({
-  duration,
-  scale,
-}) => {
+const Timeline: React.FC<{
+  duration: number;
+  scale: number;
+  cues: CueMap;
+  saveCue: (cue: CueUpdate) => void;
+}> = ({ duration, scale, cues, saveCue }) => {
   const timelineRef = React.useRef<HTMLDivElement>(null);
   const pointerRef = React.useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const [dragDetails, setDraggingDetails] = React.useState<DragDetails | null>(
@@ -36,15 +38,16 @@ const Timeline: React.FC<{ duration: number; scale: number }> = ({
     "pointerup",
     () => {
       if (dragDetails) {
-        console.log(
-          "Time to apply dragged position",
-          dragDetails,
-          pointerRef.current.x / scale
-        );
+        const timelinePosition = Math.round(pointerRef.current.x / scale);
+        if (dragDetails.start) {
+          saveCue({ id: dragDetails.id, start: timelinePosition });
+        } else {
+          saveCue({ id: dragDetails.id, end: timelinePosition });
+        }
         setDraggingDetails(null);
       }
     },
-    [dragDetails, scale]
+    [dragDetails, scale, saveCue]
   );
 
   return (
@@ -63,7 +66,7 @@ const Timeline: React.FC<{ duration: number; scale: number }> = ({
           } as CSSProperties
         }
       >
-        {mockCues.map((cue) => (
+        {Object.values(cues).map((cue) => (
           <TimelineCue
             key={cue.id}
             cue={cue}
