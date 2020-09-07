@@ -3,7 +3,6 @@
   grid-area: timeline;
   display: flex;
   --pointer-x: 0;
-  --pointer-y: 0;
 }
 
 .timeline__bumper {
@@ -70,9 +69,9 @@
   cursor: e-resize;
 }
 
-.timeline--is-dragging > .timeline__content * {
-  pointer-events: none;
-}
 .timeline--is-dragging {
+  cursor: grabbing;
+}
+.timeline--is-dragging .timeline-cue__drag-handle {
   cursor: grabbing;
 }

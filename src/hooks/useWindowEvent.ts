@@ -2,7 +2,7 @@ import { DependencyList, useCallback, useEffect } from "react";
 
 const useWindowEvent = (
   eventName: string,
-  callback: () => void,
+  callback: EventListener,
   deps: DependencyList
 ) => {
   const stableCallback = useCallback(callback, deps);

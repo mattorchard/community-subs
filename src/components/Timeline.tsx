@@ -3,6 +3,7 @@ import "./Timeline.css";
 import { Cue } from "../types/subtitles";
 import useWindowEvent from "../hooks/useWindowEvent";
 import { CueMap, CueUpdate } from "../hooks/useCues";
+import useWindowSize from "../hooks/useWindowSize";
 
 type DragDetails = {
   id: string;
@@ -18,27 +19,24 @@ const Timeline: React.FC<{
   cues: CueMap;
   saveCue: (cue: CueUpdate) => void;
 }> = ({ duration, scale, cues, saveCue }) => {
+  const { width: windowWidth } = useWindowSize();
   const timelineRef = React.useRef<HTMLDivElement>(null);
-  const pointerRef = React.useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const pointerXRef = React.useRef<number>(0);
   const [dragDetails, setDraggingDetails] = React.useState<DragDetails | null>(
     null
   );
 
   const handlePointerMove = (event: React.MouseEvent<HTMLElement>) => {
-    if (event.currentTarget === event.target) {
-      const { offsetX: x, offsetY: y } = event.nativeEvent;
-      pointerRef.current.x = x;
-      pointerRef.current.y = y;
-      timelineRef.current?.style.setProperty("--pointer-x", x.toString());
-      timelineRef.current?.style.setProperty("--pointer-y", y.toString());
-    }
+    const x = event.clientX + event.currentTarget.scrollLeft - windowWidth / 2;
+    pointerXRef.current = x;
+    timelineRef.current?.style.setProperty("--pointer-x", x.toString());
   };
 
   useWindowEvent(
     "pointerup",
     () => {
       if (dragDetails) {
-        const timelinePosition = Math.round(pointerRef.current.x / scale);
+        const timelinePosition = Math.round(pointerXRef.current / scale);
         if (dragDetails.start) {
           saveCue({ id: dragDetails.id, start: timelinePosition });
         } else {
@@ -53,12 +51,12 @@ const Timeline: React.FC<{
   return (
     <div
       ref={timelineRef}
+      onPointerMove={handlePointerMove}
       className={`timeline ${dragDetails && "timeline--is-dragging"}`}
     >
       <div className="timeline__bumper" />
       <section
         className="timeline__content"
-        onPointerMove={handlePointerMove}
         style={
           {
             "--timeline-duration": duration,
