@@ -1,0 +1,20 @@
+.timeline-marker {
+  display: flex;
+  align-items: flex-end;
+  color: white;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  --marker-time: 0;
+  left: calc(1px * var(--timeline-scale) * var(--marker-time));
+  transform: translateX(-50%);
+}
+.timeline-marker::before {
+  content: "";
+  background-color: var(--color-lighten);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0.25rem;
+  left: calc(50% - 0.125rem);
+}

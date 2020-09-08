@@ -19,7 +19,7 @@ const ZoomRange: React.FC<{
         <input
           type="range"
           min={-4}
-          max={2}
+          max={0}
           step={0.1}
           value={value}
           onChange={(event) => setBothValues(Number(event.currentTarget.value))}

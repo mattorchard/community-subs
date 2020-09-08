@@ -4,6 +4,7 @@ import { Cue } from "../types/subtitles";
 import useWindowEvent from "../hooks/useWindowEvent";
 import { CueMap, CueUpdate } from "../hooks/useCues";
 import useWindowSize from "../hooks/useWindowSize";
+import TimelineMarkers from "./TimelineMarkers";
 
 type DragDetails = {
   id: string;
@@ -64,6 +65,7 @@ const Timeline: React.FC<{
           } as CSSProperties
         }
       >
+        <TimelineMarkers duration={duration} scale={scale} />
         {Object.values(cues).map((cue) => (
           <TimelineCue
             key={cue.id}
