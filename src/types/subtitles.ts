@@ -41,3 +41,14 @@ export const timeCodeToString = ({
     milliseconds,
     3
   )}`;
+
+export const toTimeRangeString = ({
+  start,
+  end,
+}: {
+  start: number;
+  end: number;
+}) =>
+  `${timeCodeToString(toTimeCode(start))} - ${timeCodeToString(
+    toTimeCode(end)
+  )}`;

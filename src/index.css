@@ -127,11 +127,16 @@ body {
   outline: 0;
   box-shadow: var(--focus-bs);
 }
-button {
+button,
+textarea {
   font: inherit;
   background: none;
   border: none;
   padding: 0;
   line-height: 1;
   color: currentColor;
+}
+textarea {
+  resize: none;
+  caret-color: currentColor;
 }

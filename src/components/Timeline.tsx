@@ -5,6 +5,7 @@ import useWindowEvent from "../hooks/useWindowEvent";
 import { CueMap, CueUpdate } from "../hooks/useCues";
 import useWindowSize from "../hooks/useWindowSize";
 import TimelineMarkers from "./TimelineMarkers";
+import { queryAncestor } from "../helpers/domHelpers";
 
 type DragDetails = {
   id: string;
@@ -19,7 +20,8 @@ const Timeline: React.FC<{
   scale: number;
   cues: CueMap;
   saveCue: (cue: CueUpdate) => void;
-}> = ({ duration, scale, cues, saveCue }) => {
+  onSelectCue: (cueId: string) => void;
+}> = ({ duration, scale, cues, saveCue, onSelectCue }) => {
   const { width: windowWidth } = useWindowSize();
   const timelineRef = React.useRef<HTMLDivElement>(null);
   const pointerXRef = React.useRef<number>(0);
@@ -49,6 +51,14 @@ const Timeline: React.FC<{
     [dragDetails, scale, saveCue]
   );
 
+  const handleCueClick = (event: React.MouseEvent) => {
+    const cueElement = queryAncestor(event.target as Node, "[data-cue-id]");
+    const cueId = cueElement?.dataset?.cueId;
+    if (cueId) {
+      onSelectCue(cueId);
+    }
+  };
+
   return (
     <div
       ref={timelineRef}
@@ -70,6 +80,7 @@ const Timeline: React.FC<{
           <TimelineCue
             key={cue.id}
             cue={cue}
+            onClick={handleCueClick}
             dragDetails={cue.id === dragDetails?.id ? dragDetails : null}
             onDragStart={setDraggingDetails}
           />
@@ -84,7 +95,8 @@ const TimelineCue: React.FC<{
   cue: Cue;
   onDragStart: (dragDetails: DragDetails) => void;
   dragDetails: DragDetails | null;
-}> = ({ cue, dragDetails, onDragStart }) => (
+  onClick: (event: React.MouseEvent) => void;
+}> = ({ cue, dragDetails, onDragStart, onClick }) => (
   <div
     className={`timeline-cue ${
       dragDetails?.start && "timeline-cue--dragging-start"
@@ -95,6 +107,7 @@ const TimelineCue: React.FC<{
         "--cue-end": cue.end,
       } as CSSProperties
     }
+    data-cue-id={cue.id}
   >
     <button
       type="button"
@@ -113,6 +126,7 @@ const TimelineCue: React.FC<{
       type="button"
       className="timeline-cue__first-line"
       title={cue.lines.join("\n")}
+      onClick={onClick}
     >
       {cue.lines[0] || <em>Blank</em>}
     </button>

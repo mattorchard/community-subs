@@ -1,3 +1,12 @@
 .edit-details-form {
   grid-area: details;
+  display: flex;
+  flex-direction: column;
+}
+.edit-details-form__no-selection {
+  margin: auto;
+}
+.edit-details-form__cue-lines {
+  flex-grow: 2;
+  white-space: nowrap;
 }
