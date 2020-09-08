@@ -42,12 +42,6 @@
   right: calc(100% - 1px * var(--pointer-x));
 }
 
-.timeline-cue:focus {
-  background-color: var(--color-focus);
-}
-.timeline-cue:focus-within {
-  background-color: var(--color-focus);
-}
 .timeline-cue__first-line {
   overflow: hidden;
   white-space: nowrap;
