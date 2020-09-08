@@ -1,0 +1,17 @@
+.button {
+  cursor: pointer;
+  background-color: var(--color-lighten);
+  min-width: 2.5rem;
+  height: 2.5rem;
+  line-height: 1.2;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  font-weight: 600;
+  border-radius: 0.25rem;
+  white-space: nowrap;
+  user-select: none;
+}
+.button:focus {
+  outline: none;
+  box-shadow: var(--focus-bs);
+}
