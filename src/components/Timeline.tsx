@@ -85,6 +85,7 @@ const Timeline: React.FC<{
             onDragStart={setDraggingDetails}
           />
         ))}
+        <div className="play-head" />
       </section>
       <div className="timeline__bumper" />
     </div>

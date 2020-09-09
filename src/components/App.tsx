@@ -1,19 +1,30 @@
 import React from "react";
-import VideoPlaybackMock from "./VideoPlaybackMock";
 import EditDetailsForm from "./EditDetailsForm";
 import Timeline from "./Timeline";
 import ZoomRange from "./ZoomRange";
 import useCues from "../hooks/useCues";
 import Button from "./Button";
+import VideoPlayer from "./VideoPlayer";
 import "./App.css";
 
 const App = () => {
+  const appRef = React.useRef<HTMLDivElement>(null);
   const [selectedCue, setSelectedCue] = React.useState<string | null>(null);
+  const [duration, setDuration] = React.useState(60 * 1000);
   const [scale, setScale] = React.useState(0.1);
   const [cues, saveCue] = useCues();
+  const onTimeChange = React.useCallback((time: number) => {
+    console.debug("Currently at", time);
+    appRef.current?.style?.setProperty("--player-time", time.toString());
+  }, []);
+
   return (
-    <div className="app">
-      <VideoPlaybackMock />
+    <div className="app" ref={appRef}>
+      <VideoPlayer
+        onTimeChange={onTimeChange}
+        onInit={({ duration }) => setDuration(duration)}
+      />
+
       <EditDetailsForm
         selectedCue={selectedCue ? cues[selectedCue] : null}
         saveCue={saveCue}
@@ -23,7 +34,7 @@ const App = () => {
         <Button>Add Caption</Button>
       </div>
       <Timeline
-        duration={60 * 1000}
+        duration={duration}
         scale={scale}
         cues={cues}
         saveCue={saveCue}
