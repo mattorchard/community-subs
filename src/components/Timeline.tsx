@@ -1,4 +1,4 @@
-import React, { CSSProperties } from "react";
+import React, { CSSProperties, useCallback } from "react";
 import "./Timeline.css";
 import { Cue } from "../types/subtitles";
 import useWindowEvent from "../hooks/useWindowEvent";
@@ -15,6 +15,32 @@ type DragDetails = {
   max?: number;
 };
 
+const useTimelinePointerX = (onPointerXChange: (x: number) => void) => {
+  const clientXRef = React.useRef(0);
+  const scrollLeftRef = React.useRef(0);
+
+  const onPointerMove = React.useCallback(
+    (event: React.MouseEvent) => {
+      clientXRef.current = event.clientX;
+      onPointerXChange(scrollLeftRef.current + clientXRef.current);
+    },
+    [onPointerXChange]
+  );
+
+  const onScroll = React.useCallback(
+    (event: React.UIEvent<HTMLElement>) => {
+      scrollLeftRef.current = event.currentTarget.scrollLeft;
+      onPointerXChange(scrollLeftRef.current + clientXRef.current);
+    },
+    [onPointerXChange]
+  );
+
+  return {
+    onPointerMove,
+    onScroll,
+  };
+};
+
 const Timeline: React.FC<{
   duration: number;
   scale: number;
@@ -28,11 +54,13 @@ const Timeline: React.FC<{
     null
   );
 
-  const handlePointerMove = (event: React.MouseEvent<HTMLElement>) => {
-    const x = event.clientX + event.currentTarget.scrollLeft - 200;
-    pointerXRef.current = x;
-    timelineRef.current?.style.setProperty("--pointer-x", x.toString());
-  };
+  const containerProps = useTimelinePointerX(
+    useCallback((rawX) => {
+      const x = rawX - 200; // Bumper width
+      pointerXRef.current = x;
+      timelineRef.current?.style.setProperty("--pointer-x", x.toString());
+    }, [])
+  );
 
   const addCue = (time: number) =>
     saveCue({
@@ -68,8 +96,8 @@ const Timeline: React.FC<{
 
   return (
     <div
+      {...containerProps}
       ref={timelineRef}
-      onPointerMove={handlePointerMove}
       className={`timeline ${dragDetails && "timeline--is-dragging"}`}
     >
       <div className="timeline__bumper" />
