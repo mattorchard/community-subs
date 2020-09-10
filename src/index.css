@@ -146,6 +146,11 @@ textarea {
   caret-color: currentColor;
 }
 
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
 ::-webkit-scrollbar {
   width: 0.5rem;
   height: 0.5rem;

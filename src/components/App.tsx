@@ -9,9 +9,6 @@ import Button from "./Button";
 
 const App = () => {
   const appRef = React.useRef<HTMLDivElement>(null);
-
-  const [selectedCue, setSelectedCue] = React.useState<string | null>(null);
-
   const [duration, setDuration] = React.useState(60 * 1000);
   const [scale, setScale] = React.useState(0.1);
 
@@ -27,7 +24,7 @@ const App = () => {
         onTimeChange={onTimeChange}
         onInit={({ duration }) => setDuration(duration)}
       />
-      <ScriptEditor selectedCue={selectedCue} cues={cues} saveCue={saveCue} />
+      <ScriptEditor cues={cues} saveCue={saveCue} />
       <div className="toolbar">
         <ZoomRange zoom={scale} onZoomChange={setScale} />
         <Button
@@ -41,7 +38,6 @@ const App = () => {
         scale={scale}
         cues={cues}
         saveCue={saveCue}
-        onSelectCue={setSelectedCue}
       />
     </div>
   );

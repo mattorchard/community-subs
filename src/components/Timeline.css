@@ -33,6 +33,7 @@
   background-color: var(--color-primary);
   display: flex;
   height: 2rem;
+  min-width: 2rem;
 }
 
 .timeline-cue--dragging-start {
@@ -42,13 +43,15 @@
   right: calc(100% - 1px * var(--pointer-x));
 }
 
-.timeline-cue__first-line {
+.timeline-cue__body {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   display: block;
   flex-grow: 2;
   flex-shrink: 1;
+  text-align: center;
+  align-self: center;
 }
 
 .timeline-cue__drag-handle {
