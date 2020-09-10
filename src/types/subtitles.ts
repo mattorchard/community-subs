@@ -32,15 +32,11 @@ export const toTimeCode = (millis: number): TimeCode => {
 };
 
 export const timeCodeToString = ({
-  hours,
   minutes,
   seconds,
   milliseconds,
 }: TimeCode) =>
-  `${padZeros(hours)}:${padZeros(minutes)}:${padZeros(seconds)}.${padZeros(
-    milliseconds,
-    3
-  )}`;
+  `${padZeros(minutes)}:${padZeros(seconds)}.${padZeros(milliseconds, 3)}`;
 
 export const toTimeRangeString = ({
   start,

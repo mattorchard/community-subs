@@ -1,0 +1,43 @@
+.script-editor {
+  grid-area: script;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  padding: 1rem 1rem 0;
+  background-color: var(--gray-800);
+}
+.script-editor__cue-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+.script-editor__add-cue-between-button {
+  font-weight: bold;
+  color: var(--color-primary);
+  padding: 0.5rem 3rem 0.5rem 0;
+  cursor: pointer;
+}
+
+.cue-editor {
+  display: flex;
+  flex-direction: column;
+  border-left: 0.5rem solid var(--color-primary);
+  transition: border-color 0.3s ease-in-out;
+  padding: 0 0.5rem;
+}
+.cue-editor:focus-within {
+  border-left-color: var(--color-focus);
+}
+.cue-editor__textarea {
+  min-height: 3rem;
+}
+.cue-editor__textarea:focus {
+  box-shadow: none;
+}
+.cue-editor__textarea:focus::placeholder {
+  color: transparent;
+}
+.cue-editor__footer {
+  opacity: 0.5;
+}

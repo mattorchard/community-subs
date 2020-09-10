@@ -106,16 +106,21 @@
   --color-darken: rgba(0, 0, 0, 0.16);
 
   /* Semantic Colours */
-  --color-primary: var(--purple-700);
-  --color-focus: var(--blue-500);
+  --color-primary: var(--blue-500);
+  --color-focus: var(--yellow-400);
 
   /* Other Vars */
   --focus-bs: 0 0 0 0.125rem var(--color-focus);
+  --scroll-track: var(--gray-900);
+  --scroll-thumb: var(--color-focus);
 }
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+html {
+  font-size: 16px;
 }
 body {
   font-family: sans-serif;
@@ -139,4 +144,17 @@ textarea {
 textarea {
   resize: none;
   caret-color: currentColor;
+}
+
+::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--scroll-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--scroll-thumb);
 }

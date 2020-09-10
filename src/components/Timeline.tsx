@@ -3,9 +3,9 @@ import "./Timeline.css";
 import { Cue } from "../types/subtitles";
 import useWindowEvent from "../hooks/useWindowEvent";
 import { CueMap, CueUpdate } from "../hooks/useCues";
-import useWindowSize from "../hooks/useWindowSize";
 import TimelineMarkers from "./TimelineMarkers";
 import { queryAncestor } from "../helpers/domHelpers";
+import { v4 as uuidV4 } from "uuid";
 
 type DragDetails = {
   id: string;
@@ -22,7 +22,6 @@ const Timeline: React.FC<{
   saveCue: (cue: CueUpdate) => void;
   onSelectCue: (cueId: string) => void;
 }> = ({ duration, scale, cues, saveCue, onSelectCue }) => {
-  const { width: windowWidth } = useWindowSize();
   const timelineRef = React.useRef<HTMLDivElement>(null);
   const pointerXRef = React.useRef<number>(0);
   const [dragDetails, setDraggingDetails] = React.useState<DragDetails | null>(
@@ -30,10 +29,18 @@ const Timeline: React.FC<{
   );
 
   const handlePointerMove = (event: React.MouseEvent<HTMLElement>) => {
-    const x = event.clientX + event.currentTarget.scrollLeft - windowWidth / 2;
+    const x = event.clientX + event.currentTarget.scrollLeft - 200;
     pointerXRef.current = x;
     timelineRef.current?.style.setProperty("--pointer-x", x.toString());
   };
+
+  const addCue = (time: number) =>
+    saveCue({
+      id: uuidV4(),
+      lines: [],
+      start: time,
+      end: time + 2500,
+    });
 
   useWindowEvent(
     "pointerup",
@@ -68,6 +75,7 @@ const Timeline: React.FC<{
       <div className="timeline__bumper" />
       <section
         className="timeline__content"
+        onDoubleClick={() => addCue(pointerXRef.current / scale)}
         style={
           {
             "--timeline-duration": duration,
@@ -76,7 +84,7 @@ const Timeline: React.FC<{
         }
       >
         <TimelineMarkers duration={duration} scale={scale} />
-        {Object.values(cues).map((cue) => (
+        {[...cues.values()].map((cue) => (
           <TimelineCue
             key={cue.id}
             cue={cue}

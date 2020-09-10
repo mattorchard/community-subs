@@ -1,17 +1,20 @@
 import React from "react";
-import EditDetailsForm from "./EditDetailsForm";
 import Timeline from "./Timeline";
 import ZoomRange from "./ZoomRange";
 import useCues from "../hooks/useCues";
-import Button from "./Button";
 import VideoPlayer from "./VideoPlayer";
 import "./App.css";
+import ScriptEditor from "./ScriptEditor";
+import Button from "./Button";
 
 const App = () => {
   const appRef = React.useRef<HTMLDivElement>(null);
+
   const [selectedCue, setSelectedCue] = React.useState<string | null>(null);
+
   const [duration, setDuration] = React.useState(60 * 1000);
   const [scale, setScale] = React.useState(0.1);
+
   const [cues, saveCue] = useCues();
   const onTimeChange = React.useCallback((time: number) => {
     console.debug("Currently at", time);
@@ -24,14 +27,14 @@ const App = () => {
         onTimeChange={onTimeChange}
         onInit={({ duration }) => setDuration(duration)}
       />
-
-      <EditDetailsForm
-        selectedCue={selectedCue ? cues[selectedCue] : null}
-        saveCue={saveCue}
-      />
+      <ScriptEditor selectedCue={selectedCue} cues={cues} saveCue={saveCue} />
       <div className="toolbar">
         <ZoomRange zoom={scale} onZoomChange={setScale} />
-        <Button>Add Caption</Button>
+        <Button
+          onClick={() => appRef.current?.classList?.toggle("app--long-script")}
+        >
+          Toggle View
+        </Button>
       </div>
       <Timeline
         duration={duration}
