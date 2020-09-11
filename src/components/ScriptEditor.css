@@ -14,7 +14,27 @@
 }
 .script-editor__add-cue-between-button {
   font-weight: bold;
-  color: var(--color-primary);
   padding: 0.5rem 3rem 0.5rem 0;
   cursor: pointer;
+  color: transparent;
+  transition: color 0.3s ease-in-out;
+  display: flex;
+  align-items: center;
+  font-size: 0.75rem;
+}
+.script-editor__add-cue-between-button::before {
+  content: "+";
+  transition: color 0.3s ease-in-out;
+  color: var(--color-primary);
+  font-size: 1rem;
+  padding-right: 0.5rem;
+}
+.script-editor__add-cue-between-button:focus::before,
+.script-editor__add-cue-between-button:hover::before {
+  color: var(--color-focus);
+}
+.script-editor__add-cue-between-button:focus,
+.script-editor__add-cue-between-button:hover {
+  box-shadow: none;
+  color: var(--color-focus);
 }

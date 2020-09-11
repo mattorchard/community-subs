@@ -17,7 +17,7 @@ const ScriptEditor: React.FC<{
               title="Add cue before"
               className="script-editor__add-cue-between-button"
             >
-              +
+              Add Before
             </button>
           )}
           <CueEditor cue={cue} saveCue={saveCue} />
@@ -26,7 +26,7 @@ const ScriptEditor: React.FC<{
             title="Add cue between"
             className="script-editor__add-cue-between-button"
           >
-            +
+            Add Between
           </button>
         </li>
       ))}
