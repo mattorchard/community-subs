@@ -10,3 +10,8 @@ export const queryAncestor = (node: Node, selector: string) => {
   }
   return null;
 };
+
+export const matchScrollHeight = (element: HTMLElement) => {
+  element.style.height = "0"; // Must be set to 0 first, otherwise will never shrink
+  element.style.height = `${element.scrollHeight}px`;
+};

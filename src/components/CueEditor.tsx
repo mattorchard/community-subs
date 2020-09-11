@@ -3,6 +3,7 @@ import { Cue, toTimeRangeString } from "../types/subtitles";
 import { CueUpdate } from "../hooks/useCues";
 import "./CueEditor.css";
 import { debounce } from "../helpers/timingHelpers";
+import { matchScrollHeight } from "../helpers/domHelpers";
 
 const CueEditor: React.FC<{
   cue: Cue;
@@ -17,7 +18,10 @@ const CueEditor: React.FC<{
     // eslint-disable-next-line
   }, []);
 
-  const { immediate: handleBlur, debounced: handleChange } = React.useMemo(
+  const {
+    immediate: handleBlur,
+    debounced: saveLinesDebounced,
+  } = React.useMemo(
     () =>
       debounce(() => {
         saveCue({
@@ -27,6 +31,11 @@ const CueEditor: React.FC<{
       }, 2500),
     [id, saveCue]
   );
+
+  const handleChange = () => {
+    matchScrollHeight(textAreaRef.current!);
+    saveLinesDebounced();
+  };
 
   return (
     <div className="cue-editor">
