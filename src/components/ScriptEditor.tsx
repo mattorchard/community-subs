@@ -1,12 +1,12 @@
 import React from "react";
 import { CueMap, CueUpdate } from "../hooks/useCues";
 import "./ScriptEditor.css";
-import { Cue, toTimeRangeString } from "../types/subtitles";
+import CueEditor from "./CueEditor";
 
 const ScriptEditor: React.FC<{
   cues: CueMap;
   saveCue: (cue: CueUpdate) => void;
-}> = ({ cues }) => (
+}> = ({ cues, saveCue }) => (
   <section className="script-editor">
     <ol className="script-editor__cue-list">
       {[...cues.values()].map((cue, index) => (
@@ -20,7 +20,7 @@ const ScriptEditor: React.FC<{
               +
             </button>
           )}
-          <CueEditor cue={cue} />
+          <CueEditor cue={cue} saveCue={saveCue} />
           <button
             type="button"
             title="Add cue between"
@@ -32,17 +32,6 @@ const ScriptEditor: React.FC<{
       ))}
     </ol>
   </section>
-);
-
-const CueEditor: React.FC<{ cue: Cue }> = ({ cue }) => (
-  <div className="cue-editor">
-    <textarea
-      className="cue-editor__textarea"
-      id={cue.id}
-      placeholder="Blank"
-    />
-    <small className="cue-editor__footer">{toTimeRangeString(cue)}</small>
-  </div>
 );
 
 export default ScriptEditor;

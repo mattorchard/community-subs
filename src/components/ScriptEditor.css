@@ -18,27 +18,3 @@
   padding: 0.5rem 3rem 0.5rem 0;
   cursor: pointer;
 }
-
-.cue-editor {
-  display: flex;
-  flex-direction: column;
-  border-left: 0.5rem solid var(--color-primary);
-  background-color: var(--gray-900);
-  transition: border-color 0.3s ease-in-out;
-  padding: 0.5rem;
-}
-.cue-editor:focus-within {
-  border-left-color: var(--color-focus);
-}
-.cue-editor__textarea {
-  min-height: 3rem;
-}
-.cue-editor__textarea:focus {
-  box-shadow: none;
-}
-.cue-editor__textarea:focus::placeholder {
-  color: transparent;
-}
-.cue-editor__footer {
-  opacity: 0.5;
-}
