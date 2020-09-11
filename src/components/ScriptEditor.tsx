@@ -14,7 +14,6 @@ const ScriptEditor: React.FC<{
           {index === 0 && (
             <button
               type="button"
-              title="Add cue before"
               className="script-editor__add-cue-between-button"
             >
               Add Before
@@ -23,7 +22,6 @@ const ScriptEditor: React.FC<{
           <CueEditor cue={cue} saveCue={saveCue} />
           <button
             type="button"
-            title="Add cue between"
             className="script-editor__add-cue-between-button"
           >
             {index < cues.size - 1 ? "Add Between" : "Add After"}
