@@ -68,21 +68,19 @@ const Timeline: React.FC<{
       end: time + 2500,
     });
 
-  useWindowEvent(
-    "pointerup",
-    () => {
-      if (dragDetails) {
-        const timelinePosition = Math.round(pointerXRef.current / scale);
-        if (dragDetails.start) {
-          saveCue({ id: dragDetails.id, start: timelinePosition });
-        } else {
-          saveCue({ id: dragDetails.id, end: timelinePosition });
-        }
-        setDraggingDetails(null);
+  const handleDragStop = React.useCallback(() => {
+    if (dragDetails) {
+      const timelinePosition = Math.round(pointerXRef.current / scale);
+      if (dragDetails.start) {
+        saveCue({ id: dragDetails.id, start: timelinePosition });
+      } else {
+        saveCue({ id: dragDetails.id, end: timelinePosition });
       }
-    },
-    [dragDetails, scale, saveCue]
-  );
+      setDraggingDetails(null);
+    }
+  }, [dragDetails, scale, saveCue]);
+
+  useWindowEvent("pointerup", handleDragStop, [handleDragStop]);
 
   return (
     <div
@@ -93,6 +91,7 @@ const Timeline: React.FC<{
       <div className="timeline__bumper" />
       <section
         className="timeline__content"
+        onPointerLeave={handleDragStop}
         onDoubleClick={() => addCue(pointerXRef.current / scale)}
         style={
           {

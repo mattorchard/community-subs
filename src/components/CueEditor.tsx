@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { Cue, toTimeRangeString } from "../types/subtitles";
 import { CueUpdate } from "../hooks/useCues";
-import "./CueEditor.css";
 import { debounce } from "../helpers/timingHelpers";
 import { matchScrollHeight } from "../helpers/domHelpers";
+import "./CueEditor.css";
 
 const CueEditor: React.FC<{
   cue: Cue;
