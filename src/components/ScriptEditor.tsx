@@ -26,7 +26,7 @@ const ScriptEditor: React.FC<{
             title="Add cue between"
             className="script-editor__add-cue-between-button"
           >
-            Add Between
+            {index < cues.size - 1 ? "Add Between" : "Add After"}
           </button>
         </li>
       ))}
