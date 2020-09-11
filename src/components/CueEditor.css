@@ -10,7 +10,9 @@
   border-left-color: var(--color-focus);
 }
 .cue-editor__textarea {
-  min-height: 3rem;
+  min-height: 1rem;
+  height: 1rem;
+  margin-bottom: 0.5rem;
 }
 .cue-editor__textarea:focus {
   box-shadow: none;
