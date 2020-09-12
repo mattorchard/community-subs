@@ -8,6 +8,7 @@
 .timeline__bumper {
   background-color: var(--gray-900);
   width: 200px;
+  flex-shrink: 0;
 }
 .timeline__bumper,
 .timeline__content {
@@ -16,18 +17,26 @@
 }
 .timeline__content {
   position: relative;
-  display: flex;
+  display: grid;
+  grid-template-rows: repeat(3, minmax(0, 1fr));
   --timeline-scale: 0.1;
   --timeline-duration: 1000;
   /* Used in calc, not expected to actual result in float < 1*/
   /*noinspection CssFloatPxLength*/
   width: calc(1px * var(--timeline-scale) * var(--timeline-duration));
 }
+.timeline__layer {
+  position: relative;
+  min-height: 4rem;
+}
+.timeline__layer:nth-child(odd) {
+  background-color: var(--color-lighten);
+}
 .timeline-cue {
   --cue-start: 0;
   --cue-end: 0;
   position: absolute;
-  top: 10%;
+  margin: 1rem;
   left: calc(1px * var(--timeline-scale) * var(--cue-start));
   right: calc(100% - 1px * var(--timeline-scale) * var(--cue-end));
   background-color: var(--color-primary);

@@ -4,7 +4,6 @@ import { Cue } from "../types/subtitles";
 import useWindowEvent from "../hooks/useWindowEvent";
 import { SaveCue } from "../hooks/useCues";
 import TimelineMarkers from "./TimelineMarkers";
-import { v4 as uuidV4 } from "uuid";
 
 type DragDetails = {
   id: string;
@@ -62,7 +61,7 @@ const Timeline: React.FC<{
 
   const addCue = (time: number) =>
     saveCue({
-      id: uuidV4(),
+      layer: 0,
       lines: [],
       start: time,
       end: time + 2500,
@@ -81,6 +80,12 @@ const Timeline: React.FC<{
   }, [dragDetails, scale, saveCue]);
 
   useWindowEvent("pointerup", handleDragStop, [handleDragStop]);
+
+  const layers = React.useMemo(() => {
+    const layers: Cue[][] = new Array(3).fill(null).map(() => []);
+    cues.forEach((cue) => layers[cue.layer].push(cue));
+    return layers;
+  }, [cues]);
 
   return (
     <div
@@ -101,14 +106,26 @@ const Timeline: React.FC<{
         }
       >
         <TimelineMarkers duration={duration} scale={scale} />
-        {cues.map((cue) => (
-          <TimelineCue
-            key={cue.id}
-            cue={cue}
-            dragDetails={cue.id === dragDetails?.id ? dragDetails : null}
-            onDragStart={setDraggingDetails}
-          />
+        {layers.map((layerContents, index) => (
+          <div
+            key={index}
+            className="timeline__layer"
+            data-layer-id={index}
+            onPointerEnter={({ currentTarget }) => {
+              console.log(currentTarget.dataset.layerId);
+            }}
+          >
+            {layerContents.map((cue) => (
+              <TimelineCue
+                key={cue.id}
+                cue={cue}
+                dragDetails={cue.id === dragDetails?.id ? dragDetails : null}
+                onDragStart={setDraggingDetails}
+              />
+            ))}
+          </div>
         ))}
+
         <div className="play-head" />
       </section>
       <div className="timeline__bumper" />

@@ -13,6 +13,7 @@ export type Cue = {
   start: number;
   end: number;
   lines: string[];
+  layer: number;
 };
 
 export const toTimeCode = (millis: number): TimeCode => {
