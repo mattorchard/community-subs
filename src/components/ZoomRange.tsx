@@ -1,4 +1,5 @@
 import React from "react";
+import useControlScroll from "../hooks/useControlScroll";
 
 const ZoomRange: React.FC<{
   zoom: number;
@@ -10,6 +11,8 @@ const ZoomRange: React.FC<{
     setValue(value);
     onZoomChange(Math.pow(10, value));
   };
+
+  useControlScroll((scrollDelta) => setBothValues(value + scrollDelta / 1000));
 
   return (
     <label>
