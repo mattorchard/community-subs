@@ -1,5 +1,6 @@
 import { padZeros } from "../helpers/textHelpers";
 import { HOUR, MINUTE, SECOND } from "../helpers/timingHelpers";
+import { Percentage } from "./Percentage";
 
 export type TimeCode = {
   hours: number;
@@ -14,6 +15,13 @@ export type Cue = {
   end: number;
   lines: string[];
   layer: number;
+  settings?: Partial<{
+    vertical: "rl" | "lr";
+    line: number | Percentage;
+    position: Percentage;
+    size: Percentage;
+    align: "start" | "middle" | "end";
+  }>;
 };
 
 export const toTimeCode = (millis: number): TimeCode => {
