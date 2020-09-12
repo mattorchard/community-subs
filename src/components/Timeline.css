@@ -46,6 +46,15 @@
   display: flex;
   height: 2rem;
   min-width: 2rem;
+  transition-timing-function: ease-in-out;
+  transition-duration: 0.2s;
+  transition-property: transform, filter;
+  opacity: 0.9;
+}
+.timeline-cue--dragging {
+  z-index: 3;
+  transform: translateY(-0.5rem);
+  filter: drop-shadow(0 0 0.5rem var(--gray-900));
 }
 
 .timeline-cue--dragging-start {

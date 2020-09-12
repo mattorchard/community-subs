@@ -171,6 +171,7 @@ const TimelineCue: React.FC<{
       className={
         dragDetails
           ? getClassName("timeline-cue", {
+              dragging: dragDetails,
               "dragging-start": dragDetails.type === "start",
               "dragging-end": dragDetails.type === "end",
               "dragging-both": dragDetails.type === "both",
