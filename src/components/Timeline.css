@@ -64,7 +64,7 @@
   user-select: none;
   /*noinspection CssUnknownProperty*/
   user-drag: none;
-  -webkit-user-drag: none;
+  -webkit-user-drag: none !important;
 }
 
 .timeline-cue__drag-handle {

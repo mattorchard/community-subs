@@ -50,6 +50,9 @@ const Timeline: React.FC<{
   const [dragDetails, setDraggingDetails] = React.useState<DragDetails | null>(
     null
   );
+  const [hoveredLayerId, setHoveredLayerId] = React.useState<number | null>(
+    null
+  );
 
   const containerProps = useTimelinePointerX(
     useCallback((rawX) => {
@@ -61,7 +64,7 @@ const Timeline: React.FC<{
 
   const addCue = (time: number) =>
     saveCue({
-      layer: 0,
+      layer: hoveredLayerId || 0,
       lines: [],
       start: time,
       end: time + 2500,
@@ -111,7 +114,10 @@ const Timeline: React.FC<{
             className="timeline__layer"
             data-layer-id={index}
             onPointerEnter={({ currentTarget }) => {
-              console.log(currentTarget.dataset.layerId);
+              const layerId = parseInt(currentTarget.dataset.layerId!);
+              if (layerId !== hoveredLayerId) {
+                setHoveredLayerId(layerId);
+              }
             }}
           >
             {layerContents.map((cue) => (
