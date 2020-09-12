@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import YouTube from "react-youtube";
 import "./VideoPlayer.css";
 import useInterval from "../hooks/useInterval";
@@ -8,12 +8,21 @@ interface YTPlayer {
   getCurrentTime: () => Promise<number>;
 }
 
+const getPlayerSize = () => {
+  const screenWidth = window.screen.width;
+  return {
+    width: (screenWidth / 2).toString(),
+    height: ((screenWidth / 2) * (9 / 16)).toString(),
+  };
+};
+
 const VideoPlayer: React.FC<{
   onTimeChange: (time: number) => void;
   onInit: ({ duration }: { duration: number }) => void;
 }> = React.memo(({ onTimeChange, onInit }) => {
   const playerRef = React.useRef<YTPlayer | null>(null);
   const currentTimeRef = React.useRef(0);
+  const playerSize = useMemo(getPlayerSize, []);
 
   // Todo: re-work to ensure never more than one request at a time
   useInterval(() => {
@@ -43,6 +52,7 @@ const VideoPlayer: React.FC<{
           if (component?.internalPlayer)
             playerRef.current = component.internalPlayer;
         }}
+        opts={playerSize}
         onStateChange={({ data: playerState }) => {
           switch (playerState) {
             case YouTube.PlayerState.UNSTARTED:

@@ -2,19 +2,19 @@
   overflow: hidden;
   display: grid;
   grid-template:
-    "player script" 40vh
+    "player script" 1fr
     "toolbar toolbar"
-    "timeline timeline" 2fr
-    / minmax(0, 1fr) minmax(0, 1fr);
+    "timeline timeline"
+    / auto 1fr;
   height: 100vh;
   --player-time: 0;
 }
 .app--long-script {
   grid-template:
-    "player script" 40vh
-    "toolbar script" auto
-    "timeline script" 2fr
-    / minmax(0, 1fr) minmax(0, 1fr);
+    "player script" 1fr
+    "toolbar script"
+    "timeline script"
+    / auto 1fr;
 }
 .toolbar {
   grid-area: toolbar;
