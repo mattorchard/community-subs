@@ -54,6 +54,7 @@ const Timeline: React.FC<{
   );
   const [hoveredLayerId, setHoveredLayerId] = React.useState<number>(0);
 
+  // Alter layer of dragged cue
   useEffect(() => {
     if (dragDetails) {
       saveCue({ id: dragDetails.id, layer: hoveredLayerId });
@@ -70,13 +71,13 @@ const Timeline: React.FC<{
     }, [])
   );
 
-  const addCue = (time: number) =>
-    saveCue({
-      layer: hoveredLayerId || 0,
-      lines: [],
-      start: time,
-      end: time + 2500,
-    });
+  // Maintain approximate scroll position through scale changes
+  const lastScaleRef = React.useRef(scale);
+  React.useEffect(() => {
+    const scaleRatio = scale / lastScaleRef.current;
+    timelineRef.current!.scrollLeft *= scaleRatio;
+    lastScaleRef.current = scale;
+  }, [scale]);
 
   const handleDragStop = React.useCallback(() => {
     if (dragDetails) {
@@ -101,6 +102,14 @@ const Timeline: React.FC<{
 
   useWindowEvent("pointerup", handleDragStop, [handleDragStop]);
   useWindowEvent("pointerleave", handleDragStop, [handleDragStop]);
+
+  const addCue = (time: number) =>
+    saveCue({
+      layer: hoveredLayerId || 0,
+      lines: [],
+      start: time,
+      end: time + 2500,
+    });
 
   const layers = React.useMemo(() => {
     const layers: Cue[][] = new Array(3).fill(null).map(() => []);
