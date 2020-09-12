@@ -38,7 +38,7 @@ const CueEditor: React.FC<{
   };
 
   return (
-    <div className="cue-editor">
+    <label className="cue-editor">
       <textarea
         id={cue.id}
         ref={textAreaRef}
@@ -48,7 +48,7 @@ const CueEditor: React.FC<{
         placeholder="Blank"
       />
       <small className="cue-editor__footer">{toTimeRangeString(cue)}</small>
-    </div>
+    </label>
   );
 };
 

@@ -5,6 +5,7 @@
   background-color: var(--gray-900);
   transition: border-color 0.3s ease-in-out;
   padding: 0.5rem;
+  cursor: text;
 }
 .cue-editor:focus-within {
   border-left-color: var(--color-focus);
@@ -21,5 +22,6 @@
   color: transparent;
 }
 .cue-editor__footer {
+  user-select: none;
   opacity: 0.5;
 }
