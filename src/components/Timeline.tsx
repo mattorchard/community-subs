@@ -1,4 +1,4 @@
-import React, { CSSProperties, useCallback } from "react";
+import React, { CSSProperties, useCallback, useEffect } from "react";
 import "./Timeline.css";
 import { Cue } from "../types/subtitles";
 import useWindowEvent from "../hooks/useWindowEvent";
@@ -52,9 +52,15 @@ const Timeline: React.FC<{
   const [dragDetails, setDraggingDetails] = React.useState<DragDetails | null>(
     null
   );
-  const [hoveredLayerId, setHoveredLayerId] = React.useState<number | null>(
-    null
-  );
+  const [hoveredLayerId, setHoveredLayerId] = React.useState<number>(0);
+
+  useEffect(() => {
+    if (dragDetails) {
+      saveCue({ id: dragDetails.id, layer: hoveredLayerId });
+    }
+    // Only execute when layer changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hoveredLayerId]);
 
   const containerProps = useTimelinePointerX(
     useCallback((rawX) => {
@@ -134,9 +140,7 @@ const Timeline: React.FC<{
             data-layer-id={index}
             onPointerEnter={({ currentTarget }) => {
               const layerId = parseInt(currentTarget.dataset.layerId!);
-              if (layerId !== hoveredLayerId) {
-                setHoveredLayerId(layerId);
-              }
+              setHoveredLayerId(layerId);
             }}
           >
             {layerContents.map((cue) => (
