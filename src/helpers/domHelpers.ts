@@ -23,5 +23,19 @@ const interactableElementsSelector = [
   "select",
   "details",
 ].join(",");
+
 export const isInteractableElement = (element: HTMLElement) =>
   Boolean(element.closest(interactableElementsSelector));
+
+export const getClassName = (
+  baseName: string,
+  modifiers: { [key: string]: any }
+) => {
+  const classes = [baseName];
+  Object.entries(modifiers).forEach(([key, value]) => {
+    if (value) {
+      classes.push(`${baseName}--${key}`);
+    }
+  });
+  return classes.join(" ");
+};

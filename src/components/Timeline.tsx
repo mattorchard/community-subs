@@ -4,14 +4,15 @@ import { Cue } from "../types/subtitles";
 import useWindowEvent from "../hooks/useWindowEvent";
 import { SaveCue } from "../hooks/useCues";
 import TimelineMarkers from "./TimelineMarkers";
-import { isInteractableElement } from "../helpers/domHelpers";
+import { getClassName, isInteractableElement } from "../helpers/domHelpers";
 
+type DragType = "start" | "end" | "both";
 type DragDetails = {
   id: string;
-  start: boolean;
-  end: boolean;
-  min?: number;
-  max?: number;
+  type: DragType;
+  start: number;
+  end: number;
+  offset: number;
 };
 
 const useTimelinePointerX = (onPointerXChange: (x: number) => void) => {
@@ -74,16 +75,26 @@ const Timeline: React.FC<{
   const handleDragStop = React.useCallback(() => {
     if (dragDetails) {
       const timelinePosition = Math.round(pointerXRef.current / scale);
-      if (dragDetails.start) {
-        saveCue({ id: dragDetails.id, start: timelinePosition });
-      } else {
-        saveCue({ id: dragDetails.id, end: timelinePosition });
+      switch (dragDetails.type) {
+        case "both":
+          const offsetPosition = Math.round(dragDetails.offset / scale);
+          const start = timelinePosition - offsetPosition;
+          const end = start + (dragDetails.end - dragDetails.start);
+          saveCue({ id: dragDetails.id, start, end });
+          break;
+        case "start":
+          saveCue({ id: dragDetails.id, start: timelinePosition });
+          break;
+        case "end":
+          saveCue({ id: dragDetails.id, end: timelinePosition });
+          break;
       }
       setDraggingDetails(null);
     }
   }, [dragDetails, scale, saveCue]);
 
   useWindowEvent("pointerup", handleDragStop, [handleDragStop]);
+  useWindowEvent("pointerleave", handleDragStop, [handleDragStop]);
 
   const layers = React.useMemo(() => {
     const layers: Cue[][] = new Array(3).fill(null).map(() => []);
@@ -100,7 +111,6 @@ const Timeline: React.FC<{
       <div className="timeline__bumper" />
       <section
         className="timeline__content"
-        onPointerLeave={handleDragStop}
         onDoubleClick={(event) => {
           if (
             event.target instanceof HTMLElement &&
@@ -113,6 +123,7 @@ const Timeline: React.FC<{
           {
             "--timeline-duration": duration,
             "--timeline-scale": scale,
+            "--offset-x": dragDetails?.offset,
           } as CSSProperties
         }
       >
@@ -150,48 +161,66 @@ const TimelineCue: React.FC<{
   cue: Cue;
   onDragStart: (dragDetails: DragDetails) => void;
   dragDetails: DragDetails | null;
-}> = ({ cue, dragDetails, onDragStart }) => (
-  <div
-    className={`timeline-cue ${
-      dragDetails?.start && "timeline-cue--dragging-start"
-    } ${dragDetails?.end && "timeline-cue--dragging-end"}`}
-    style={
-      {
-        "--cue-start": cue.start,
-        "--cue-end": cue.end,
-      } as CSSProperties
-    }
-    data-cue-id={cue.id}
-  >
-    <button
-      type="button"
-      className="timeline-cue__drag-handle"
-      aria-label="Adjust start time"
-      onPointerDown={() =>
-        onDragStart({
-          id: cue.id,
-          start: true,
-          end: false,
-          max: cue.end - 1,
-        })
+}> = ({ cue, dragDetails, onDragStart }) => {
+  return (
+    <div
+      className={
+        dragDetails
+          ? getClassName("timeline-cue", {
+              "dragging-start": dragDetails.type === "start",
+              "dragging-end": dragDetails.type === "end",
+              "dragging-both": dragDetails.type === "both",
+            })
+          : "timeline-cue"
       }
-    />
-    <a
-      className="timeline-cue__body"
-      title={cue.lines.join("\n")}
-      href={`#${cue.id}`}
+      style={
+        {
+          "--cue-start": cue.start,
+          "--cue-end": cue.end,
+          "--cue-duration": cue.end - cue.start,
+        } as CSSProperties
+      }
+      data-cue-id={cue.id}
+      onPointerDown={(event) => {
+        event.preventDefault();
+        const target = event.target as HTMLElement;
+        const type = target.dataset.dragType as DragType | undefined;
+        if (type) {
+          const offset =
+            event.nativeEvent.offsetX +
+            (target === event.currentTarget ? 0 : target.offsetLeft);
+          onDragStart({
+            type,
+            id: cue.id,
+            start: cue.start,
+            end: cue.end,
+            offset,
+          });
+        }
+      }}
     >
-      {cue.lines[0] || <em>Blank</em>}
-    </a>
-    <button
-      type="button"
-      className="timeline-cue__drag-handle"
-      aria-label="Adjust end time"
-      onPointerDown={() =>
-        onDragStart({ id: cue.id, start: false, end: true, min: cue.start + 1 })
-      }
-    />
-  </div>
-);
+      <button
+        type="button"
+        className="timeline-cue__drag-handle"
+        aria-label="Adjust start time"
+        data-drag-type="start"
+      />
+      <a
+        className="timeline-cue__body"
+        title={cue.lines.join("\n")}
+        href={`#${cue.id}`}
+        data-drag-type="both"
+      >
+        {cue.lines[0] || "Blank"}
+      </a>
+      <button
+        type="button"
+        className="timeline-cue__drag-handle"
+        aria-label="Adjust end time"
+        data-drag-type="end"
+      />
+    </div>
+  );
+};
 
 export default Timeline;
