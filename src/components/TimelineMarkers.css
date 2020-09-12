@@ -8,15 +8,19 @@
   --marker-time: 0;
   left: calc(1px * var(--timeline-scale) * var(--marker-time));
   transform: translateX(-50%);
+  opacity: 0.5;
   user-select: none;
   z-index: -1;
+  text-shadow: 0 0.125rem 0.125rem black;
 }
-.timeline-marker::before {
+.timeline-marker::after {
   content: "";
-  background-color: var(--color-lighten);
+  background-color: white;
+  opacity: 0.5;
   position: absolute;
   top: 0;
   bottom: 0;
   width: 0.25rem;
   left: calc(50% - 0.125rem);
+  z-index: -2;
 }

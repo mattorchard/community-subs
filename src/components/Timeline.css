@@ -25,6 +25,7 @@
   /* Used in calc, not expected to actual result in float < 1*/
   /*noinspection CssFloatPxLength*/
   width: calc(1px * var(--timeline-scale) * var(--timeline-duration));
+  padding-bottom: 1rem;
 }
 .timeline__layer {
   position: relative;
