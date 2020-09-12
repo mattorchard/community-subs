@@ -23,13 +23,6 @@ const initialState = {
   index: new Map(),
 };
 
-const getIndexForCue = (cues: Cue[], cue: Cue) => {
-  const rawIndex = cues.findIndex(
-    (otherCue) => cueComparator(cue, otherCue) > 0
-  );
-  return rawIndex + 1;
-};
-
 const useCues = (): [CueState, SaveCue] => {
   const [cues, setCues] = useState<CueState>(initialState);
   const saveCue = useCallback(
@@ -49,8 +42,15 @@ const useCues = (): [CueState, SaveCue] => {
 
         const newCues = oldCueState.cues.filter((cue) => cue.id !== newCue.id);
 
-        const index = getIndexForCue(newCues, newCue);
-        newCues.splice(index, 0, newCue);
+        const index = newCues.findIndex(
+          (otherCue) => cueComparator(newCue, otherCue) < 0
+        );
+
+        if (index === -1) {
+          newCues.push(newCue);
+        } else {
+          newCues.splice(index, 0, newCue);
+        }
 
         return {
           cues: newCues,
