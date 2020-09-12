@@ -29,14 +29,14 @@
   position: relative;
   min-height: 4rem;
 }
-.timeline__layer:nth-child(odd) {
+.timeline__layer:nth-child(even) {
   background-color: var(--color-lighten);
 }
 .timeline-cue {
   --cue-start: 0;
   --cue-end: 0;
   position: absolute;
-  margin: 1rem;
+  margin: 1rem 0;
   left: calc(1px * var(--timeline-scale) * var(--cue-start));
   right: calc(100% - 1px * var(--timeline-scale) * var(--cue-end));
   background-color: var(--color-primary);

@@ -1,7 +1,7 @@
 import React, { CSSProperties } from "react";
 import { HOUR, MINUTE, SECOND } from "../helpers/timingHelpers";
-import "./TimelineMarkers.css";
 import { timeCodeToString, toTimeCode } from "../types/subtitles";
+import "./TimelineMarkers.css";
 
 const SPACINGS = [
   10 * HOUR,

@@ -105,7 +105,6 @@ const Timeline: React.FC<{
           } as CSSProperties
         }
       >
-        <TimelineMarkers duration={duration} scale={scale} />
         {layers.map((layerContents, index) => (
           <div
             key={index}
@@ -125,7 +124,7 @@ const Timeline: React.FC<{
             ))}
           </div>
         ))}
-
+        <TimelineMarkers duration={duration} scale={scale} />
         <div className="play-head" />
       </section>
       <div className="timeline__bumper" />

@@ -9,6 +9,7 @@
   left: calc(1px * var(--timeline-scale) * var(--marker-time));
   transform: translateX(-50%);
   user-select: none;
+  z-index: -1;
 }
 .timeline-marker::before {
   content: "";

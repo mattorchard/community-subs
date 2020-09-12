@@ -14,7 +14,7 @@
     "player script" 1fr
     "toolbar script"
     "timeline script"
-    / auto 1fr;
+    / 50vw 1fr;
 }
 .toolbar {
   grid-area: toolbar;
