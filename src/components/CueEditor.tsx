@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import { Cue, toTimeRangeString } from "../types/subtitles";
-import { CueUpdate } from "../hooks/useCues";
+import { SaveCue } from "../hooks/useCues";
 import { debounce } from "../helpers/timingHelpers";
 import { matchScrollHeight } from "../helpers/domHelpers";
 import "./CueEditor.css";
 
 const CueEditor: React.FC<{
   cue: Cue;
-  saveCue: (cue: CueUpdate) => void;
+  saveCue: SaveCue;
 }> = ({ cue, saveCue }) => {
   const { id } = cue;
   const textAreaRef = React.useRef<HTMLTextAreaElement>(null);

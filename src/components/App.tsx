@@ -12,7 +12,7 @@ const App = () => {
   const [duration, setDuration] = React.useState(60 * 1000);
   const [scale, setScale] = React.useState(0.1);
 
-  const [cues, saveCue] = useCues();
+  const [cueState, saveCue] = useCues();
   const onTimeChange = React.useCallback((time: number) => {
     console.debug("Currently at", time);
     appRef.current?.style?.setProperty("--player-time", time.toString());
@@ -24,7 +24,7 @@ const App = () => {
         onTimeChange={onTimeChange}
         onInit={({ duration }) => setDuration(duration)}
       />
-      <ScriptEditor cues={cues} saveCue={saveCue} />
+      <ScriptEditor cues={cueState.cues} saveCue={saveCue} />
       <div className="toolbar">
         <ZoomRange zoom={scale} onZoomChange={setScale} />
         <Button
@@ -36,7 +36,7 @@ const App = () => {
       <Timeline
         duration={duration}
         scale={scale}
-        cues={cues}
+        cues={cueState.cues}
         saveCue={saveCue}
       />
     </div>

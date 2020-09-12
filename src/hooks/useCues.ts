@@ -1,8 +1,15 @@
 import { Cue } from "../types/subtitles";
 import { useCallback, useState } from "react";
+import { v4 as uuidV4 } from "uuid";
 
-export type CueMap = Map<string, Cue>;
-export type CueUpdate = Partial<Cue> & { id: string };
+export type CueState = {
+  cues: Cue[];
+  index: Map<string, number>;
+};
+
+type CueUpdate = Partial<Cue> & Pick<Cue, "id">;
+type NewCue = Omit<Cue, "id">;
+export type SaveCue = (cue: CueUpdate | NewCue) => void;
 
 const cueComparator = (a: Cue, b: Cue) => {
   if (a.start !== b.start) {
@@ -11,35 +18,48 @@ const cueComparator = (a: Cue, b: Cue) => {
   return a.id.localeCompare(b.id);
 };
 
-const useCues = (): [CueMap, (cue: CueUpdate) => void] => {
-  const [cues, setCues] = useState<CueMap>(() => new Map());
+const initialState = {
+  cues: [],
+  index: new Map(),
+};
+
+const getIndexForCue = (cues: Cue[], cue: Cue) => {
+  const rawIndex = cues.findIndex(
+    (otherCue) => cueComparator(cue, otherCue) > 0
+  );
+  return rawIndex + 1;
+};
+
+const useCues = (): [CueState, SaveCue] => {
+  const [cues, setCues] = useState<CueState>(initialState);
   const saveCue = useCallback(
-    (cueUpdate: CueUpdate) =>
-      setCues((oldCues) => {
-        const newCue = oldCues.has(cueUpdate.id)
-          ? { ...oldCues.get(cueUpdate.id)!, ...cueUpdate }
-          : (cueUpdate as Cue); // Todo: Add validation
+    (cueToSave: CueUpdate | NewCue) =>
+      setCues((oldCueState) => {
+        // Construct the complete cue
+        const newCue: Cue =
+          "id" in cueToSave
+            ? {
+                ...oldCueState.cues[oldCueState.index.get(cueToSave.id)!],
+                ...cueToSave,
+              }
+            : {
+                ...cueToSave,
+                id: uuidV4(),
+              };
 
-        if (cueUpdate.start) {
-          const entries = [...oldCues.entries()].filter(
-            ([id]) => id !== cueUpdate.id
-          );
-          const indexOfFirstSmallerCue = entries.findIndex(
-            ([, otherCue]) => cueComparator(newCue, otherCue) < 0
-          );
-          const index =
-            indexOfFirstSmallerCue >= 0 ? indexOfFirstSmallerCue + 1 : 0;
-          entries.splice(index, 0, [newCue.id, newCue]);
+        const newCues = oldCueState.cues.filter((cue) => cue.id !== newCue.id);
 
-          return new Map(entries);
-        } else {
-          const newCues = new Map(oldCues);
-          newCues.set(newCue.id, newCue);
-          return newCues;
-        }
+        const index = getIndexForCue(newCues, newCue);
+        newCues.splice(index, 0, newCue);
+
+        return {
+          cues: newCues,
+          index: new Map(newCues.map((cue, index) => [cue.id, index])),
+        };
       }),
     []
   );
+
   return [cues, saveCue];
 };
 

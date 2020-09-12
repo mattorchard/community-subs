@@ -52,6 +52,10 @@
   flex-shrink: 1;
   text-align: center;
   align-self: center;
+  user-select: none;
+  /*noinspection CssUnknownProperty*/
+  user-drag: none;
+  -webkit-user-drag: none;
 }
 
 .timeline-cue__drag-handle {

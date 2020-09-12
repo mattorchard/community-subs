@@ -1,15 +1,16 @@
 import React from "react";
-import { CueMap, CueUpdate } from "../hooks/useCues";
+import { SaveCue } from "../hooks/useCues";
 import "./ScriptEditor.css";
 import CueEditor from "./CueEditor";
+import { Cue } from "../types/subtitles";
 
 const ScriptEditor: React.FC<{
-  cues: CueMap;
-  saveCue: (cue: CueUpdate) => void;
+  cues: Cue[];
+  saveCue: SaveCue;
 }> = ({ cues, saveCue }) => (
   <section className="script-editor">
     <ol className="script-editor__cue-list">
-      {[...cues.values()].map((cue, index) => (
+      {cues.map((cue, index) => (
         <li key={cue.id}>
           {index === 0 && (
             <button
@@ -24,7 +25,7 @@ const ScriptEditor: React.FC<{
             type="button"
             className="script-editor__add-cue-between-button"
           >
-            {index < cues.size - 1 ? "Add Between" : "Add After"}
+            {index < cues.length - 1 ? "Add Between" : "Add After"}
           </button>
         </li>
       ))}

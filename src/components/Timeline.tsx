@@ -2,7 +2,7 @@ import React, { CSSProperties, useCallback } from "react";
 import "./Timeline.css";
 import { Cue } from "../types/subtitles";
 import useWindowEvent from "../hooks/useWindowEvent";
-import { CueMap, CueUpdate } from "../hooks/useCues";
+import { SaveCue } from "../hooks/useCues";
 import TimelineMarkers from "./TimelineMarkers";
 import { v4 as uuidV4 } from "uuid";
 
@@ -43,8 +43,8 @@ const useTimelinePointerX = (onPointerXChange: (x: number) => void) => {
 const Timeline: React.FC<{
   duration: number;
   scale: number;
-  cues: CueMap;
-  saveCue: (cue: CueUpdate) => void;
+  cues: Cue[];
+  saveCue: SaveCue;
 }> = ({ duration, scale, cues, saveCue }) => {
   const timelineRef = React.useRef<HTMLDivElement>(null);
   const pointerXRef = React.useRef<number>(0);
@@ -101,7 +101,7 @@ const Timeline: React.FC<{
         }
       >
         <TimelineMarkers duration={duration} scale={scale} />
-        {[...cues.values()].map((cue) => (
+        {cues.map((cue) => (
           <TimelineCue
             key={cue.id}
             cue={cue}
