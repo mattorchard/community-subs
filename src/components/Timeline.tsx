@@ -4,6 +4,7 @@ import { Cue } from "../types/subtitles";
 import useWindowEvent from "../hooks/useWindowEvent";
 import { SaveCue } from "../hooks/useCues";
 import TimelineMarkers from "./TimelineMarkers";
+import { isInteractableElement } from "../helpers/domHelpers";
 
 type DragDetails = {
   id: string;
@@ -100,7 +101,14 @@ const Timeline: React.FC<{
       <section
         className="timeline__content"
         onPointerLeave={handleDragStop}
-        onDoubleClick={() => addCue(pointerXRef.current / scale)}
+        onDoubleClick={(event) => {
+          if (
+            event.target instanceof HTMLElement &&
+            !isInteractableElement(event.target)
+          ) {
+            addCue(pointerXRef.current / scale);
+          }
+        }}
         style={
           {
             "--timeline-duration": duration,

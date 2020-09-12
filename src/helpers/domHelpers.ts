@@ -15,3 +15,13 @@ export const matchScrollHeight = (element: HTMLElement) => {
   element.style.height = "0"; // Must be set to 0 first, otherwise will never shrink
   element.style.height = `${element.scrollHeight}px`;
 };
+
+const interactableElementsSelector = [
+  "a",
+  "button",
+  "input",
+  "select",
+  "details",
+].join(",");
+export const isInteractableElement = (element: HTMLElement) =>
+  Boolean(element.closest(interactableElementsSelector));
