@@ -24,7 +24,11 @@ const App = () => {
         onTimeChange={onTimeChange}
         onInit={({ duration }) => setDuration(duration)}
       />
-      <ScriptEditor cues={cueState.cues} saveCue={saveCue} />
+      <ScriptEditor
+        cues={cueState.cues}
+        saveCue={saveCue}
+        duration={duration}
+      />
       <div className="toolbar">
         <ZoomRange zoom={scale} onZoomChange={setScale} />
         <Button
