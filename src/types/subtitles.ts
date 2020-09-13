@@ -9,19 +9,21 @@ export type TimeCode = {
   milliseconds: number;
 };
 
+export type CueSettings = Partial<{
+  vertical: "rl" | "lr";
+  line: number | Percentage;
+  position: Percentage;
+  size: Percentage;
+  align: "start" | "middle" | "end";
+}>;
+
 export type Cue = {
   id: string;
   start: number;
   end: number;
   lines: string[];
   layer: number;
-  settings?: Partial<{
-    vertical: "rl" | "lr";
-    line: number | Percentage;
-    position: Percentage;
-    size: Percentage;
-    align: "start" | "middle" | "end";
-  }>;
+  settings?: CueSettings;
 };
 
 export const toTimeCode = (millis: number): TimeCode => {
@@ -46,6 +48,9 @@ export const timeCodeToString = ({
   milliseconds,
 }: TimeCode) =>
   `${padZeros(minutes)}:${padZeros(seconds)}.${padZeros(milliseconds, 3)}`;
+
+export const timeCodeToFullString = (timeCode: TimeCode) =>
+  `${padZeros(timeCode.hours)}:${timeCodeToString(timeCode)}`;
 
 export const toTimeRangeString = ({
   start,

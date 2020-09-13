@@ -6,6 +6,8 @@ import VideoPlayer from "./VideoPlayer";
 import "./App.css";
 import ScriptEditor from "./ScriptEditor";
 import Button from "./Button";
+import { createVttBlob, downloadFile } from "../helpers/fileHelpers";
+import { toWebVtt } from "../helpers/webVttHelpers";
 
 const App = () => {
   const appRef = React.useRef<HTMLDivElement>(null);
@@ -35,6 +37,16 @@ const App = () => {
           onClick={() => appRef.current?.classList?.toggle("app--long-script")}
         >
           Toggle View
+        </Button>
+        <Button
+          onClick={() => {
+            downloadFile(
+              "CommunitySubs.vtt",
+              createVttBlob(toWebVtt(cueState))
+            );
+          }}
+        >
+          Export
         </Button>
       </div>
       <Timeline
