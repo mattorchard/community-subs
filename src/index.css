@@ -126,7 +126,6 @@ body {
   font-family: sans-serif;
   background-color: var(--gray-800);
   color: white;
-  min-height: 100vh;
 }
 :focus {
   outline: 0;

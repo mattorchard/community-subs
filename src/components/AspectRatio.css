@@ -1,0 +1,14 @@
+.aspect-ratio {
+  display: grid;
+}
+.aspect-ratio__stretcher,
+.aspect-ratio__content {
+  grid-row: 1;
+  grid-column: 1;
+}
+.aspect-ratio__stretcher {
+  width: 100%;
+  height: auto;
+}
+.aspect-ratio__content {
+}
