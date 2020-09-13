@@ -3,13 +3,13 @@ import Timeline from "./Timeline";
 import ZoomRange from "./ZoomRange";
 import useCues from "../hooks/useCues";
 import VideoPlayer from "./VideoPlayer";
-import "./App.css";
+import "./Studio.css";
 import ScriptEditor from "./ScriptEditor";
 import Button from "./Button";
 import { createVttBlob, downloadFile } from "../helpers/fileHelpers";
 import { toWebVtt } from "../helpers/webVttHelpers";
 
-const App = () => {
+const Studio = () => {
   const appRef = React.useRef<HTMLDivElement>(null);
   const [duration, setDuration] = React.useState(60 * 1000);
   const [scale, setScale] = React.useState(0.1);
@@ -21,7 +21,7 @@ const App = () => {
   }, []);
 
   return (
-    <div className="app" ref={appRef}>
+    <div className="studio" ref={appRef}>
       <VideoPlayer
         onTimeChange={onTimeChange}
         onInit={({ duration }) => setDuration(duration)}
@@ -34,7 +34,9 @@ const App = () => {
       <div className="toolbar">
         <ZoomRange zoom={scale} onZoomChange={setScale} />
         <Button
-          onClick={() => appRef.current?.classList?.toggle("app--long-script")}
+          onClick={() =>
+            appRef.current?.classList?.toggle("studio--long-script")
+          }
         >
           Toggle View
         </Button>
@@ -58,4 +60,4 @@ const App = () => {
     </div>
   );
 };
-export default App;
+export default Studio;

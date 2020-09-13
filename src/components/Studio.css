@@ -1,4 +1,4 @@
-.app {
+.studio {
   overflow: hidden;
   display: grid;
   grid-template:
@@ -9,7 +9,7 @@
   height: 100vh;
   --player-time: 0;
 }
-.app--long-script {
+.studio--long-script {
   grid-template:
     "player script" 1fr
     "toolbar script"
