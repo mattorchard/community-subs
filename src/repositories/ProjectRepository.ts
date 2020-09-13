@@ -60,14 +60,14 @@ const dbPromise = openDB<ProjectRepository>("primary-repository", 1, {
 
 export const getProjects = async () => {
   const db = await dbPromise;
-  return await db.getAll("projects");
+  return (await db.getAllFromIndex("projects", "createdAt")).reverse();
 };
 
 export const createProject = async () => {
   const db = await dbPromise;
   const newProject: Project = {
     id: uuidV4(),
-    name: "New Project",
+    name: "Untitled Project",
     createdAt: new Date(),
   };
   await db.put("projects", newProject);
