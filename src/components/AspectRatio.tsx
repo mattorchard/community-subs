@@ -1,19 +1,25 @@
 import React from "react";
 import "./AspectRatio.css";
+import { getClassName } from "../helpers/domHelpers";
 
 const AspectRatio: React.FC<{
+  as?: keyof JSX.IntrinsicElements;
   ratio?: number;
-}> = ({ children, ratio = 1 }) => {
+  center?: boolean;
+}> = ({ children, as = "div", ratio = 1, center = false }) => {
+  const TagName = as;
   return (
-    <div className="aspect-ratio">
+    <TagName className="aspect-ratio">
       <svg
         className="aspect-ratio__stretcher"
         viewBox={`0 0 1 ${ratio}`}
         width={1}
         height={ratio}
       />
-      <div className="aspect-ratio__content">{children}</div>
-    </div>
+      <div className={getClassName("aspect-ratio__content", { center })}>
+        {children}
+      </div>
+    </TagName>
   );
 };
 

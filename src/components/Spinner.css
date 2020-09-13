@@ -1,0 +1,38 @@
+.spinner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: wait;
+}
+.spinner::before {
+  content: "";
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  animation: spinner__spin 1s linear infinite;
+  border: 0.25rem solid;
+  border-right-color: transparent;
+  border-radius: 1000px;
+}
+
+@keyframes spinner__spin {
+  from {
+    transform: rotateZ(0turn);
+  }
+  to {
+    transform: rotateZ(1turn);
+  }
+}
+
+.spinner.fade-in {
+  animation: spinner__fade-in 1s ease-in 1 forwards;
+}
+
+@keyframes spinner__fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

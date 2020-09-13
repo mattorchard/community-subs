@@ -11,4 +11,9 @@
   height: auto;
 }
 .aspect-ratio__content {
+  display: flex;
+}
+.aspect-ratio__content--center {
+  align-self: center;
+  justify-self: center;
 }

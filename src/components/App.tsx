@@ -1,6 +1,6 @@
 import React from "react";
+import ProjectList from "./ProjectList";
 import "./App.css";
-import AspectRatio from "./AspectRatio";
 
 const App = () => {
   return (
@@ -23,17 +23,8 @@ const App = () => {
         </p>
         {/*Todo: Warning to Safari users about storage issue */}
       </section>
-      <section className="app__project-grid">
-        <AspectRatio>
-          <button
-            type="button"
-            className="app__project-grid__create-project-button"
-          >
-            + New Project
-          </button>
-        </AspectRatio>
-
-        {/* Todo: List existing Projects */}
+      <section className="app__project-section">
+        <ProjectList />
       </section>
     </div>
   );
