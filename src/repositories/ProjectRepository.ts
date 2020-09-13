@@ -63,13 +63,15 @@ export const getProjects = async () => {
   return (await db.getAllFromIndex("projects", "createdAt")).reverse();
 };
 
-export const createProject = async () => {
+export const saveProject = async (project: Project) => {
   const db = await dbPromise;
-  const newProject: Project = {
+  await db.put("projects", project);
+  return project;
+};
+
+export const createProject = async () =>
+  await saveProject({
     id: uuidV4(),
     name: "Untitled Project",
     createdAt: new Date(),
-  };
-  await db.put("projects", newProject);
-  return newProject;
-};
+  });

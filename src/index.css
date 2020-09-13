@@ -132,7 +132,8 @@ body {
   box-shadow: var(--focus-bs);
 }
 button,
-textarea {
+textarea,
+input {
   font: inherit;
   background: none;
   border: none;
