@@ -1,6 +1,11 @@
 import { HOUR } from "./timingHelpers";
+import { captureImageBlob } from "./imageHelpers";
 
-const waitForDuration = (mediaElement: HTMLMediaElement, timeout: number) =>
+const waitForMediaEvent = (
+  mediaElement: HTMLMediaElement,
+  eventName: string,
+  timeout: number
+) =>
   new Promise((resolve, reject) => {
     if (!isNaN(mediaElement.duration)) {
       return resolve(mediaElement);
@@ -16,10 +21,10 @@ const waitForDuration = (mediaElement: HTMLMediaElement, timeout: number) =>
       reject(new Error(`Failed to load`));
     };
     const unsubscribe = () => {
-      mediaElement.removeEventListener("durationchange", loadedHandler);
+      mediaElement.removeEventListener(eventName, loadedHandler);
       mediaElement.removeEventListener("error", errorHandler);
     };
-    mediaElement.addEventListener("durationchange", loadedHandler);
+    mediaElement.addEventListener(eventName, loadedHandler);
     mediaElement.addEventListener("error", errorHandler);
 
     setTimeout(() => {
@@ -30,11 +35,11 @@ const waitForDuration = (mediaElement: HTMLMediaElement, timeout: number) =>
 
 export const getVideoFileDetails = async (
   file: File
-): Promise<{ duration: number; aspectRatio: number }> => {
+): Promise<{ duration: number; aspectRatio: number; thumbnail: Blob }> => {
   const url = URL.createObjectURL(file);
   try {
     const video = document.createElement("video");
-    const loadedPromise = waitForDuration(video, 10000);
+    const loadedPromise = waitForMediaEvent(video, "durationchange", 10000);
 
     video.setAttribute("preload", "metadata");
     video.setAttribute("hidden", "true");
@@ -48,7 +53,12 @@ export const getVideoFileDetails = async (
     const duration = video.duration * 1000; // Default is in seconds
     const aspectRatio = video.videoWidth / video.videoHeight;
 
-    return { duration, aspectRatio };
+    const seekedPromise = waitForMediaEvent(video, "seeked", 1000);
+    video.currentTime = duration / 2;
+    await seekedPromise;
+    const thumbnail = await captureImageBlob(video, "image/jpeg", "0.85");
+
+    return { duration, aspectRatio, thumbnail };
   } finally {
     URL.revokeObjectURL(url);
   }

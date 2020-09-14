@@ -7,12 +7,12 @@ export type Project = {
   name: string;
   createdAt: Date;
   video?: ProjectVideo;
-  thumbnail?: string;
 };
 
 export type ProjectVideo = {
   duration: number;
   aspectRatio: number;
+  thumbnail?: Blob;
 } & (
   | {
       type: "youtube";
