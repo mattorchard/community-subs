@@ -33,7 +33,7 @@ const ProjectList: React.FC<{ onOpenProject: (project: Project) => void }> = ({
     try {
       const project = await createProject();
       onOpenProject(project);
-    } finally {
+    } catch {
       setSavingNewProject(false);
     }
   };

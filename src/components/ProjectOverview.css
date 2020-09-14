@@ -1,4 +1,6 @@
 .project-overview {
+  max-width: 800px;
+  margin: 3rem auto 0;
 }
 .project-overview__header {
   padding: 2rem;
