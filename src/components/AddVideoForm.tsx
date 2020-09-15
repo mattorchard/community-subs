@@ -80,6 +80,7 @@ const AddVideoForm: React.FC<{
                   duration: duration * 1000,
                   aspectRatio: 1920 / 1080,
                   youtubeId: youTubeVideoId,
+                  thumbnailUrl: `https://img.youtube.com/vi/${youTubeVideoId}/hqdefault.jpg`,
                 });
               });
             }}

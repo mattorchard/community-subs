@@ -1,5 +1,5 @@
 import { HOUR } from "./timingHelpers";
-import { captureImageBlob } from "./imageHelpers";
+import { captureImageToDataUrl } from "./imageHelpers";
 
 const waitForMediaEvent = (
   mediaElement: HTMLMediaElement,
@@ -33,9 +33,7 @@ const waitForMediaEvent = (
     }, timeout);
   });
 
-export const getVideoFileDetails = async (
-  file: File
-): Promise<{ duration: number; aspectRatio: number; thumbnail: Blob }> => {
+export const getVideoFileDetails = async (file: File) => {
   const url = URL.createObjectURL(file);
   try {
     const video = document.createElement("video");
@@ -56,9 +54,13 @@ export const getVideoFileDetails = async (
     const seekedPromise = waitForMediaEvent(video, "seeked", 1000);
     video.currentTime = duration / 2;
     await seekedPromise;
-    const thumbnail = await captureImageBlob(video, "image/jpeg", "0.85");
+    const thumbnailUrl = await captureImageToDataUrl(
+      video,
+      "image/jpeg",
+      "0.85"
+    );
 
-    return { duration, aspectRatio, thumbnail };
+    return { duration, aspectRatio, thumbnailUrl };
   } finally {
     URL.revokeObjectURL(url);
   }

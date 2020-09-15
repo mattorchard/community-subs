@@ -3,17 +3,13 @@ import AspectRatio from "./AspectRatio";
 import { createProject, Project } from "../repositories/ProjectRepository";
 import Spinner from "./Spinner";
 import { useProjects } from "../hooks/ProjectRepositoryHooks";
-import { useProjectThumbnails } from "../hooks/thumbnailHooks";
 import "./ProjectList.css";
-import { toDateTimeString } from "../helpers/dateHelpers";
-import { getClassName } from "../helpers/domHelpers";
 
 const ProjectList: React.FC<{ onOpenProject: (project: Project) => void }> = ({
   onOpenProject,
 }) => {
   const [savingNewProject, setSavingNewProject] = useState(false);
   const { projects, loading: loadingProjectList, error } = useProjects();
-  const thumbnails = useProjectThumbnails(projects || []);
 
   useEffect(() => {
     const hash = window.location.hash;
@@ -66,23 +62,15 @@ const ProjectList: React.FC<{ onOpenProject: (project: Project) => void }> = ({
         </AspectRatio>
       )}
 
-      {projects?.map((project, index) => (
+      {projects?.map((project) => (
         <AspectRatio as="li" key={project.id}>
           <a
             href={`#project-${project.id}`}
-            className={getClassName("project-link", {
-              "has-thumbnail": thumbnails[index],
-            })}
-            style={{ backgroundImage: `url(${thumbnails[index]})` }}
+            className="project-link thumbnail-background"
+            style={{ backgroundImage: `url(${project.video?.thumbnailUrl})` }}
             onClick={() => onOpenProject(project)}
           >
-            <h3 className="xl">{project.name}</h3>
-            <time
-              className="project-link__footer"
-              dateTime={project.createdAt.toISOString()}
-            >
-              {toDateTimeString(project.createdAt)}
-            </time>
+            <h3 className="project-link__title xl">{project.name}</h3>
           </a>
         </AspectRatio>
       ))}

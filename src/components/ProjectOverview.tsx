@@ -8,7 +8,6 @@ import "./ProjectOverview.css";
 import DebouncedInput from "./DebouncedInput";
 import { toDateTimeString } from "../helpers/dateHelpers";
 import AddVideoForm from "./AddVideoForm";
-import { useProjectThumbnail } from "../hooks/thumbnailHooks";
 
 const ProjectOverview: React.FC<{ project: Project; onClose: () => void }> = ({
   project: initialProject,
@@ -16,7 +15,6 @@ const ProjectOverview: React.FC<{ project: Project; onClose: () => void }> = ({
 }) => {
   const [project, setProject] = useState(initialProject);
   const [isSaving, setIsSaving] = useState(false);
-  const thumbnailUrl = useProjectThumbnail(project);
 
   const handleUpdateProject = async (projectUpdate: ProjectUpdate) => {
     try {
@@ -29,6 +27,13 @@ const ProjectOverview: React.FC<{ project: Project; onClose: () => void }> = ({
   };
   return (
     <div className="project-overview">
+      {project.video?.thumbnailUrl && (
+        <img
+          src={project.video?.thumbnailUrl}
+          alt=""
+          className="project-overview__hero thumbnail"
+        />
+      )}
       <header className="project-overview__header">
         <a
           href="#welcome"
@@ -53,7 +58,6 @@ const ProjectOverview: React.FC<{ project: Project; onClose: () => void }> = ({
           {toDateTimeString(project.createdAt)}
         </time>
       </header>
-      {thumbnailUrl && <img src={thumbnailUrl} alt="" />}
       <main>
         {project.video ? (
           <div>

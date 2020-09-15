@@ -185,3 +185,15 @@ h5 {
 .xl {
   font-size: 1.5rem;
 }
+
+.thumbnail-background {
+  background-color: var(--gray-700);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: luminosity;
+}
+.thumbnail {
+  background-color: var(--gray-700);
+  mix-blend-mode: luminosity;
+}

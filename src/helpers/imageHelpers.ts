@@ -51,3 +51,9 @@ export const captureImageBlob = async (
       quality
     )
   );
+
+export const captureImageToDataUrl = (
+  source: CanvasImageSource,
+  type: string,
+  quality: any
+) => captureImage(source).canvas.toDataURL(type, quality);

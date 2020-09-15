@@ -20,26 +20,11 @@
   text-align: center;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  position: relative;
+  justify-content: flex-end;
   border-radius: 1rem;
-  background-color: var(--gray-700);
-  text-shadow: 0 0.125rem 0.125rem var(--gray-900);
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
+  overflow: hidden;
 }
-.project-link--has-thumbnail {
-  filter: saturate(0.25);
-  transition: filter 0.3s ease-in-out;
-}
-.project-link--has-thumbnail:hover,
-.project-link--has-thumbnail:focus {
-  filter: saturate(1);
-}
-
-.project-link__footer {
-  position: absolute;
-  bottom: 1rem;
-  width: 100%;
+.project-link__title {
+  padding: 0.5rem;
+  background-color: #1a202ca0;
 }

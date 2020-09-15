@@ -12,7 +12,7 @@ export type Project = {
 export type ProjectVideo = {
   duration: number;
   aspectRatio: number;
-  thumbnail?: Blob;
+  thumbnailUrl?: string;
 } & (
   | {
       type: "youtube";
