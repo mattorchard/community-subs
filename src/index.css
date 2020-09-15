@@ -123,7 +123,7 @@ html {
   font-size: 16px;
 }
 body {
-  font-family: sans-serif;
+  font-family: "lato", sans-serif;
   background-color: var(--gray-800);
   color: white;
 }
@@ -149,6 +149,13 @@ textarea {
 a {
   text-decoration: none;
   color: inherit;
+}
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: "Raleway", sans-serif;
 }
 
 ::-webkit-scrollbar {
