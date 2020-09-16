@@ -18,6 +18,7 @@ const ProjectList: React.FC = () => {
 
   const handleCreateProject = async () => {
     try {
+      setSavingNewProject(true);
       const project = await createProject();
       history.push(`/project/${project.id}`);
     } catch (error) {

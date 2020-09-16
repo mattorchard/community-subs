@@ -3,6 +3,7 @@ import YouTube from "react-youtube";
 import "./VideoPlayer.css";
 import useInterval from "../hooks/useInterval";
 import { ProjectVideo } from "../repositories/ProjectRepository";
+import FilePlayer from "./FilePlayer";
 
 interface YTPlayer {
   getDuration: () => Promise<number>;
@@ -40,7 +41,7 @@ const VideoPlayer: React.FC<{
   if (video.type === "upload") {
     return (
       <div className="player">
-        <p>Manual upload not yet supported</p>
+        <FilePlayer id={video.fileId} />
       </div>
     );
   }

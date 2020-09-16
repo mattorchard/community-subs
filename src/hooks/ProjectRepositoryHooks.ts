@@ -1,5 +1,6 @@
 import useAsyncValue from "./useAsyncValue";
 import {
+  getFile,
   getProject,
   getProjects,
   getTranscripts,
@@ -37,6 +38,18 @@ export const useTranscripts = (projectId: string) => {
   );
   return {
     transcripts,
+    error,
+    loading,
+  };
+};
+
+export const useFile = (fileId: string) => {
+  const { result: file, error, loading } = useAsyncValue(
+    () => getFile(fileId),
+    [fileId]
+  );
+  return {
+    file,
     error,
     loading,
   };

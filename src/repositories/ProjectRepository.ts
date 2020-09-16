@@ -131,6 +131,12 @@ export const saveFile = async (projectId: string, file: File) => {
   return projectFile;
 };
 
+export const getFile = async (fileId: string) => {
+  const db = await dbPromise;
+  const projectFile = await db.get("files", fileId);
+  return projectFile?.file as File | undefined;
+};
+
 export const getCues = async (transcriptId: string) => {
   const db = await dbPromise;
   return await db.getAllFromIndex(
