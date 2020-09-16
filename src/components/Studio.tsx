@@ -8,17 +8,22 @@ import ScriptEditor from "./ScriptEditor";
 import Button from "./Button";
 import { createVttBlob, downloadFile } from "../helpers/fileHelpers";
 import { toWebVtt } from "../helpers/webVttHelpers";
+import Spinner from "./Spinner";
 
-const Studio = () => {
+const Studio: React.FC<{ transcriptId: string }> = ({ transcriptId }) => {
   const appRef = React.useRef<HTMLDivElement>(null);
   const [duration, setDuration] = React.useState(60 * 1000);
   const [scale, setScale] = React.useState(0.1);
 
-  const [cueState, saveCue] = useCues();
+  const [cueState, setCue] = useCues(transcriptId);
   const onTimeChange = React.useCallback((time: number) => {
     console.debug("Currently at", time);
     appRef.current?.style?.setProperty("--player-time", time.toString());
   }, []);
+
+  if (!cueState) {
+    return <Spinner>Loading transcript...</Spinner>;
+  }
 
   return (
     <div className="studio" ref={appRef}>
@@ -26,11 +31,7 @@ const Studio = () => {
         onTimeChange={onTimeChange}
         onInit={({ duration }) => setDuration(duration)}
       />
-      <ScriptEditor
-        cues={cueState.cues}
-        saveCue={saveCue}
-        duration={duration}
-      />
+      <ScriptEditor cues={cueState.cues} setCue={setCue} duration={duration} />
       <div className="toolbar">
         <ZoomRange zoom={scale} onZoomChange={setScale} />
         <Button
@@ -55,7 +56,7 @@ const Studio = () => {
         duration={duration}
         scale={scale}
         cues={cueState.cues}
-        saveCue={saveCue}
+        setCue={setCue}
       />
     </div>
   );

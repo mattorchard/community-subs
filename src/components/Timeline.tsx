@@ -2,7 +2,7 @@ import React, { CSSProperties, useCallback, useEffect } from "react";
 import "./Timeline.css";
 import { Cue } from "../types/subtitles";
 import useWindowEvent from "../hooks/useWindowEvent";
-import { SaveCue } from "../hooks/useCues";
+import { SetCue } from "../hooks/useCues";
 import TimelineMarkers from "./TimelineMarkers";
 import { getClassName, isInteractableElement } from "../helpers/domHelpers";
 
@@ -45,8 +45,8 @@ const Timeline: React.FC<{
   duration: number;
   scale: number;
   cues: Cue[];
-  saveCue: SaveCue;
-}> = ({ duration, scale, cues, saveCue }) => {
+  setCue: SetCue;
+}> = ({ duration, scale, cues, setCue }) => {
   const timelineRef = React.useRef<HTMLDivElement>(null);
   const pointerXRef = React.useRef<number>(0);
   const [dragDetails, setDraggingDetails] = React.useState<DragDetails | null>(
@@ -57,7 +57,7 @@ const Timeline: React.FC<{
   // Alter layer of dragged cue
   useEffect(() => {
     if (dragDetails) {
-      saveCue({ id: dragDetails.id, layer: hoveredLayerId });
+      setCue({ id: dragDetails.id, layer: hoveredLayerId });
     }
     // Only execute when layer changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -87,24 +87,24 @@ const Timeline: React.FC<{
           const offsetPosition = Math.round(dragDetails.offset / scale);
           const start = timelinePosition - offsetPosition;
           const end = start + (dragDetails.end - dragDetails.start);
-          saveCue({ id: dragDetails.id, start, end });
+          setCue({ id: dragDetails.id, start, end });
           break;
         case "start":
-          saveCue({ id: dragDetails.id, start: timelinePosition });
+          setCue({ id: dragDetails.id, start: timelinePosition });
           break;
         case "end":
-          saveCue({ id: dragDetails.id, end: timelinePosition });
+          setCue({ id: dragDetails.id, end: timelinePosition });
           break;
       }
       setDraggingDetails(null);
     }
-  }, [dragDetails, scale, saveCue]);
+  }, [dragDetails, scale, setCue]);
 
   useWindowEvent("pointerup", handleDragStop, [handleDragStop]);
   useWindowEvent("pointerleave", handleDragStop, [handleDragStop]);
 
   const addCue = (time: number) =>
-    saveCue({
+    setCue({
       layer: hoveredLayerId || 0,
       lines: [],
       start: time,

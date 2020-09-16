@@ -1,5 +1,5 @@
 import React from "react";
-import { SaveCue } from "../hooks/useCues";
+import { SetCue } from "../hooks/useCues";
 import "./ScriptEditor.css";
 import CueEditor from "./CueEditor";
 import { Cue } from "../types/subtitles";
@@ -9,15 +9,15 @@ const MIN_DURATION = 1000;
 
 const ScriptEditor: React.FC<{
   cues: Cue[];
-  saveCue: SaveCue;
+  setCue: SetCue;
   duration: number;
-}> = ({ cues, saveCue, duration }) => {
+}> = ({ cues, setCue, duration }) => {
   const handleAddBeforeAll = () => {
     const cueBefore = cues[0];
     if (cueBefore.start < MIN_DURATION) {
       alert("No room to add in a cue before that");
     } else {
-      saveCue({
+      setCue({
         start: Math.max(0, cueBefore.start - TARGET_DURATION),
         end: cueBefore.start,
         lines: [],
@@ -32,7 +32,7 @@ const ScriptEditor: React.FC<{
     if (cueBefore.end > duration - MIN_DURATION) {
       alert("No room to add in a cue after that");
     } else if (!cueAfter) {
-      saveCue({
+      setCue({
         start: cueBefore.end,
         end: Math.min(cueBefore.end + TARGET_DURATION, duration - MIN_DURATION),
         lines: [],
@@ -41,7 +41,7 @@ const ScriptEditor: React.FC<{
     } else if (cueAfter.start - cueBefore.end < MIN_DURATION) {
       alert("No room to add in a cue between");
     } else {
-      saveCue({
+      setCue({
         start: cueBefore.end,
         end: cueAfter.start,
         lines: [],
@@ -63,7 +63,7 @@ const ScriptEditor: React.FC<{
                 Add Before
               </button>
             )}
-            <CueEditor cue={cue} saveCue={saveCue} />
+            <CueEditor cue={cue} setCue={setCue} />
             <button
               type="button"
               className="script-editor__add-cue-between-button"

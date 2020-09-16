@@ -1,14 +1,14 @@
 import React, { useEffect } from "react";
 import { Cue, toTimeRangeString } from "../types/subtitles";
-import { SaveCue } from "../hooks/useCues";
+import { SetCue } from "../hooks/useCues";
 import { debounce } from "../helpers/timingHelpers";
 import { matchScrollHeight } from "../helpers/domHelpers";
 import "./CueEditor.css";
 
 const CueEditor: React.FC<{
   cue: Cue;
-  saveCue: SaveCue;
-}> = ({ cue, saveCue }) => {
+  setCue: SetCue;
+}> = ({ cue, setCue }) => {
   const { id } = cue;
   const textAreaRef = React.useRef<HTMLTextAreaElement>(null);
 
@@ -24,12 +24,12 @@ const CueEditor: React.FC<{
   } = React.useMemo(
     () =>
       debounce(() => {
-        saveCue({
+        setCue({
           id,
           lines: textAreaRef.current!.value.split("\n"),
         });
       }, 2500),
-    [id, saveCue]
+    [id, setCue]
   );
 
   const handleChange = () => {

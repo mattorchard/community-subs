@@ -18,6 +18,7 @@ export type CueSettings = Partial<{
 }>;
 
 export type Cue = {
+  transcriptId: string;
   id: string;
   start: number;
   end: number;
