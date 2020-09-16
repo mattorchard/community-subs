@@ -1,25 +1,51 @@
-import React, { useState } from "react";
+import React from "react";
+import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
+import { useProject } from "../hooks/ProjectRepositoryHooks";
 import ProjectList from "./ProjectList";
-import { Project } from "../repositories/ProjectRepository";
 import ProjectOverview from "./ProjectOverview";
+import Spinner from "./Spinner";
+import Studio from "./Studio";
 import "./App.css";
 
-const App = () => {
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  if (selectedProject) {
-    return (
-      <ProjectOverview
-        project={selectedProject}
-        onClose={() => setSelectedProject(null)}
+const App = () => (
+  <BrowserRouter>
+    <Switch>
+      <Route path="/" exact component={LandingPage} />
+      <Route
+        path="/project/:projectId"
+        render={({ match }) => (
+          <ProjectOverviewWrapper projectId={match.params.projectId} />
+        )}
       />
-    );
+      <Route
+        path="/studio/:projectId/:transcriptId"
+        render={({ match }) => (
+          <Studio transcriptId={match.params.transcriptId} />
+        )}
+      />
+
+      <Route>
+        <Redirect to="/" />
+      </Route>
+    </Switch>
+  </BrowserRouter>
+);
+
+const ProjectOverviewWrapper: React.FC<{ projectId: string }> = ({
+  projectId,
+}) => {
+  const { project, error, loading } = useProject(projectId);
+  if (loading) {
+    return <Spinner fadeIn />;
   }
-  return <LandingPage onSelectProject={setSelectedProject} />;
+  if (error || !project) {
+    // Todo: proper error message
+    return <Redirect to="/" />;
+  }
+  return <ProjectOverview project={project} />;
 };
 
-const LandingPage: React.FC<{
-  onSelectProject: (project: Project) => void;
-}> = ({ onSelectProject }) => (
+const LandingPage = () => (
   <div className="landing-page" id="welcome">
     <section className="landing-page__welcome-section">
       <h1 className="landing-page__welcome-section__title">Community Subs</h1>
@@ -40,7 +66,7 @@ const LandingPage: React.FC<{
       {/*Todo: Warning to Safari users about storage issue */}
     </section>
     <section className="landing-page__project-section">
-      <ProjectList onOpenProject={onSelectProject} />
+      <ProjectList />
     </section>
   </div>
 );

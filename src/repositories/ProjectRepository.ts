@@ -85,7 +85,8 @@ const dbPromise = openDB<ProjectRepository>("primary-repository", 1, {
 
 export const getProjects = async () => {
   const db = await dbPromise;
-  return (await db.getAllFromIndex("projects", "createdAt")).reverse();
+  const projects = await db.getAllFromIndex("projects", "createdAt");
+  return projects.reverse();
 };
 
 export const getProject = async (projectId: string) => {

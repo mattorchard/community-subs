@@ -16,13 +16,15 @@
     "typescript": "^3.7.5",
     "react-youtube": "^7.12.0",
     "uuid": "^8.3.0",
-    "idb": "latest"
+    "idb": "latest",
+    "react-router-dom": "^5.2.0"
   },
   "devDependencies": {
     "prettier": "^2.1.1",
     "@testing-library/react-hooks": "latest",
     "@types/uuid": "^8.3.0",
-    "react-test-renderer": "^16.13.1"
+    "react-test-renderer": "^16.13.1",
+    "@types/react-router-dom": "^5.1.5"
   },
   "prettier": {
     "tabWidth": 2,

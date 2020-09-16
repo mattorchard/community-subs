@@ -1,27 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { Link, useHistory } from "react-router-dom";
 import AspectRatio from "./AspectRatio";
-import { createProject, Project } from "../repositories/ProjectRepository";
+import { createProject } from "../repositories/ProjectRepository";
 import Spinner from "./Spinner";
 import { useProjects } from "../hooks/ProjectRepositoryHooks";
 import "./ProjectList.css";
 
-const ProjectList: React.FC<{ onOpenProject: (project: Project) => void }> = ({
-  onOpenProject,
-}) => {
+const ProjectList: React.FC = () => {
+  const history = useHistory();
   const [savingNewProject, setSavingNewProject] = useState(false);
   const { projects, loading: loadingProjectList, error } = useProjects();
-
-  useEffect(() => {
-    const hash = window.location.hash;
-    if (!projects || !hash.startsWith("#project-")) {
-      return;
-    }
-    const projectId = hash.replace("#project-", "");
-    const project = projects.find((project) => project.id === projectId);
-    if (project) {
-      onOpenProject(project);
-    }
-  }, [projects, onOpenProject]);
 
   if (error && !loadingProjectList) {
     // Todo: Proper error message styles
@@ -31,8 +19,10 @@ const ProjectList: React.FC<{ onOpenProject: (project: Project) => void }> = ({
   const handleCreateProject = async () => {
     try {
       const project = await createProject();
-      onOpenProject(project);
-    } catch {
+      history.push(`/project/${project.id}`);
+    } catch (error) {
+      // Todo: Message
+      console.error("Create project failed", error);
       setSavingNewProject(false);
     }
   };
@@ -64,14 +54,13 @@ const ProjectList: React.FC<{ onOpenProject: (project: Project) => void }> = ({
 
       {projects?.map((project) => (
         <AspectRatio as="li" key={project.id}>
-          <a
-            href={`#project-${project.id}`}
+          <Link
+            to={`/project/${project.id}`}
             className="project-link thumbnail-background"
             style={{ backgroundImage: `url(${project.video?.thumbnailUrl})` }}
-            onClick={() => onOpenProject(project)}
           >
             <h3 className="project-link__title xl">{project.name}</h3>
-          </a>
+          </Link>
         </AspectRatio>
       ))}
     </ol>

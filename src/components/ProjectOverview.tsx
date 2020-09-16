@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Project,
   ProjectUpdate,
@@ -8,10 +9,10 @@ import "./ProjectOverview.css";
 import DebouncedInput from "./DebouncedInput";
 import { toDateTimeString } from "../helpers/dateHelpers";
 import AddVideoForm from "./AddVideoForm";
+import TranscriptList from "./TranscriptList";
 
-const ProjectOverview: React.FC<{ project: Project; onClose: () => void }> = ({
+const ProjectOverview: React.FC<{ project: Project }> = ({
   project: initialProject,
-  onClose,
 }) => {
   const [project, setProject] = useState(initialProject);
   const [isSaving, setIsSaving] = useState(false);
@@ -35,14 +36,13 @@ const ProjectOverview: React.FC<{ project: Project; onClose: () => void }> = ({
         />
       )}
       <header className="project-overview__header">
-        <a
-          href="#welcome"
-          onClick={onClose}
+        <Link
+          to="/"
           title="Close Project"
           className="project-overview__close-button xl"
         >
           &times;
-        </a>
+        </Link>
         <DebouncedInput
           initialValue={project.name}
           disabled={isSaving}
@@ -62,8 +62,8 @@ const ProjectOverview: React.FC<{ project: Project; onClose: () => void }> = ({
         {project.video ? (
           <div>
             {/*Todo: Add video details*/}
-            {/*Todo: Add cue list selection*/}
             {/*Todo: Add import option*/}
+            {<TranscriptList projectId={project.id} />}
           </div>
         ) : (
           <AddVideoForm

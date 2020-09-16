@@ -1,5 +1,6 @@
 import useAsyncValue from "./useAsyncValue";
 import {
+  getProject,
   getProjects,
   getTranscripts,
   Project,
@@ -12,6 +13,18 @@ export const useProjects = () => {
   );
   return {
     projects,
+    error,
+    loading,
+  };
+};
+
+export const useProject = (projectId: string) => {
+  const { result: project, error, loading } = useAsyncValue(
+    () => getProject(projectId),
+    [projectId]
+  );
+  return {
+    project,
     error,
     loading,
   };
