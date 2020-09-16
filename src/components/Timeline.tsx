@@ -1,10 +1,10 @@
 import React, { CSSProperties, useCallback, useEffect } from "react";
-import "./Timeline.css";
 import { Cue } from "../types/subtitles";
 import useWindowEvent from "../hooks/useWindowEvent";
 import { SetCue } from "../hooks/useCues";
-import TimelineMarkers from "./TimelineMarkers";
 import { getClassName, isInteractableElement } from "../helpers/domHelpers";
+import useTimelineMarkerSpacing from "../helpers/useTimelineMarkerSpacing";
+import "./Timeline.css";
 
 type DragType = "start" | "end" | "both";
 type DragDetails = {
@@ -47,6 +47,7 @@ const Timeline: React.FC<{
   cues: Cue[];
   setCue: SetCue;
 }> = ({ duration, scale, cues, setCue }) => {
+  const markerSpacing = useTimelineMarkerSpacing(scale);
   const timelineRef = React.useRef<HTMLDivElement>(null);
   const pointerXRef = React.useRef<number>(0);
   const [dragDetails, setDraggingDetails] = React.useState<DragDetails | null>(
@@ -139,6 +140,7 @@ const Timeline: React.FC<{
             "--timeline-duration": duration,
             "--timeline-scale": scale,
             "--offset-x": dragDetails?.offset,
+            "--marker-spacing": markerSpacing,
           } as CSSProperties
         }
       >
@@ -162,7 +164,6 @@ const Timeline: React.FC<{
             ))}
           </div>
         ))}
-        <TimelineMarkers duration={duration} scale={scale} />
         <div className="play-head" />
       </section>
       <div className="timeline__bumper" />
