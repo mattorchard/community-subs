@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import { useProject } from "../hooks/ProjectRepositoryHooks";
 import ProjectList from "./ProjectList";
@@ -6,6 +6,7 @@ import ProjectOverview from "./ProjectOverview";
 import Spinner from "./Spinner";
 import Studio from "./Studio";
 import "./App.css";
+import { Project } from "../repositories/ProjectRepository";
 
 const App = () => (
   <BrowserRouter>
@@ -14,13 +15,24 @@ const App = () => (
       <Route
         path="/project/:projectId"
         render={({ match }) => (
-          <ProjectOverviewWrapper projectId={match.params.projectId} />
+          <ProjectLoadingWrapper
+            projectId={match.params.projectId}
+            render={(project) => <ProjectOverview project={project} />}
+          />
         )}
       />
       <Route
         path="/studio/:projectId/:transcriptId"
         render={({ match }) => (
-          <Studio transcriptId={match.params.transcriptId} />
+          <ProjectLoadingWrapper
+            projectId={match.params.projectId}
+            render={(project) => (
+              <Studio
+                project={project}
+                transcriptId={match.params.transcriptId}
+              />
+            )}
+          />
         )}
       />
 
@@ -31,9 +43,10 @@ const App = () => (
   </BrowserRouter>
 );
 
-const ProjectOverviewWrapper: React.FC<{ projectId: string }> = ({
-  projectId,
-}) => {
+const ProjectLoadingWrapper: React.FC<{
+  projectId: string;
+  render: (project: Project) => ReactElement<any, any> | null;
+}> = ({ projectId, render }) => {
   const { project, error, loading } = useProject(projectId);
   if (loading) {
     return <Spinner fadeIn />;
@@ -42,7 +55,7 @@ const ProjectOverviewWrapper: React.FC<{ projectId: string }> = ({
     // Todo: proper error message
     return <Redirect to="/" />;
   }
-  return <ProjectOverview project={project} />;
+  return render(project);
 };
 
 const LandingPage = () => (

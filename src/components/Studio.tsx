@@ -9,10 +9,14 @@ import Button from "./Button";
 import { createVttBlob, downloadFile } from "../helpers/fileHelpers";
 import { toWebVtt } from "../helpers/webVttHelpers";
 import Spinner from "./Spinner";
+import { Project } from "../repositories/ProjectRepository";
+import { Link } from "react-router-dom";
 
-const Studio: React.FC<{ transcriptId: string }> = ({ transcriptId }) => {
+const Studio: React.FC<{ project: Project; transcriptId: string }> = ({
+  project,
+  transcriptId,
+}) => {
   const appRef = React.useRef<HTMLDivElement>(null);
-  const [duration, setDuration] = React.useState(60 * 1000);
   const [scale, setScale] = React.useState(0.1);
 
   const [cueState, setCue] = useCues(transcriptId);
@@ -25,13 +29,24 @@ const Studio: React.FC<{ transcriptId: string }> = ({ transcriptId }) => {
     return <Spinner>Loading transcript...</Spinner>;
   }
 
+  if (!project.video) {
+    // Todo: Error Message
+    console.error("Project has no video, but has transcript?");
+    return (
+      <p>
+        Something went wrong <Link to="/">back to home page</Link>
+      </p>
+    );
+  }
+
   return (
     <div className="studio" ref={appRef}>
-      <VideoPlayer
-        onTimeChange={onTimeChange}
-        onInit={({ duration }) => setDuration(duration)}
+      <VideoPlayer video={project.video!} onTimeChange={onTimeChange} />
+      <ScriptEditor
+        cues={cueState.cues}
+        setCue={setCue}
+        duration={project.video.duration}
       />
-      <ScriptEditor cues={cueState.cues} setCue={setCue} duration={duration} />
       <div className="toolbar">
         <ZoomRange zoom={scale} onZoomChange={setScale} />
         <Button
@@ -53,7 +68,7 @@ const Studio: React.FC<{ transcriptId: string }> = ({ transcriptId }) => {
         </Button>
       </div>
       <Timeline
-        duration={duration}
+        duration={project.video.duration}
         scale={scale}
         cues={cueState.cues}
         setCue={setCue}

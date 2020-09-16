@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import YouTube from "react-youtube";
 import "./VideoPlayer.css";
 import useInterval from "../hooks/useInterval";
+import { ProjectVideo } from "../repositories/ProjectRepository";
 
 interface YTPlayer {
   getDuration: () => Promise<number>;
@@ -17,9 +18,9 @@ const getPlayerSize = () => {
 };
 
 const VideoPlayer: React.FC<{
+  video: ProjectVideo;
   onTimeChange: (time: number) => void;
-  onInit: ({ duration }: { duration: number }) => void;
-}> = React.memo(({ onTimeChange, onInit }) => {
+}> = React.memo(({ onTimeChange, video }) => {
   const playerRef = React.useRef<YTPlayer | null>(null);
   const currentTimeRef = React.useRef(0);
   const playerSize = useMemo(getPlayerSize, []);
@@ -35,18 +36,19 @@ const VideoPlayer: React.FC<{
         }
       });
   }, 50);
-  const handlePlayerReady = async () => {
-    if (!playerRef.current) {
-      throw new Error(`Player ready but ref is null?!`);
-    }
-    const durationSeconds = await playerRef.current.getDuration();
-    onInit({ duration: durationSeconds * 1000 });
-  };
+
+  if (video.type === "upload") {
+    return (
+      <div className="player">
+        <p>Manual upload not yet supported</p>
+      </div>
+    );
+  }
 
   return (
     <div className="player">
       <YouTube
-        videoId="gAkwW2tuIqE"
+        videoId={video.youtubeId}
         id="player"
         ref={(component: any) => {
           if (component?.internalPlayer)
@@ -56,8 +58,6 @@ const VideoPlayer: React.FC<{
         onStateChange={({ data: playerState }) => {
           switch (playerState) {
             case YouTube.PlayerState.UNSTARTED:
-              // noinspection JSIgnoredPromiseFromCall
-              handlePlayerReady();
               break;
             case YouTube.PlayerState.ENDED:
               console.debug("Player Ended");
