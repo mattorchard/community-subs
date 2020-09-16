@@ -8,48 +8,51 @@ import "./CueEditor.css";
 const CueEditor: React.FC<{
   cue: Cue;
   setCue: SetCue;
-}> = ({ cue, setCue }) => {
-  const { id } = cue;
-  const textAreaRef = React.useRef<HTMLTextAreaElement>(null);
+}> = React.memo(
+  ({ cue, setCue }) => {
+    const { id } = cue;
+    const textAreaRef = React.useRef<HTMLTextAreaElement>(null);
 
-  useEffect(() => {
-    textAreaRef.current!.value = cue.lines.join("\n");
-    // Only intended to run on mount
-    // eslint-disable-next-line
-  }, []);
+    useEffect(() => {
+      textAreaRef.current!.value = cue.lines.join("\n");
+      // Only intended to run on mount
+      // eslint-disable-next-line
+    }, []);
 
-  const {
-    immediate: handleBlur,
-    debounced: saveLinesDebounced,
-  } = React.useMemo(
-    () =>
-      debounce(() => {
-        setCue({
-          id,
-          lines: textAreaRef.current!.value.split("\n"),
-        });
-      }, 2500),
-    [id, setCue]
-  );
+    const {
+      immediate: handleBlur,
+      debounced: saveLinesDebounced,
+    } = React.useMemo(
+      () =>
+        debounce(() => {
+          setCue({
+            id,
+            lines: textAreaRef.current!.value.split("\n"),
+          });
+        }, 2500),
+      [id, setCue]
+    );
 
-  const handleChange = () => {
-    matchScrollHeight(textAreaRef.current!);
-    saveLinesDebounced();
-  };
+    const handleChange = () => {
+      matchScrollHeight(textAreaRef.current!);
+      saveLinesDebounced();
+    };
 
-  return (
-    <label className="cue-editor">
-      <textarea
-        id={cue.id}
-        ref={textAreaRef}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        className="cue-editor__textarea"
-        placeholder="Blank"
-      />
-      <small className="cue-editor__footer">{toTimeRangeString(cue)}</small>
-    </label>
-  );
-};
+    return (
+      <label className="cue-editor">
+        <textarea
+          id={cue.id}
+          ref={textAreaRef}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          className="cue-editor__textarea"
+          placeholder="Blank"
+        />
+        <small className="cue-editor__footer">{toTimeRangeString(cue)}</small>
+      </label>
+    );
+  },
+  (oldProps, newProps) => oldProps.cue === newProps.cue
+);
 
 export default CueEditor;
