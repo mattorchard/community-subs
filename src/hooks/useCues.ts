@@ -1,5 +1,5 @@
 import { Cue } from "../types/subtitles";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { v4 as uuidV4 } from "uuid";
 import { getCues, saveCue } from "../repositories/ProjectRepository";
 
@@ -25,7 +25,9 @@ const getCueIndex = (cuesOrdered: Cue[]) =>
   new Map(cuesOrdered.map((cue, index) => [cue.id, index]));
 
 const useCues = (transcriptId: string): [CueState | null, SetCue] => {
-  const [cues, setCues] = useState<CueState | null>(null);
+  const [cueState, setCues] = useState<CueState | null>(null);
+  const cueStateRef = useRef<CueState | null>(cueState);
+  cueStateRef.current = cueState;
 
   // Get initial state
   useEffect(() => {
@@ -49,50 +51,54 @@ const useCues = (transcriptId: string): [CueState | null, SetCue] => {
   }, [transcriptId]);
 
   const setCue = useCallback(
-    (cueToSave: CueToSave) =>
-      setCues((oldCueState) => {
-        if (!oldCueState) {
-          return oldCueState;
-        }
-        // Construct the complete cue
-        const newCue: Cue =
-          "id" in cueToSave
-            ? {
-                ...oldCueState.cues[oldCueState.index.get(cueToSave.id)!],
-                ...cueToSave,
-                transcriptId,
-              }
-            : {
-                ...cueToSave,
-                id: uuidV4(),
-                transcriptId,
-              };
+    (cueToSave: CueToSave) => {
+      if (!cueStateRef.current) {
+        throw new Error("Cannot save cue before initial cue load");
+      }
 
-        saveCue(newCue).catch((error) =>
-          console.warn("Failed to save cue", newCue, error)
-        );
+      const oldCueState = cueStateRef.current;
 
-        const newCues = oldCueState.cues.filter((cue) => cue.id !== newCue.id);
+      // Construct the complete cue
+      const fullCueToSave: Cue =
+        "id" in cueToSave
+          ? {
+              ...oldCueState.cues[oldCueState.index.get(cueToSave.id)!],
+              ...cueToSave,
+              transcriptId,
+            }
+          : {
+              ...cueToSave,
+              id: uuidV4(),
+              transcriptId,
+            };
 
-        const index = newCues.findIndex(
-          (otherCue) => cueComparator(newCue, otherCue) < 0
-        );
+      saveCue(fullCueToSave).catch((error) =>
+        console.warn("Failed to save cue", fullCueToSave, error)
+      );
 
-        if (index === -1) {
-          newCues.push(newCue);
-        } else {
-          newCues.splice(index, 0, newCue);
-        }
+      const newCues = oldCueState.cues.filter(
+        (cue) => cue.id !== fullCueToSave.id
+      );
 
-        return {
-          cues: newCues,
-          index: getCueIndex(newCues),
-        };
-      }),
+      const index = newCues.findIndex(
+        (otherCue) => cueComparator(fullCueToSave, otherCue) < 0
+      );
+
+      if (index === -1) {
+        newCues.push(fullCueToSave);
+      } else {
+        newCues.splice(index, 0, fullCueToSave);
+      }
+
+      setCues({
+        cues: newCues,
+        index: getCueIndex(newCues),
+      });
+    },
     [transcriptId]
   );
 
-  return [cues, setCue];
+  return [cueState, setCue];
 };
 
 export default useCues;
