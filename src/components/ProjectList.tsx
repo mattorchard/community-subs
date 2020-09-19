@@ -5,6 +5,7 @@ import { createProject } from "../repositories/ProjectRepository";
 import Spinner from "./Spinner";
 import { useProjects } from "../hooks/ProjectRepositoryHooks";
 import "./ProjectList.css";
+import Thumbnail from "./Thumbnail";
 
 const ProjectList: React.FC = () => {
   const history = useHistory();
@@ -29,24 +30,22 @@ const ProjectList: React.FC = () => {
   };
   return (
     <ol className="project-list">
-      {savingNewProject ? (
-        <AspectRatio as="li" center>
+      <AspectRatio as="li" ratio={9 / 16}>
+        {savingNewProject ? (
           <Spinner size="xl">Creating new project</Spinner>
-        </AspectRatio>
-      ) : (
-        <AspectRatio as="li">
+        ) : (
           <button
             type="button"
-            className="project-list__create-project-button xl"
+            className="project-list__create-project-button placeholder-button xl"
             onClick={handleCreateProject}
           >
             + New Project
           </button>
-        </AspectRatio>
-      )}
+        )}
+      </AspectRatio>
 
       {loadingProjectList && (
-        <AspectRatio as="li" center>
+        <AspectRatio as="li" center ratio={9 / 16}>
           <Spinner size="xl" fadeIn>
             Loading projects
           </Spinner>
@@ -54,15 +53,15 @@ const ProjectList: React.FC = () => {
       )}
 
       {projects?.map((project) => (
-        <AspectRatio as="li" key={project.id}>
+        <li key={project.id} className="project-list__item">
           <Link
             to={`/project/${project.id}`}
-            className="project-link thumbnail-background"
-            style={{ backgroundImage: `url(${project.video?.thumbnailUrl})` }}
+            className="project-list__item__link"
           >
-            <h3 className="project-link__title xl">{project.name}</h3>
+            <Thumbnail url={project.video?.thumbnailUrl} />
+            <h3 className="project-link__title lg">{project.name}</h3>
           </Link>
-        </AspectRatio>
+        </li>
       ))}
     </ol>
   );

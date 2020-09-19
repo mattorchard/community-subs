@@ -1,18 +1,26 @@
 .project-overview {
-  max-width: 800px;
-  margin: 3rem auto 0;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem 2rem 0;
+}
+.project-overview .file-drop-target {
+  margin-top: 2rem;
 }
 .project-overview__header {
-  padding: 2rem;
   display: flex;
-  align-items: center;
-  background-color: var(--gray-900);
+  align-items: flex-end;
+  margin-bottom: 2rem;
 }
-.project-overview__close-button {
-  cursor: pointer;
-  padding: 0 1rem;
+.project-overview__header .thumbnail {
+  width: 200px;
+  margin-right: 1rem;
+}
+.project-overview__thumbnail .thumbnail-background {
+  width: 100%;
+  height: 100%;
 }
 .project-overview__name-input {
+  font-size: 3rem;
   width: 100%;
 }
 .project-overview__name-input:focus {

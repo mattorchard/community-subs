@@ -26,7 +26,7 @@ const Studio: React.FC<{ project: Project; transcriptId: string }> = ({
   }, []);
 
   if (!cueState) {
-    return <Spinner>Loading transcript...</Spinner>;
+    return <Spinner fadeIn>Loading transcript...</Spinner>;
   }
 
   if (!project.video) {

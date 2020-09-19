@@ -6,10 +6,11 @@ const AspectRatio: React.FC<{
   as?: keyof JSX.IntrinsicElements;
   ratio?: number;
   center?: boolean;
-}> = ({ children, as = "div", ratio = 1, center = false }) => {
+  className?: string;
+}> = ({ className, children, as = "div", ratio = 1, center = false }) => {
   const TagName = as;
   return (
-    <TagName className="aspect-ratio">
+    <TagName className={`aspect-ratio ${className}`}>
       <svg
         className="aspect-ratio__stretcher"
         viewBox={`0 0 1 ${ratio}`}

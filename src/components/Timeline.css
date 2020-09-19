@@ -11,6 +11,9 @@
   width: 200px;
   flex-shrink: 0;
 }
+.timeline__bumper:last-child {
+  width: calc(100vw - 200px);
+}
 .timeline__bumper,
 .timeline__content {
   flex-grow: 0;
