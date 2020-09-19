@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { debounce } from "../helpers/timingHelpers";
+import useAsRef from "../hooks/useAsRef";
 
 type InputProps = React.DetailedHTMLProps<
   React.InputHTMLAttributes<HTMLInputElement>,
@@ -16,8 +17,7 @@ const DebouncedInput: React.FC<
   const ref = useRef<HTMLInputElement>(null);
 
   // Ref invoked on value change
-  const valueChangeRef = useRef(onValueChange);
-  valueChangeRef.current = onValueChange;
+  const valueChangeRef = useAsRef(onValueChange);
 
   const { immediate: handleBlur, debounced: handleChange } = React.useMemo(
     () =>

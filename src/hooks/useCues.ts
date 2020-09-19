@@ -1,7 +1,8 @@
 import { Cue } from "../types/subtitles";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { v4 as uuidV4 } from "uuid";
 import { getCues, saveCue } from "../repositories/ProjectRepository";
+import useAsRef from "./useAsRef";
 
 export type CueState = {
   cues: Cue[];
@@ -26,8 +27,7 @@ const getCueIndex = (cuesOrdered: Cue[]) =>
 
 const useCues = (transcriptId: string): [CueState | null, SetCue] => {
   const [cueState, setCues] = useState<CueState | null>(null);
-  const cueStateRef = useRef<CueState | null>(cueState);
-  cueStateRef.current = cueState;
+  const cueStateRef = useAsRef(cueState);
 
   // Get initial state
   useEffect(() => {
@@ -72,10 +72,6 @@ const useCues = (transcriptId: string): [CueState | null, SetCue] => {
               transcriptId,
             };
 
-      saveCue(fullCueToSave).catch((error) =>
-        console.warn("Failed to save cue", fullCueToSave, error)
-      );
-
       const newCues = oldCueState.cues.filter(
         (cue) => cue.id !== fullCueToSave.id
       );
@@ -94,8 +90,13 @@ const useCues = (transcriptId: string): [CueState | null, SetCue] => {
         cues: newCues,
         index: getCueIndex(newCues),
       });
+
+      saveCue(fullCueToSave).catch((error) => {
+        console.warn("Failed to save cue", fullCueToSave, error);
+        throw error;
+      });
     },
-    [transcriptId]
+    [transcriptId, cueStateRef]
   );
 
   return [cueState, setCue];
