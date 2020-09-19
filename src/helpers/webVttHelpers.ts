@@ -27,14 +27,17 @@ const getGlobalStyles = () =>
 
 const getFormattedCues = (cues: Cue[]) =>
   cues
-    .filter((cue) => cue.lines.length > 0)
+    .filter((cue) => cue.text.trim())
     .map(formatCue)
     .join("\n\n");
 
 const formatCue = (cue: Cue, index: number) =>
   `${index + 1}
 ${formatTimeRange(cue)} ${cue.settings ? formatSettings(cue.settings) : ""}
-${cue.lines.filter((line) => line.trim()).join("\n")}`;
+${cue.text
+  .split("\n")
+  .filter((line) => line.trim())
+  .join("\n")}`;
 
 const formatTimeRange = ({ start, end }: { start: number; end: number }) =>
   `${timeCodeToFullString(toTimeCode(start))} --> ${timeCodeToFullString(

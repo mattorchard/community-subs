@@ -1,3 +1,7 @@
 .player {
   grid-area: player;
+  width: 100%;
+}
+.player video {
+  width: 100%;
 }

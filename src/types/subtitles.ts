@@ -1,6 +1,5 @@
 import { padZeros } from "../helpers/textHelpers";
 import { HOUR, MINUTE, SECOND } from "../helpers/timingHelpers";
-import { Percentage } from "./Percentage";
 
 export type TimeCode = {
   hours: number;
@@ -8,6 +7,9 @@ export type TimeCode = {
   seconds: number;
   milliseconds: number;
 };
+
+// Takes the form ###%
+type Percentage = string;
 
 export type CueSettings = Partial<{
   vertical: "rl" | "lr";
@@ -22,7 +24,7 @@ export type Cue = {
   id: string;
   start: number;
   end: number;
-  lines: string[];
+  text: string;
   layer: number;
   settings?: CueSettings;
 };

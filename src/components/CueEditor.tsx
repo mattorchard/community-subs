@@ -14,7 +14,7 @@ const CueEditor: React.FC<{
     const textAreaRef = React.useRef<HTMLTextAreaElement>(null);
 
     useEffect(() => {
-      textAreaRef.current!.value = cue.lines.join("\n");
+      textAreaRef.current!.value = cue.text || "";
       // Only intended to run on mount
       // eslint-disable-next-line
     }, []);
@@ -27,7 +27,7 @@ const CueEditor: React.FC<{
         debounce(() => {
           setCue({
             id,
-            lines: textAreaRef.current!.value.split("\n"),
+            text: textAreaRef.current!.value,
           });
         }, 2500),
       [id, setCue]

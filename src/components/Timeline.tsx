@@ -107,7 +107,7 @@ const Timeline: React.FC<{
   const addCue = (time: number) =>
     setCue({
       layer: hoveredLayerId || 0,
-      lines: [],
+      text: "",
       start: time,
       end: time + 2500,
     });
@@ -222,11 +222,11 @@ const TimelineCue: React.FC<{
       />
       <a
         className="timeline-cue__body"
-        title={cue.lines.join("\n")}
+        title={cue.text}
         href={`#${cue.id}`}
         data-drag-type="both"
       >
-        {cue.lines[0] || "Blank"}
+        {cue.text || "Blank"}
       </a>
       <button
         type="button"

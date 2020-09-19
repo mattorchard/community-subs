@@ -127,6 +127,8 @@ body {
   background-color: var(--gray-800);
   color: white;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 :focus {
   outline: 0;
@@ -142,8 +144,11 @@ input {
   line-height: 1;
   color: currentColor;
 }
-button:enabled {
+button {
   cursor: pointer;
+}
+button:disabled {
+  cursor: default;
 }
 textarea {
   resize: none;

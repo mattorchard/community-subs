@@ -5,7 +5,7 @@
     "player script" 1fr
     "toolbar toolbar"
     "timeline timeline"
-    / auto 1fr;
+    / minmax(auto, 50vw) 1fr;
   height: 100vh;
   --player-time: 0;
 }

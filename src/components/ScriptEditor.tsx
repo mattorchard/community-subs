@@ -20,7 +20,7 @@ const ScriptEditor: React.FC<{
       setCue({
         start: Math.max(0, cueBefore.start - TARGET_DURATION),
         end: cueBefore.start,
-        lines: [],
+        text: "",
         layer: cueBefore.layer,
       });
     }
@@ -35,7 +35,7 @@ const ScriptEditor: React.FC<{
       setCue({
         start: cueBefore.end,
         end: Math.min(cueBefore.end + TARGET_DURATION, duration - MIN_DURATION),
-        lines: [],
+        text: "",
         layer: cueBefore.layer,
       });
     } else if (cueAfter.start - cueBefore.end < MIN_DURATION) {
@@ -44,7 +44,7 @@ const ScriptEditor: React.FC<{
       setCue({
         start: cueBefore.end,
         end: cueAfter.start,
-        lines: [],
+        text: "",
         layer: cueBefore.layer,
       });
     }
