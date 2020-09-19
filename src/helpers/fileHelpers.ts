@@ -8,11 +8,12 @@ export const downloadFile = (fileName: string, blob: Blob) => {
     document.body.appendChild(a);
     a.click();
   } finally {
-    a.remove();
-    URL.revokeObjectURL(url);
+    setTimeout(() => {
+      a.remove();
+      URL.revokeObjectURL(url);
+    }, 66);
   }
 };
 
-export const createVttBlob = (text: string) => {
-  return new Blob([text], { type: "text/vtt" });
-};
+export const createVttBlob = (text: string) =>
+  new Blob([text], { type: "text/vtt" });

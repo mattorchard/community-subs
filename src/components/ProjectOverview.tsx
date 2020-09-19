@@ -57,7 +57,11 @@ const ProjectOverview: React.FC<{ project: Project }> = ({
             {/*Todo: Add video details*/}
             {/*Todo: Add import option*/}
             {<TranscriptList projectId={project.id} />}
-            <FileDropTarget label="Drop a WebVTT here to import" />
+            <FileDropTarget
+              buttonLabel="Choose a file to import"
+              dropLabel="Or drag and drop one"
+              onDrop={console.log}
+            />
           </div>
         ) : (
           <AddVideoForm

@@ -2,13 +2,17 @@ import React, { useEffect, useRef } from "react";
 import { getClassName } from "../helpers/domHelpers";
 import useFileDrop from "../hooks/useFileDrop";
 import "./FileDropTarget.css";
+import Button from "./Button";
 
 const FileDropTarget: React.FC<{
-  label: string;
-  labelWhileDragging?: string;
-}> = ({ label, labelWhileDragging }) => {
+  buttonLabel: string;
+  dropLabel: string;
+  onDrop: (files: File[]) => void;
+  accept?: string;
+}> = ({ buttonLabel, dropLabel, accept, onDrop }) => {
   const contentRef = useRef<HTMLDivElement | null>(null);
-  const isDraggingOver = useFileDrop(console.log);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const isDraggingOver = useFileDrop(onDrop);
 
   useEffect(() => {
     if (contentRef.current) {
@@ -29,7 +33,22 @@ const FileDropTarget: React.FC<{
           dragging: isDraggingOver,
         })}
       >
-        {isDraggingOver ? label : labelWhileDragging || label}
+        <Button onClick={() => fileInputRef.current?.click()}>
+          {buttonLabel}
+        </Button>
+        <input
+          accept={accept}
+          ref={fileInputRef}
+          hidden
+          aria-label={buttonLabel}
+          type="file"
+          onChange={(event) => {
+            if (event.currentTarget.files) {
+              onDrop([...event.currentTarget.files]);
+            }
+          }}
+        />
+        <div className="file-drop-target__drop-label">{dropLabel}</div>
       </div>
     </div>
   );
