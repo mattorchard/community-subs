@@ -11,7 +11,9 @@ const ScriptEditor: React.FC<{
   cues: Cue[];
   setCue: SetCue;
   duration: number;
-}> = ({ cues, setCue, duration }) => {
+  selectedCue: string | null;
+  onSelectCue: (cueId: string) => void;
+}> = ({ cues, setCue, duration, selectedCue }) => {
   const handleAddBeforeAll = () => {
     const cueBefore = cues[0];
     if (cueBefore.start < MIN_DURATION) {
@@ -63,7 +65,11 @@ const ScriptEditor: React.FC<{
                 Add Before
               </button>
             )}
-            <CueEditor cue={cue} setCue={setCue} />
+            <CueEditor
+              cue={cue}
+              setCue={setCue}
+              selected={selectedCue === cue.id}
+            />
             <button
               type="button"
               className="script-editor__add-cue-between-button"

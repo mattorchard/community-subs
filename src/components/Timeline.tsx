@@ -46,7 +46,9 @@ const Timeline: React.FC<{
   scale: number;
   cues: Cue[];
   setCue: SetCue;
-}> = ({ duration, scale, cues, setCue }) => {
+  selectedCue: string | null;
+  onSelectCue: (cueId: string) => void;
+}> = ({ duration, scale, cues, setCue, onSelectCue }) => {
   const markerSpacing = useTimelineMarkerSpacing(scale);
   const timelineRef = React.useRef<HTMLDivElement>(null);
   const pointerXRef = React.useRef<number>(0);
@@ -160,6 +162,7 @@ const Timeline: React.FC<{
                 cue={cue}
                 dragDetails={cue.id === dragDetails?.id ? dragDetails : null}
                 onDragStart={setDraggingDetails}
+                onSelect={onSelectCue}
               />
             ))}
           </div>
@@ -174,8 +177,9 @@ const Timeline: React.FC<{
 const TimelineCue: React.FC<{
   cue: Cue;
   onDragStart: (dragDetails: DragDetails) => void;
+  onSelect: (cueId: string) => void;
   dragDetails: DragDetails | null;
-}> = ({ cue, dragDetails, onDragStart }) => {
+}> = ({ cue, dragDetails, onDragStart, onSelect }) => {
   return (
     <div
       className={
@@ -220,14 +224,14 @@ const TimelineCue: React.FC<{
         aria-label="Adjust start time"
         data-drag-type="start"
       />
-      <a
+      <button
+        onClick={() => onSelect(cue.id)}
         className="timeline-cue__body"
         title={cue.text}
-        href={`#${cue.id}`}
         data-drag-type="both"
       >
         {cue.text || "Blank"}
-      </a>
+      </button>
       <button
         type="button"
         className="timeline-cue__drag-handle"

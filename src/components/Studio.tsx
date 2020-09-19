@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useRef, useState } from "react";
 import Timeline from "./Timeline";
 import ZoomRange from "./ZoomRange";
 import useCues from "../hooks/useCues";
@@ -16,17 +16,18 @@ const Studio: React.FC<{ project: Project; transcriptId: string }> = ({
   project,
   transcriptId,
 }) => {
-  const appRef = React.useRef<HTMLDivElement>(null);
-  const [scale, setScale] = React.useState(0.1);
-
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(0.1);
+  const [selectedCue, setSelectedCue] = useState<string | null>(null);
   const [cueState, setCue] = useCues(transcriptId);
-  const onTimeChange = React.useCallback((time: number) => {
+
+  const onTimeChange = useCallback((time: number) => {
     console.debug("Currently at", time);
-    appRef.current?.style?.setProperty("--player-time", time.toString());
+    containerRef.current?.style?.setProperty("--player-time", time.toString());
   }, []);
 
   if (!cueState) {
-    return <Spinner fadeIn>Loading transcript...</Spinner>;
+    return <Spinner fadeIn>Loading transcript</Spinner>;
   }
 
   if (!project.video) {
@@ -40,18 +41,20 @@ const Studio: React.FC<{ project: Project; transcriptId: string }> = ({
   }
 
   return (
-    <div className="studio" ref={appRef}>
+    <div className="studio" ref={containerRef}>
       <VideoPlayer video={project.video!} onTimeChange={onTimeChange} />
       <ScriptEditor
         cues={cueState.cues}
         setCue={setCue}
+        selectedCue={selectedCue}
+        onSelectCue={setSelectedCue}
         duration={project.video.duration}
       />
       <div className="toolbar">
         <ZoomRange zoom={scale} onZoomChange={setScale} />
         <Button
           onClick={() =>
-            appRef.current?.classList?.toggle("studio--long-script")
+            containerRef.current?.classList?.toggle("studio--long-script")
           }
         >
           Toggle View
@@ -72,6 +75,8 @@ const Studio: React.FC<{ project: Project; transcriptId: string }> = ({
         scale={scale}
         cues={cueState.cues}
         setCue={setCue}
+        selectedCue={selectedCue}
+        onSelectCue={setSelectedCue}
       />
     </div>
   );

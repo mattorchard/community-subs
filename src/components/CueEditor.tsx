@@ -8,16 +8,24 @@ import "./CueEditor.css";
 const CueEditor: React.FC<{
   cue: Cue;
   setCue: SetCue;
+  selected: boolean;
 }> = React.memo(
-  ({ cue, setCue }) => {
+  ({ cue, setCue, selected }) => {
     const { id } = cue;
     const textAreaRef = React.useRef<HTMLTextAreaElement>(null);
 
     useEffect(() => {
       textAreaRef.current!.value = cue.text || "";
+      matchScrollHeight(textAreaRef.current!);
       // Only intended to run on mount
       // eslint-disable-next-line
     }, []);
+
+    useEffect(() => {
+      if (selected) {
+        textAreaRef.current!.focus();
+      }
+    }, [selected]);
 
     const {
       immediate: handleBlur,
@@ -52,7 +60,8 @@ const CueEditor: React.FC<{
       </label>
     );
   },
-  (oldProps, newProps) => oldProps.cue === newProps.cue
+  (oldProps, newProps) =>
+    oldProps.selected === newProps.selected && oldProps.cue === newProps.cue
 );
 
 export default CueEditor;
