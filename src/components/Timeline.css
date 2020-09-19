@@ -89,9 +89,7 @@
   cursor: move;
   flex-grow: 2;
   flex-shrink: 1;
-  text-align: center;
-  display: flex;
-  align-items: center;
+  text-align: start;
   user-select: none;
   /*noinspection CssUnknownProperty*/
   user-drag: none;
