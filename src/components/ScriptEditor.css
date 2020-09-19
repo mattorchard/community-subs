@@ -15,7 +15,6 @@
 .script-editor__add-cue-between-button {
   font-weight: bold;
   padding: 0.5rem 3rem 0.5rem 0;
-  cursor: pointer;
   color: transparent;
   transition: color 0.3s ease-in-out;
   display: flex;

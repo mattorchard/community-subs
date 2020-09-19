@@ -1,5 +1,4 @@
 .button {
-  cursor: pointer;
   background-color: var(--color-lighten);
   min-width: 2.5rem;
   height: 2.5rem;
