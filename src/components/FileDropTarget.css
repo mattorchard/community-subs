@@ -1,0 +1,33 @@
+.file-drop-target {
+  --initial-x: 0;
+  --initial-y: 0;
+  --initial-width: 0;
+  --initial-height: 0;
+}
+.file-drop-target__content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  border: 0.25rem dashed var(--color-lighten);
+  border-radius: 1rem;
+}
+.file-drop-target__content--dragging {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  width: calc(100vw - 2rem);
+  height: calc(100vh - 2rem);
+  animation: file-drop-target__foo 0.5s ease-in-out forwards 1;
+}
+@keyframes file-drop-target__foo {
+  from {
+    top: var(--initial-x);
+    left: var(--initial-y);
+    width: var(--initial-width);
+    height: var(--initial-height);
+  }
+  to {
+    background-color: var(--gray-700);
+  }
+}
