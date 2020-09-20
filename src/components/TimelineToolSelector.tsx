@@ -8,8 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { getClassName } from "../helpers/domHelpers";
 import "./TimelineToolSelector.css";
-
-export type TimelineTool = "pan" | "add" | "seek";
+import { TimelineTool } from "./Studio";
 
 type TimelineItem = { title: string; icon: IconDefinition; tool: TimelineTool };
 const items: TimelineItem[] = [

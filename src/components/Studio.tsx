@@ -11,7 +11,9 @@ import { toWebVtt } from "../helpers/webVttHelpers";
 import Spinner from "./Spinner";
 import { Project } from "../repositories/ProjectRepository";
 import { Link } from "react-router-dom";
-import TimelineToolSelector, { TimelineTool } from "./TimelineToolSelector";
+import TimelineToolSelector from "./TimelineToolSelector";
+
+export type TimelineTool = "pan" | "add" | "seek";
 
 const Studio: React.FC<{ project: Project; transcriptId: string }> = ({
   project,
