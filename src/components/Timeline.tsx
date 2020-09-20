@@ -1,8 +1,15 @@
-import React, { CSSProperties, useCallback, useEffect } from "react";
+import React, {
+  CSSProperties,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Cue } from "../types/subtitles";
 import useWindowEvent from "../hooks/useWindowEvent";
 import { SetCue } from "../hooks/useCues";
-import { getClassName, isInteractableElement } from "../helpers/domHelpers";
+import { getClassName } from "../helpers/domHelpers";
 import useTimelineMarkerSpacing from "../helpers/useTimelineMarkerSpacing";
 import "./Timeline.css";
 
@@ -16,10 +23,10 @@ type DragDetails = {
 };
 
 const useTimelinePointerX = (onPointerXChange: (x: number) => void) => {
-  const clientXRef = React.useRef(0);
-  const scrollLeftRef = React.useRef(0);
+  const clientXRef = useRef(0);
+  const scrollLeftRef = useRef(0);
 
-  const onPointerMove = React.useCallback(
+  const onPointerMove = useCallback(
     (event: React.MouseEvent) => {
       clientXRef.current = event.clientX;
       onPointerXChange(scrollLeftRef.current + clientXRef.current);
@@ -27,7 +34,7 @@ const useTimelinePointerX = (onPointerXChange: (x: number) => void) => {
     [onPointerXChange]
   );
 
-  const onScroll = React.useCallback(
+  const onScroll = useCallback(
     (event: React.UIEvent<HTMLElement>) => {
       scrollLeftRef.current = event.currentTarget.scrollLeft;
       onPointerXChange(scrollLeftRef.current + clientXRef.current);
@@ -41,6 +48,17 @@ const useTimelinePointerX = (onPointerXChange: (x: number) => void) => {
   };
 };
 
+const isTargetBackground = (event: React.PointerEvent | React.MouseEvent) =>
+  event.currentTarget === event.target ||
+  event.currentTarget === (event.target as Node).parentElement;
+
+const useCueLayers = (cues: Cue[]) =>
+  useMemo(() => {
+    const layers: Cue[][] = [[], [], []];
+    cues.forEach((cue) => layers[cue.layer].push(cue));
+    return layers;
+  }, [cues]);
+
 const Timeline: React.FC<{
   duration: number;
   scale: number;
@@ -50,21 +68,11 @@ const Timeline: React.FC<{
   onSelectCue: (cueId: string) => void;
 }> = ({ duration, scale, cues, setCue, onSelectCue }) => {
   const markerSpacing = useTimelineMarkerSpacing(scale);
-  const timelineRef = React.useRef<HTMLDivElement>(null);
-  const pointerXRef = React.useRef<number>(0);
-  const [dragDetails, setDraggingDetails] = React.useState<DragDetails | null>(
-    null
-  );
-  const [hoveredLayerId, setHoveredLayerId] = React.useState<number>(0);
-
-  // Alter layer of dragged cue
-  useEffect(() => {
-    if (dragDetails) {
-      setCue({ id: dragDetails.id, layer: hoveredLayerId });
-    }
-    // Only execute when layer changes
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hoveredLayerId]);
+  const layers = useCueLayers(cues);
+  const timelineRef = useRef<HTMLDivElement>(null);
+  const pointerXRef = useRef<number>(0);
+  const hoveredLayerIdRef = useRef<number>(0);
+  const [dragDetails, setDraggingDetails] = useState<DragDetails | null>(null);
 
   const containerProps = useTimelinePointerX(
     useCallback((rawX) => {
@@ -75,14 +83,14 @@ const Timeline: React.FC<{
   );
 
   // Maintain approximate scroll position through scale changes
-  const lastScaleRef = React.useRef(scale);
-  React.useEffect(() => {
+  const lastScaleRef = useRef(scale);
+  useEffect(() => {
     const scaleRatio = scale / lastScaleRef.current;
     timelineRef.current!.scrollLeft *= scaleRatio;
     lastScaleRef.current = scale;
   }, [scale]);
 
-  const handleDragStop = React.useCallback(() => {
+  const handleDragStop = useCallback(() => {
     if (dragDetails) {
       const timelinePosition = Math.round(pointerXRef.current / scale);
       switch (dragDetails.type) {
@@ -106,19 +114,24 @@ const Timeline: React.FC<{
   useWindowEvent("pointerup", handleDragStop, [handleDragStop]);
   useWindowEvent("pointerleave", handleDragStop, [handleDragStop]);
 
+  const onPointerEnterLayer = useCallback(
+    ({ currentTarget }) => {
+      const layerId = parseInt(currentTarget.dataset.layerId!);
+      hoveredLayerIdRef.current = layerId;
+      if (dragDetails) {
+        setCue({ id: dragDetails.id, layer: layerId });
+      }
+    },
+    [dragDetails, setCue]
+  );
+
   const addCue = (time: number) =>
     setCue({
-      layer: hoveredLayerId || 0,
+      layer: hoveredLayerIdRef.current,
       text: "",
       start: time,
       end: time + 2500,
     });
-
-  const layers = React.useMemo(() => {
-    const layers: Cue[][] = new Array(3).fill(null).map(() => []);
-    cues.forEach((cue) => layers[cue.layer].push(cue));
-    return layers;
-  }, [cues]);
 
   return (
     <div
@@ -130,10 +143,7 @@ const Timeline: React.FC<{
       <section
         className="timeline__content"
         onDoubleClick={(event) => {
-          if (
-            event.target instanceof HTMLElement &&
-            !isInteractableElement(event.target)
-          ) {
+          if (isTargetBackground(event)) {
             addCue(pointerXRef.current / scale);
           }
         }}
@@ -151,10 +161,7 @@ const Timeline: React.FC<{
             key={index}
             className="timeline__layer"
             data-layer-id={index}
-            onPointerEnter={({ currentTarget }) => {
-              const layerId = parseInt(currentTarget.dataset.layerId!);
-              setHoveredLayerId(layerId);
-            }}
+            onPointerEnter={onPointerEnterLayer}
           >
             {layerContents.map((cue) => (
               <TimelineCue

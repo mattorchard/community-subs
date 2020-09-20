@@ -4,6 +4,7 @@
   display: flex;
   --pointer-x: 0;
   --offset-x: 0;
+  --timeline-drag-start: 0;
 }
 
 .timeline__bumper {
@@ -20,6 +21,7 @@
   flex-shrink: 0;
 }
 .timeline__content {
+  user-select: none;
   position: relative;
   display: grid;
   grid-template-rows: repeat(3, minmax(0, 1fr));

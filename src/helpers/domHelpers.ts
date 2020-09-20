@@ -16,17 +16,6 @@ export const matchScrollHeight = (element: HTMLElement) => {
   element.style.height = `${element.scrollHeight}px`;
 };
 
-const interactableElementsSelector = [
-  "a",
-  "button",
-  "input",
-  "select",
-  "details",
-].join(",");
-
-export const isInteractableElement = (element: HTMLElement) =>
-  Boolean(element.closest(interactableElementsSelector));
-
 export const getClassName = (
   baseName: string,
   modifiers: { [key: string]: any },
