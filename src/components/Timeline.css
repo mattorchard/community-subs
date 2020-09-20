@@ -104,19 +104,31 @@
   width: 1rem;
   background-color: var(--color-darken);
 }
-.timeline-cue__drag-handle:first-child {
-  cursor: w-resize;
-}
+.timeline-cue__drag-handle:first-child,
 .timeline-cue__drag-handle:last-child {
-  cursor: e-resize;
+  cursor: ew-resize;
 }
 
 .timeline--is-dragging,
 .timeline--is-dragging .timeline-cue__drag-handle,
 .timeline--is-dragging .timeline-cue__body {
+  cursor: ew-resize;
+}
+.timeline--is-dragging.timeline--is-dragging-both,
+.timeline--is-dragging.timeline--is-dragging-both .timeline-cue__drag-handle,
+.timeline--is-dragging.timeline--is-dragging-both .timeline-cue__body {
+  cursor: move;
+}
+.modifier-key--shift .timeline,
+.modifier-key--shift .timeline .timeline-cue__drag-handle,
+.modifier-key--shift .timeline .timeline-cue__body {
+  cursor: grab;
+}
+.modifier-key--shift .timeline--is-panning,
+.modifier-key--shift .timeline--is-panning .timeline-cue__drag-handle,
+.modifier-key--shift .timeline--is-panning .timeline-cue__body {
   cursor: grabbing;
 }
-
 .play-head {
   position: absolute;
   top: 0;

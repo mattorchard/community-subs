@@ -13,10 +13,10 @@ import { getClassName } from "../helpers/domHelpers";
 import useTimelineMarkerSpacing from "../helpers/useTimelineMarkerSpacing";
 import "./Timeline.css";
 
-type DragType = "start" | "end" | "both";
-type DragDetails = {
+type CueDragType = "start" | "end" | "both";
+type CueDragDetails = {
   id: string;
-  type: DragType;
+  type: CueDragType;
   start: number;
   end: number;
   offset: number;
@@ -72,7 +72,11 @@ const Timeline: React.FC<{
   const timelineRef = useRef<HTMLDivElement>(null);
   const pointerXRef = useRef<number>(0);
   const hoveredLayerIdRef = useRef<number>(0);
-  const [dragDetails, setDraggingDetails] = useState<DragDetails | null>(null);
+  const [
+    cueDragDetails,
+    setCueDraggingDetails,
+  ] = useState<CueDragDetails | null>(null);
+  const [isPanning, setIsPanning] = useState(false);
 
   const containerProps = useTimelinePointerX(
     useCallback((rawX) => {
@@ -91,25 +95,26 @@ const Timeline: React.FC<{
   }, [scale]);
 
   const handleDragStop = useCallback(() => {
-    if (dragDetails) {
+    if (cueDragDetails) {
       const timelinePosition = Math.round(pointerXRef.current / scale);
-      switch (dragDetails.type) {
+      switch (cueDragDetails.type) {
         case "both":
-          const offsetPosition = Math.round(dragDetails.offset / scale);
+          const offsetPosition = Math.round(cueDragDetails.offset / scale);
           const start = timelinePosition - offsetPosition;
-          const end = start + (dragDetails.end - dragDetails.start);
-          setCue({ id: dragDetails.id, start, end });
+          const end = start + (cueDragDetails.end - cueDragDetails.start);
+          setCue({ id: cueDragDetails.id, start, end });
           break;
         case "start":
-          setCue({ id: dragDetails.id, start: timelinePosition });
+          setCue({ id: cueDragDetails.id, start: timelinePosition });
           break;
         case "end":
-          setCue({ id: dragDetails.id, end: timelinePosition });
+          setCue({ id: cueDragDetails.id, end: timelinePosition });
           break;
       }
-      setDraggingDetails(null);
+      setCueDraggingDetails(null);
     }
-  }, [dragDetails, scale, setCue]);
+    setIsPanning(false);
+  }, [cueDragDetails, scale, setCue]);
 
   useWindowEvent("pointerup", handleDragStop);
   useWindowEvent("pointerleave", handleDragStop);
@@ -118,11 +123,11 @@ const Timeline: React.FC<{
     ({ currentTarget }) => {
       const layerId = parseInt(currentTarget.dataset.layerId!);
       hoveredLayerIdRef.current = layerId;
-      if (dragDetails) {
-        setCue({ id: dragDetails.id, layer: layerId });
+      if (cueDragDetails) {
+        setCue({ id: cueDragDetails.id, layer: layerId });
       }
     },
-    [dragDetails, setCue]
+    [cueDragDetails, setCue]
   );
 
   const addCue = (time: number) =>
@@ -137,7 +142,11 @@ const Timeline: React.FC<{
     <div
       {...containerProps}
       ref={timelineRef}
-      className={`timeline ${dragDetails && "timeline--is-dragging"}`}
+      className={getClassName("timeline", {
+        "is-dragging": cueDragDetails,
+        "is-dragging-both": cueDragDetails?.start && cueDragDetails.end,
+        "is-panning": isPanning,
+      })}
     >
       <div className="timeline__bumper" />
       <section
@@ -147,11 +156,26 @@ const Timeline: React.FC<{
             addCue(pointerXRef.current / scale);
           }
         }}
+        onPointerDown={(event) => {
+          if (event.shiftKey) {
+            setIsPanning(true);
+          }
+        }}
+        onPointerMove={
+          isPanning
+            ? (event) => {
+                timelineRef.current!.scrollLeft -= event.movementX;
+              }
+            : undefined
+        }
+        onPointerUp={() => {
+          setIsPanning(false);
+        }}
         style={
           {
             "--timeline-duration": duration,
             "--timeline-scale": scale,
-            "--offset-x": dragDetails?.offset,
+            "--offset-x": cueDragDetails?.offset,
             "--marker-spacing": markerSpacing,
           } as CSSProperties
         }
@@ -167,8 +191,10 @@ const Timeline: React.FC<{
               <TimelineCue
                 key={cue.id}
                 cue={cue}
-                dragDetails={cue.id === dragDetails?.id ? dragDetails : null}
-                onDragStart={setDraggingDetails}
+                dragDetails={
+                  cue.id === cueDragDetails?.id ? cueDragDetails : null
+                }
+                onDragStart={setCueDraggingDetails}
                 onSelect={onSelectCue}
               />
             ))}
@@ -183,9 +209,9 @@ const Timeline: React.FC<{
 
 const TimelineCue: React.FC<{
   cue: Cue;
-  onDragStart: (dragDetails: DragDetails) => void;
+  onDragStart: (dragDetails: CueDragDetails) => void;
   onSelect: (cueId: string) => void;
-  dragDetails: DragDetails | null;
+  dragDetails: CueDragDetails | null;
 }> = ({ cue, dragDetails, onDragStart, onSelect }) => {
   return (
     <div
@@ -208,9 +234,12 @@ const TimelineCue: React.FC<{
       }
       data-cue-id={cue.id}
       onPointerDown={(event) => {
+        if (event.shiftKey) {
+          return;
+        }
         event.preventDefault();
         const target = event.target as HTMLElement;
-        const type = target.dataset.dragType as DragType | undefined;
+        const type = target.dataset.dragType as CueDragType | undefined;
         if (type) {
           const offset =
             event.nativeEvent.offsetX +
