@@ -5,12 +5,35 @@ import { debounce } from "../helpers/timingHelpers";
 import { matchScrollHeight } from "../helpers/domHelpers";
 import "./CueEditor.css";
 
+type KE = React.KeyboardEvent<HTMLTextAreaElement>;
+
+const onArrowOut = (onUp: (event: KE) => void, onDown: (event: KE) => void) => (
+  event: KE
+) => {
+  const { key, currentTarget } = event;
+  if (key !== "ArrowUp" && key !== "ArrowDown") {
+    return;
+  }
+  const { selectionStart, selectionEnd } = currentTarget;
+  if (selectionStart !== selectionEnd) {
+    return;
+  }
+  if (key === "ArrowUp" && selectionStart === 0) {
+    return onUp(event);
+  }
+  if (key === "ArrowDown" && selectionStart === currentTarget.value.length) {
+    return onDown(event);
+  }
+};
+
 const CueEditor: React.FC<{
   cue: Cue;
   setCue: SetCue;
   selected: boolean;
+  onSelectPrevious: (cueId: string) => void;
+  onSelectNext: (cueId: string) => void;
 }> = React.memo(
-  ({ cue, setCue, selected }) => {
+  ({ cue, setCue, selected, onSelectPrevious, onSelectNext }) => {
     const { id } = cue;
     const textAreaRef = React.useRef<HTMLTextAreaElement>(null);
 
@@ -46,6 +69,11 @@ const CueEditor: React.FC<{
       saveLinesDebounced();
     };
 
+    const onKeyDown = onArrowOut(
+      () => onSelectPrevious(cue.id),
+      () => onSelectNext(cue.id)
+    );
+
     return (
       <label className="cue-editor">
         <textarea
@@ -53,6 +81,7 @@ const CueEditor: React.FC<{
           ref={textAreaRef}
           onChange={handleChange}
           onBlur={handleBlur}
+          onKeyDown={onKeyDown}
           className="cue-editor__textarea"
           placeholder="Blank"
         />

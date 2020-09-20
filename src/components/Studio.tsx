@@ -45,6 +45,7 @@ const Studio: React.FC<{ project: Project; transcriptId: string }> = ({
       <VideoPlayer video={project.video!} onTimeChange={onTimeChange} />
       <ScriptEditor
         cues={cueState.cues}
+        cueIndex={cueState.index}
         setCue={setCue}
         selectedCue={selectedCue}
         onSelectCue={setSelectedCue}

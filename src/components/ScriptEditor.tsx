@@ -1,19 +1,58 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { SetCue } from "../hooks/useCues";
 import "./ScriptEditor.css";
 import CueEditor from "./CueEditor";
 import { Cue } from "../types/subtitles";
+import useAsRef from "../hooks/useAsRef";
 
 const TARGET_DURATION = 2500;
 const MIN_DURATION = 1000;
 
+const useSequentialSelectors = (
+  cues: Cue[],
+  cueIndex: Map<string, number>,
+  onSelectCue: (cueId: string) => void
+) => {
+  const cuesRef = useAsRef(cues);
+  const cueIndexRef = useAsRef(cueIndex);
+
+  const onSelectPrevious = useCallback(
+    (cueId: string) => {
+      const indexToSelect = cueIndexRef.current.get(cueId)! - 1;
+      if (indexToSelect >= 0) {
+        onSelectCue(cuesRef.current[indexToSelect].id);
+      }
+    },
+    [onSelectCue, cuesRef, cueIndexRef]
+  );
+
+  const onSelectNext = useCallback(
+    (cueId: string) => {
+      const indexToSelect = cueIndexRef.current.get(cueId)! + 1;
+      if (indexToSelect < cuesRef.current.length) {
+        onSelectCue(cuesRef.current[indexToSelect].id);
+      }
+    },
+    [onSelectCue, cuesRef, cueIndexRef]
+  );
+
+  return { onSelectPrevious, onSelectNext };
+};
+
 const ScriptEditor: React.FC<{
   cues: Cue[];
+  cueIndex: Map<string, number>;
   setCue: SetCue;
   duration: number;
   selectedCue: string | null;
   onSelectCue: (cueId: string) => void;
-}> = ({ cues, setCue, duration, selectedCue }) => {
+}> = ({ cues, setCue, duration, selectedCue, onSelectCue, cueIndex }) => {
+  const { onSelectPrevious, onSelectNext } = useSequentialSelectors(
+    cues,
+    cueIndex,
+    onSelectCue
+  );
+
   const handleAddBeforeAll = () => {
     const cueBefore = cues[0];
     if (cueBefore.start < MIN_DURATION) {
@@ -69,6 +108,8 @@ const ScriptEditor: React.FC<{
               cue={cue}
               setCue={setCue}
               selected={selectedCue === cue.id}
+              onSelectPrevious={onSelectPrevious}
+              onSelectNext={onSelectNext}
             />
             <button
               type="button"
