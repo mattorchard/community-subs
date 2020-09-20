@@ -29,9 +29,10 @@ export const isInteractableElement = (element: HTMLElement) =>
 
 export const getClassName = (
   baseName: string,
-  modifiers: { [key: string]: any }
+  modifiers: { [key: string]: any },
+  others?: string
 ) => {
-  const classes = [baseName];
+  const classes = [baseName, others];
   Object.entries(modifiers).forEach(([key, value]) => {
     if (value) {
       classes.push(`${baseName}--${key}`);

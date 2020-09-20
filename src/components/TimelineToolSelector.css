@@ -1,0 +1,18 @@
+.timeline-tool-selector {
+  display: flex;
+  border-radius: 0.25rem;
+  overflow: hidden;
+}
+
+.timeline-tool-selector__label {
+  border-radius: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+.timeline-tool-selector__label--selected {
+  background-color: var(--gray-600);
+}
+.timeline-tool-selector__label > input {
+  display: none;
+}
