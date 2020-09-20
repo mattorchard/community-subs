@@ -1,15 +1,18 @@
-import { DependencyList, useCallback, useEffect } from "react";
+import { useEffect } from "react";
+import useAsRef from "./useAsRef";
 
-const useWindowEvent = (
+const useWindowEvent = <E extends Event>(
   eventName: string,
-  callback: EventListener,
-  deps: DependencyList
+  callback: (event: E) => void
 ) => {
-  const stableCallback = useCallback(callback, deps);
+  const callbackRef = useAsRef(callback);
   useEffect(() => {
-    window.addEventListener(eventName, stableCallback);
-    return () => window.removeEventListener(eventName, stableCallback);
-  }, [eventName, stableCallback]);
+    const handler = (event: Event) => {
+      callbackRef.current(event as E);
+    };
+    window.addEventListener(eventName, handler);
+    return () => window.removeEventListener(eventName, handler);
+  }, [eventName, callbackRef]);
 };
 
 export default useWindowEvent;

@@ -8,7 +8,7 @@ const getSize = () => ({
 
 const useWindowSize = () => {
   const [windowSize, setWindowSize] = useState(getSize);
-  useWindowEvent("resize", () => setWindowSize(getSize()), []);
+  useWindowEvent("resize", () => setWindowSize(getSize()));
   return windowSize;
 };
 

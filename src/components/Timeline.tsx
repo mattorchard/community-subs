@@ -111,8 +111,8 @@ const Timeline: React.FC<{
     }
   }, [dragDetails, scale, setCue]);
 
-  useWindowEvent("pointerup", handleDragStop, [handleDragStop]);
-  useWindowEvent("pointerleave", handleDragStop, [handleDragStop]);
+  useWindowEvent("pointerup", handleDragStop);
+  useWindowEvent("pointerleave", handleDragStop);
 
   const onPointerEnterLayer = useCallback(
     ({ currentTarget }) => {
