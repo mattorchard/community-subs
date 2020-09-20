@@ -86,6 +86,7 @@ const Studio: React.FC<{ project: Project; transcriptId: string }> = ({
         setCue={setCue}
         selectedCue={selectedCue}
         onSelectCue={setSelectedCue}
+        onSeek={console.debug}
       />
     </div>
   );

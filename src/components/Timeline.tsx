@@ -66,7 +66,8 @@ const Timeline: React.FC<{
   setCue: SetCue;
   selectedCue: string | null;
   onSelectCue: (cueId: string) => void;
-}> = ({ duration, scale, cues, setCue, onSelectCue }) => {
+  onSeek: (time: number) => void;
+}> = ({ duration, scale, cues, setCue, onSelectCue, onSeek }) => {
   const markerSpacing = useTimelineMarkerSpacing(scale);
   const layers = useCueLayers(cues);
   const timelineRef = useRef<HTMLDivElement>(null);
@@ -77,6 +78,7 @@ const Timeline: React.FC<{
     setCueDraggingDetails,
   ] = useState<CueDragDetails | null>(null);
   const [isPanning, setIsPanning] = useState(false);
+  const [isSeeking, setIsSeeking] = useState(false);
 
   const containerProps = useTimelinePointerX(
     useCallback((rawX) => {
@@ -114,6 +116,7 @@ const Timeline: React.FC<{
       setCueDraggingDetails(null);
     }
     setIsPanning(false);
+    setIsSeeking(false);
   }, [cueDragDetails, scale, setCue]);
 
   useWindowEvent("pointerup", handleDragStop);
@@ -146,6 +149,7 @@ const Timeline: React.FC<{
         "is-dragging": cueDragDetails,
         "is-dragging-both": cueDragDetails?.start && cueDragDetails.end,
         "is-panning": isPanning,
+        "is-seeking": isSeeking,
       })}
     >
       <div className="timeline__bumper" />
@@ -159,6 +163,8 @@ const Timeline: React.FC<{
         onPointerDown={(event) => {
           if (event.shiftKey) {
             setIsPanning(true);
+          } else if (isTargetBackground(event)) {
+            setIsSeeking(true);
           }
         }}
         onPointerMove={
@@ -169,7 +175,11 @@ const Timeline: React.FC<{
             : undefined
         }
         onPointerUp={() => {
+          if (isSeeking) {
+            onSeek(pointerXRef.current);
+          }
           setIsPanning(false);
+          setIsSeeking(false);
         }}
         style={
           {
