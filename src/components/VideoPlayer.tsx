@@ -10,13 +10,13 @@ interface YtPlayer {
   getDuration: () => Promise<number>;
   getCurrentTime: () => Promise<number>;
   seekTo: (timeSeconds: number) => Promise<void>;
+  setSize: (width: number, height: number) => void;
 }
 
-const getPlayerSize = () => {
-  const screenWidth = window.screen.width;
+const getPlayerSize = (windowWidth: number) => {
   return {
-    width: (screenWidth / 2).toString(),
-    height: ((screenWidth / 2) * (9 / 16)).toString(),
+    width: windowWidth / 2,
+    height: (windowWidth / 2) * (9 / 16),
   };
 };
 
@@ -46,7 +46,22 @@ const YouTubePlayer: React.FC<VideoPlayerProps> = ({
   const playerRef = React.useRef<YtPlayer | null>(null);
   const currentTimeRef = React.useRef(0);
   const windowSize = useWindowSize();
-  const playerSize = useMemo(getPlayerSize, [windowSize]);
+
+  // Any change to this results in the Youtube player unloading the video
+  const playerOptions = useMemo(() => {
+    const { width, height } = getPlayerSize(window.innerWidth);
+    return {
+      width: width.toString(),
+      height: height.toString(),
+    };
+  }, []);
+
+  useEffect(() => {
+    if (playerRef.current) {
+      const { width, height } = getPlayerSize(windowSize.width);
+      playerRef.current.setSize(width, height);
+    }
+  }, [windowSize]);
 
   useEffect(() => {
     if (seekTo !== null) {
@@ -89,7 +104,7 @@ const YouTubePlayer: React.FC<VideoPlayerProps> = ({
           if (component?.internalPlayer)
             playerRef.current = component.internalPlayer;
         }}
-        opts={playerSize}
+        opts={playerOptions}
       />
     </div>
   );
