@@ -4,6 +4,7 @@ import { ProjectVideo } from "../repositories/ProjectRepository";
 import "./VideoPlayer.css";
 import FilePlayer from "./FilePlayer";
 import useInterval from "../hooks/useInterval";
+import useWindowSize from "../hooks/useWindowSize";
 
 interface YtPlayer {
   getDuration: () => Promise<number>;
@@ -44,7 +45,8 @@ const YouTubePlayer: React.FC<VideoPlayerProps> = ({
   }
   const playerRef = React.useRef<YtPlayer | null>(null);
   const currentTimeRef = React.useRef(0);
-  const playerSize = useMemo(getPlayerSize, []);
+  const windowSize = useWindowSize();
+  const playerSize = useMemo(getPlayerSize, [windowSize]);
 
   useEffect(() => {
     if (seekTo !== null) {
@@ -88,24 +90,6 @@ const YouTubePlayer: React.FC<VideoPlayerProps> = ({
             playerRef.current = component.internalPlayer;
         }}
         opts={playerSize}
-        onStateChange={({ data: playerState }) => {
-          switch (playerState) {
-            case YouTube.PlayerState.UNSTARTED:
-              break;
-            case YouTube.PlayerState.ENDED:
-              console.debug("Player Ended");
-              break;
-            case YouTube.PlayerState.PLAYING:
-              console.debug("Player playing");
-              break;
-            case YouTube.PlayerState.PAUSED:
-              console.debug("Player Paused");
-              break;
-            case YouTube.PlayerState.BUFFERING:
-              console.debug("Player Buffering");
-              break;
-          }
-        }}
       />
     </div>
   );
