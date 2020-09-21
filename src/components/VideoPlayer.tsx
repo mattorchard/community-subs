@@ -1,7 +1,9 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import YouTube from "react-youtube";
 import { ProjectVideo } from "../repositories/ProjectRepository";
 import "./VideoPlayer.css";
+import FilePlayer from "./FilePlayer";
+import useInterval from "../hooks/useInterval";
 
 interface YtPlayer {
   getDuration: () => Promise<number>;
@@ -27,9 +29,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = (props) => {
   switch (props.video.type) {
     case "youtube":
       return <YouTubePlayer {...props} />;
-    default:
-      // Todo: Proper error formatting
-      return <p>Unsupported player type {props.video.type}</p>;
+    case "upload":
+      return <UploadPlayer {...props} />;
   }
 };
 
@@ -106,6 +107,39 @@ const YouTubePlayer: React.FC<VideoPlayerProps> = ({
           }
         }}
       />
+    </div>
+  );
+};
+
+const UploadPlayer: React.FC<VideoPlayerProps> = ({
+  video,
+  onTimeChange,
+  seekTo,
+}) => {
+  if (video.type !== "upload")
+    throw new Error(`Upload player got video of type ${video.type}`);
+
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const currentTimeRef = useRef(0);
+
+  useInterval(() => {
+    if (videoRef.current) {
+      const currentTime = videoRef.current.currentTime * 1000;
+      if (currentTimeRef.current !== currentTime) {
+        currentTimeRef.current = currentTime;
+        onTimeChange(currentTime);
+      }
+    }
+  }, 40);
+
+  useEffect(() => {
+    if (seekTo !== null && videoRef.current)
+      videoRef.current.currentTime = seekTo / 1000;
+  }, [seekTo]);
+
+  return (
+    <div className="player">
+      <FilePlayer id={video.fileId} ref={videoRef} />
     </div>
   );
 };
