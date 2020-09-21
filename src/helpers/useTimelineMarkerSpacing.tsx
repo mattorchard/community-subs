@@ -19,7 +19,7 @@ const SPACINGS = [
   0.25 * SECOND,
 ];
 
-const getBestSpacing = (scale: number, target = 300) => {
+const getBestSpacing = (scale: number, target = 200) => {
   let bestSpacing = SPACINGS[0];
   SPACINGS.forEach((currentSpacing) => {
     const bestDelta = Math.abs(bestSpacing * scale - target);
