@@ -24,6 +24,7 @@ const Studio: React.FC<{ project: Project; transcriptId: string }> = ({
   const [selectedCue, setSelectedCue] = useState<string | null>(null);
   const [cueState, setCue] = useCues(transcriptId);
   const [timelineTool, setTimelineTool] = useState<TimelineTool>("pan");
+  const [seekTo, setSeekTo] = useState<number | null>(null);
 
   const onTimeChange = useCallback((time: number) => {
     console.debug("Currently at", time);
@@ -46,7 +47,11 @@ const Studio: React.FC<{ project: Project; transcriptId: string }> = ({
 
   return (
     <div className="studio" ref={containerRef}>
-      <VideoPlayer video={project.video!} onTimeChange={onTimeChange} />
+      <VideoPlayer
+        video={project.video}
+        onTimeChange={onTimeChange}
+        seekTo={seekTo}
+      />
       <ScriptEditor
         cues={cueState.cues}
         cueIndex={cueState.index}
@@ -86,7 +91,7 @@ const Studio: React.FC<{ project: Project; transcriptId: string }> = ({
         setCue={setCue}
         selectedCue={selectedCue}
         onSelectCue={setSelectedCue}
-        onSeek={console.debug}
+        onSeek={setSeekTo}
       />
     </div>
   );

@@ -1,13 +1,12 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import YouTube from "react-youtube";
-import "./VideoPlayer.css";
-import useInterval from "../hooks/useInterval";
 import { ProjectVideo } from "../repositories/ProjectRepository";
-import FilePlayer from "./FilePlayer";
+import "./VideoPlayer.css";
 
-interface YTPlayer {
+interface YtPlayer {
   getDuration: () => Promise<number>;
   getCurrentTime: () => Promise<number>;
+  seekTo: (timeSeconds: number) => Promise<void>;
 }
 
 const getPlayerSize = () => {
@@ -18,33 +17,65 @@ const getPlayerSize = () => {
   };
 };
 
-const VideoPlayer: React.FC<{
+type VideoPlayerProps = {
   video: ProjectVideo;
   onTimeChange: (time: number) => void;
-}> = React.memo(({ onTimeChange, video }) => {
-  const playerRef = React.useRef<YTPlayer | null>(null);
+  seekTo: number | null;
+};
+
+const VideoPlayer: React.FC<VideoPlayerProps> = (props) => {
+  switch (props.video.type) {
+    case "youtube":
+      return <YouTubePlayer {...props} />;
+    default:
+      // Todo: Proper error formatting
+      return <p>Unsupported player type {props.video.type}</p>;
+  }
+};
+
+const YouTubePlayer: React.FC<VideoPlayerProps> = ({
+  video,
+  onTimeChange,
+  seekTo,
+}) => {
+  if (video.type !== "youtube") {
+    throw new Error(`Non Youtube video in youtube player`);
+  }
+  const playerRef = React.useRef<YtPlayer | null>(null);
   const currentTimeRef = React.useRef(0);
   const playerSize = useMemo(getPlayerSize, []);
 
-  // Todo: re-work to ensure never more than one request at a time
-  useInterval(() => {
-    if (playerRef.current)
-      Promise.resolve(playerRef.current.getCurrentTime()).then((value) => {
-        const currentTime = value * 1000;
-        if (currentTimeRef.current !== currentTime) {
-          currentTimeRef.current = currentTime;
-          onTimeChange(currentTime);
-        }
-      });
-  }, 50);
+  useEffect(() => {
+    if (seekTo !== null) {
+      playerRef.current?.seekTo(seekTo / 1000);
+    }
+  }, [seekTo]);
 
-  if (video.type === "upload") {
-    return (
-      <div className="player">
-        <FilePlayer id={video.fileId} />
-      </div>
-    );
-  }
+  useEffect(() => {
+    let cancelled = false;
+
+    const getCurrentTimeLoop = () => {
+      if (playerRef.current) {
+        playerRef.current.getCurrentTime().then((value) => {
+          const currentTime = value * 1000;
+          if (currentTimeRef.current !== currentTime) {
+            currentTimeRef.current = currentTime;
+            onTimeChange(currentTime);
+          }
+          if (!cancelled) {
+            setTimeout(getCurrentTimeLoop, 40);
+          }
+        });
+      } else if (!cancelled) {
+        setTimeout(getCurrentTimeLoop);
+      }
+    };
+    getCurrentTimeLoop();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [onTimeChange]);
 
   return (
     <div className="player">
@@ -77,6 +108,6 @@ const VideoPlayer: React.FC<{
       />
     </div>
   );
-});
+};
 
 export default VideoPlayer;
