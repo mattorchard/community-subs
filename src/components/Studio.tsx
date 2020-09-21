@@ -11,9 +11,6 @@ import { toWebVtt } from "../helpers/webVttHelpers";
 import Spinner from "./Spinner";
 import { Project } from "../repositories/ProjectRepository";
 import { Link } from "react-router-dom";
-import TimelineToolSelector from "./TimelineToolSelector";
-
-export type TimelineTool = "pan" | "add" | "seek";
 
 const Studio: React.FC<{ project: Project; transcriptId: string }> = ({
   project,
@@ -23,7 +20,6 @@ const Studio: React.FC<{ project: Project; transcriptId: string }> = ({
   const [scale, setScale] = useState(0.1);
   const [selectedCue, setSelectedCue] = useState<string | null>(null);
   const [cueState, setCue] = useCues(transcriptId);
-  const [timelineTool, setTimelineTool] = useState<TimelineTool>("pan");
   const [seekTo, setSeekTo] = useState<number | null>(null);
 
   const onTimeChange = useCallback((time: number) => {
@@ -61,10 +57,6 @@ const Studio: React.FC<{ project: Project; transcriptId: string }> = ({
         duration={project.video.duration}
       />
       <div className="toolbar">
-        <TimelineToolSelector
-          selected={timelineTool}
-          onSelectionChange={setTimelineTool}
-        />
         <ZoomRange zoom={scale} onZoomChange={setScale} />
         <Button
           onClick={() =>
