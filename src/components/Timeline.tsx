@@ -176,7 +176,7 @@ const Timeline: React.FC<{
         }
         onPointerUp={() => {
           if (isSeeking) {
-            onSeek(pointerXRef.current);
+            onSeek(pointerXRef.current / scale);
           }
           setIsPanning(false);
           setIsSeeking(false);
