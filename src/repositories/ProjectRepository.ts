@@ -1,6 +1,6 @@
 import { DBSchema, openDB } from "idb";
 import { v4 as uuidV4 } from "uuid";
-import { Cue } from "../types/subtitles";
+import { Cue } from "../types/cue";
 
 export type Project = {
   id: string;

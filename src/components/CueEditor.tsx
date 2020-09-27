@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
-import { Cue, toTimeRangeString } from "../types/subtitles";
+import { Cue } from "../types/cue";
 import { SetCue } from "../hooks/useCues";
 import { debounce } from "../helpers/timingHelpers";
 import { matchScrollHeight } from "../helpers/domHelpers";
 import "./CueEditor.css";
+import { toTimeRangeString } from "../helpers/timeCodeHelpers";
 
 type KE = React.KeyboardEvent<HTMLTextAreaElement>;
 

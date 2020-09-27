@@ -1,5 +1,5 @@
-import { padZeros } from "../helpers/textHelpers";
-import { HOUR, MINUTE, SECOND } from "../helpers/timingHelpers";
+import { HOUR, MINUTE, SECOND } from "./timingHelpers";
+import { padZeros } from "./textHelpers";
 
 export type TimeCode = {
   hours: number;
@@ -8,26 +8,11 @@ export type TimeCode = {
   milliseconds: number;
 };
 
-// Takes the form ###%
-type Percentage = string;
-
-export type CueSettings = Partial<{
-  vertical: "rl" | "lr";
-  line: number | Percentage;
-  position: Percentage;
-  size: Percentage;
-  align: "start" | "middle" | "end";
-}>;
-
-export type Cue = {
-  transcriptId: string;
-  id: string;
-  start: number;
-  end: number;
-  text: string;
-  layer: number;
-  settings?: CueSettings;
-};
+export const timeCodeToMillis = (timeCode: TimeCode) =>
+  HOUR * timeCode.hours +
+  MINUTE * timeCode.minutes +
+  SECOND * timeCode.seconds +
+  timeCode.milliseconds;
 
 export const toTimeCode = (millis: number): TimeCode => {
   let millisRemaining = millis;

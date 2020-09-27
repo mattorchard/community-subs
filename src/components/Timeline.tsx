@@ -6,7 +6,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Cue } from "../types/subtitles";
+import { Cue } from "../types/cue";
 import useWindowEvent from "../hooks/useWindowEvent";
 import { SetCue } from "../hooks/useCues";
 import { getClassName } from "../helpers/domHelpers";

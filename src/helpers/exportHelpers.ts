@@ -1,10 +1,6 @@
 import { CueState } from "../hooks/useCues";
-import {
-  Cue,
-  CueSettings,
-  timeCodeToFullString,
-  toTimeCode,
-} from "../types/subtitles";
+import { Cue, CueSettings } from "../types/cue";
+import { timeCodeToFullString, toTimeCode } from "./timeCodeHelpers";
 
 export const toWebVtt = ({ cues }: CueState) => {
   return [

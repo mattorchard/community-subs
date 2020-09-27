@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 import { SetCue } from "../hooks/useCues";
 import "./ScriptEditor.css";
 import CueEditor from "./CueEditor";
-import { Cue } from "../types/subtitles";
+import { Cue } from "../types/cue";
 import useAsRef from "../hooks/useAsRef";
 
 const TARGET_DURATION = 2500;

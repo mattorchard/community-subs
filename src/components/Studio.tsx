@@ -7,7 +7,7 @@ import "./Studio.css";
 import ScriptEditor from "./ScriptEditor";
 import Button from "./Button";
 import { createVttBlob, downloadFile } from "../helpers/fileHelpers";
-import { toWebVtt } from "../helpers/webVttHelpers";
+import { toWebVtt } from "../helpers/exportHelpers";
 import Spinner from "./Spinner";
 import { Project } from "../repositories/ProjectRepository";
 import { Link } from "react-router-dom";

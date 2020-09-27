@@ -1,4 +1,4 @@
-import { Cue } from "../types/subtitles";
+import { Cue } from "../types/cue";
 import { useCallback, useEffect, useState } from "react";
 import { v4 as uuidV4 } from "uuid";
 import { getCues, saveCue } from "../repositories/ProjectRepository";
