@@ -108,6 +108,7 @@
   /* Semantic Colours */
   --color-primary: var(--blue-500);
   --color-focus: var(--yellow-400);
+  --color-danger: var(--red-500);
 
   /* Other Vars */
   --focus-bs: 0 0 0 0.125rem var(--color-focus);

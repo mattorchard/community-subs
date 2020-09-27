@@ -1,15 +1,25 @@
 import React, { useEffect, useRef } from "react";
 import { getClassName } from "../helpers/domHelpers";
 import useFileDrop from "../hooks/useFileDrop";
-import "./FileDropTarget.css";
 import Button from "./Button";
+import Spinner from "./Spinner";
+import "./FileDropTarget.css";
 
 const FileDropTarget: React.FC<{
   buttonLabel: string;
   dropLabel: string;
   onDrop: (files: File[]) => void;
   accept?: string;
-}> = ({ buttonLabel, dropLabel, accept, onDrop }) => {
+  isLoading?: boolean;
+  errorMessage?: string;
+}> = ({
+  buttonLabel,
+  dropLabel,
+  accept,
+  onDrop,
+  errorMessage,
+  isLoading = false,
+}) => {
   const contentRef = useRef<HTMLDivElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const isDraggingOver = useFileDrop(onDrop);
@@ -31,9 +41,13 @@ const FileDropTarget: React.FC<{
         ref={contentRef}
         className={getClassName("file-drop-target__content", {
           dragging: isDraggingOver,
+          "has-error": errorMessage,
         })}
       >
-        <Button onClick={() => fileInputRef.current?.click()}>
+        <Button
+          onClick={() => fileInputRef.current?.click()}
+          disabled={isLoading}
+        >
           {buttonLabel}
         </Button>
         <input
@@ -42,13 +56,19 @@ const FileDropTarget: React.FC<{
           hidden
           aria-label={buttonLabel}
           type="file"
+          disabled={isLoading}
           onChange={(event) => {
             if (event.currentTarget.files) {
               onDrop([...event.currentTarget.files]);
             }
           }}
         />
-        <div className="file-drop-target__drop-label">{dropLabel}</div>
+        <div className="file-drop-target__drop-label">
+          {isLoading ? <Spinner size="xl">Loading</Spinner> : dropLabel}
+        </div>
+        {errorMessage && (
+          <div className="file-drop-target__error-label">{errorMessage}</div>
+        )}
       </div>
     </div>
   );

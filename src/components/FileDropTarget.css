@@ -21,6 +21,9 @@
   height: calc(100vh - 2rem);
   animation: file-drop-target__foo 0.5s ease-in-out forwards 1;
 }
+.file-drop-target__content--has-error {
+  border-color: var(--color-danger);
+}
 @keyframes file-drop-target__foo {
   from {
     top: var(--initial-x);
@@ -34,4 +37,8 @@
 }
 .file-drop-target__drop-label {
   margin-top: 1rem;
+}
+.file-drop-target__error-label {
+  margin-top: 1rem;
+  color: var(--color-danger);
 }

@@ -10,7 +10,7 @@ import { toDateTimeString } from "../helpers/dateHelpers";
 import AddVideoForm from "./AddVideoForm";
 import TranscriptList from "./TranscriptList";
 import Thumbnail from "./Thumbnail";
-import FileDropTarget from "./FileDropTarget";
+import ImportTranscriptArea from "./ImportTranscriptArea";
 
 const ProjectOverview: React.FC<{ project: Project }> = ({
   project: initialProject,
@@ -27,6 +27,7 @@ const ProjectOverview: React.FC<{ project: Project }> = ({
       setIsSaving(false);
     }
   };
+
   return (
     <div className="project-overview">
       <header className="project-overview__header">
@@ -56,12 +57,8 @@ const ProjectOverview: React.FC<{ project: Project }> = ({
           <div>
             {/*Todo: Add video details*/}
             {/*Todo: Add import option*/}
-            {<TranscriptList projectId={project.id} />}
-            <FileDropTarget
-              buttonLabel="Choose a file to import"
-              dropLabel="Or drag and drop one"
-              onDrop={console.log}
-            />
+            <TranscriptList projectId={project.id} />
+            <ImportTranscriptArea projectId={project.id} />
           </div>
         ) : (
           <AddVideoForm

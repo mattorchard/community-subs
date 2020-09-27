@@ -17,3 +17,10 @@ export const downloadFile = (fileName: string, blob: Blob) => {
 
 export const createVttBlob = (text: string) =>
   new Blob([text], { type: "text/vtt" });
+
+export const readAsText = (file: File): Promise<string> => new Promise((resolve, reject) => {
+  const reader = new FileReader();
+  reader.onerror = () => reject(new Error(`Reader failed to read`))
+  reader.onload = () => resolve(reader.result as string)
+  reader.readAsText(file)
+})

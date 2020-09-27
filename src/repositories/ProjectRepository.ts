@@ -172,3 +172,15 @@ export const createTranscript = async (projectId: string) => {
   await db.put("transcripts", transcript);
   return transcript;
 };
+
+export const createTranscriptWithContent = async(transcript: ProjectTranscript, cues: Cue[]) => {
+  const db = await dbPromise;
+  const transaction = db.transaction(["transcripts", "cues"], "readwrite");
+  // Only transaction should be awaited
+  // noinspection ES6MissingAwait
+  transaction.objectStore("transcripts").put(transcript)
+  const cueStore = transaction.objectStore("cues");
+  cues.forEach(cue => cueStore.put(cue))
+
+  await transaction.done;
+}

@@ -3,9 +3,9 @@ import { Cue } from "../types/cue";
 import { v4 as uuidV4 } from "uuid";
 import { timeCodeToMillis } from "./timeCodeHelpers";
 
-export const fromVtt = (rawVtt: string): Cue[] => {
+export const fromVtt = (rawVtt: string) => {
   const transcriptId = uuidV4();
-  return rawVtt
+  const cues: Cue[] = rawVtt
     .split(/\r?\n\r?\n/g)
     .filter(
       (block, index) =>
@@ -20,6 +20,11 @@ export const fromVtt = (rawVtt: string): Cue[] => {
       id: uuidV4(),
       layer: 0,
     }));
+  const transcript = {
+    id: transcriptId,
+    // Todo: Parse language from header
+  }
+  return {cues, transcript}
 };
 
 const getBlockType = (block: string) => {
