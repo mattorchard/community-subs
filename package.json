@@ -13,7 +13,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.3",
-    "typescript": "^4.0.3",
+    "typescript": "^3.7.2",
     "react-youtube": "^7.12.0",
     "uuid": "^8.3.0",
     "idb": "^5.0.6",
