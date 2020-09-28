@@ -45,6 +45,7 @@ const ImportTranscriptArea: React.FC<{ projectId: string }> = ({
   };
   return (
     <FileDropTarget
+      className="transcript-drop-target"
       isLoading={isLoadingImport}
       errorMessage={errorMessage}
       buttonLabel="Choose a file to import"

@@ -1,0 +1,25 @@
+.add-youtube-video-form {
+}
+.add-youtube-video-form__heading {
+  margin-bottom: 1rem;
+}
+.youtube-id-input__examples {
+  margin: 0.5rem 0.5rem 1rem;
+}
+.youtube-id-input__label-row {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 1rem;
+}
+.youtube-id-input__label {
+  display: inline-flex;
+  flex-direction: column;
+  font-weight: bold;
+  font-size: 1.25rem;
+}
+.youtube-id-input__label > input {
+  font-weight: normal;
+  padding: 0.5rem;
+  border-bottom: 0.25rem solid var(--color-lighten);
+  align-self: flex-start;
+}

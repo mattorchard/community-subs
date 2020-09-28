@@ -101,6 +101,11 @@
   --pink-800: #702459;
   --pink-900: #521b41;
 
+  --blue-bg: #63b3ed38;
+  --green-bg: #68d39138;
+  --orange-bg: #f6ad5538;
+  --red-bg: #fc818138;
+
   /* Utility colours */
   --color-lighten: rgba(255, 255, 255, 0.08);
   --color-darken: rgba(0, 0, 0, 0.16);
@@ -164,12 +169,17 @@ ol,
 ul {
   list-style: none;
 }
+
 h1,
 h2,
 h3,
 h4,
 h5 {
   font-family: "Raleway", sans-serif;
+}
+
+fieldset {
+  border: none;
 }
 
 ::-webkit-scrollbar {
@@ -199,6 +209,9 @@ h5 {
 .xl {
   font-size: 1.5rem;
 }
+.xxl {
+  font-size: 2rem;
+}
 .placeholder-button {
   border: 0.25rem dashed var(--color-lighten);
 }
@@ -210,4 +223,8 @@ h5 {
 .placeholder-button:focus {
   box-shadow: none;
   border-color: var(--color-focus);
+}
+.disc-list {
+  list-style: disc;
+  padding-left: 1rem;
 }

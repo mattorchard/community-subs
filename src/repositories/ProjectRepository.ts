@@ -11,7 +11,6 @@ export type Project = {
 
 export type ProjectVideo = {
   duration: number;
-  aspectRatio: number;
   thumbnailUrl?: string;
 } & (
   | {

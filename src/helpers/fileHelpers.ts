@@ -23,4 +23,7 @@ export const readAsText = (file: File): Promise<string> => new Promise((resolve,
   reader.onerror = () => reject(new Error(`Reader failed to read`))
   reader.onload = () => resolve(reader.result as string)
   reader.readAsText(file)
-})
+});
+
+export const getFileExtension = (fileName: string) =>
+  fileName.toLowerCase().substring(fileName.lastIndexOf(".") + 1, fileName.length)
