@@ -8,7 +8,6 @@ import "./ProjectOverview.css";
 import DebouncedInput from "./DebouncedInput";
 import { toDateTimeString } from "../helpers/dateHelpers";
 import AddVideoForm from "./AddVideoForm";
-import TranscriptList from "./TranscriptList";
 import Thumbnail from "./Thumbnail";
 import ImportTranscriptArea from "./ImportTranscriptArea";
 
@@ -57,7 +56,6 @@ const ProjectOverview: React.FC<{ project: Project }> = ({
           <div>
             {/*Todo: Add video details*/}
             {/*Todo: Add import option*/}
-            <TranscriptList projectId={project.id} />
             <ImportTranscriptArea projectId={project.id} />
           </div>
         ) : (
