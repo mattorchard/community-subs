@@ -18,3 +18,20 @@ export type Cue = {
   layer: number;
   settings?: CueSettings;
 };
+
+export type Transcript = {
+  id: string;
+  name: string;
+  createdAt: Date;
+  accessedAt: Date;
+  video?: VideoMeta
+}
+
+
+export type VideoMeta = { id: string, createdAt: Date, duration: number } &
+  ({
+    type: "youtube";
+  } | {
+    type: "upload";
+    thumbnailUrl: string;
+  })

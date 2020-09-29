@@ -8,44 +8,47 @@ import Studio from "./Studio";
 import "./App.css";
 import { Project } from "../repositories/ProjectRepository";
 import useModifierKeyClasses from "../hooks/useModifierKeyClasses";
+import { TranscriptContextProvider } from "../contexts/TranscriptContext";
 
 const App = () => {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   useModifierKeyClasses(wrapperRef);
   return (
     <div ref={wrapperRef}>
-      <BrowserRouter>
-        <Switch>
-          <Route path="/" exact component={LandingPage} />
-          <Route
-            path="/project/:projectId"
-            render={({ match }) => (
-              <ProjectLoadingWrapper
-                projectId={match.params.projectId}
-                render={(project) => <ProjectOverview project={project} />}
-              />
-            )}
-          />
-          <Route
-            path="/studio/:projectId/:transcriptId"
-            render={({ match }) => (
-              <ProjectLoadingWrapper
-                projectId={match.params.projectId}
-                render={(project) => (
-                  <Studio
-                    project={project}
-                    transcriptId={match.params.transcriptId}
-                  />
-                )}
-              />
-            )}
-          />
+      <TranscriptContextProvider>
+        <BrowserRouter>
+          <Switch>
+            <Route path="/" exact component={LandingPage} />
+            <Route
+              path="/project/:projectId"
+              render={({ match }) => (
+                <ProjectLoadingWrapper
+                  projectId={match.params.projectId}
+                  render={(project) => <ProjectOverview project={project} />}
+                />
+              )}
+            />
+            <Route
+              path="/studio/:projectId/:transcriptId"
+              render={({ match }) => (
+                <ProjectLoadingWrapper
+                  projectId={match.params.projectId}
+                  render={(project) => (
+                    <Studio
+                      project={project}
+                      transcriptId={match.params.transcriptId}
+                    />
+                  )}
+                />
+              )}
+            />
 
-          <Route>
-            <Redirect to="/" />
-          </Route>
-        </Switch>
-      </BrowserRouter>
+            <Route>
+              <Redirect to="/" />
+            </Route>
+          </Switch>
+        </BrowserRouter>
+      </TranscriptContextProvider>
     </div>
   );
 };
