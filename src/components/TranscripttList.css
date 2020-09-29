@@ -1,24 +1,24 @@
-.project-list {
+.transcript-list {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   grid-gap: 2rem;
   align-items: flex-start;
 }
-.project-list__create-project-button {
+.transcript-list__create-transcript-button {
   width: 100%;
   height: 100%;
 }
-.project-list__item__link:focus,
-.project-list__item__link:hover {
+.transcript-list__item__link:focus,
+.transcript-list__item__link:hover {
   color: var(--color-focus);
 }
-.project-list__item__link {
+.transcript-list__item__link {
   transition: color 0.3s ease-in-out;
 }
-.project-list__item__link:focus {
+.transcript-list__item__link:focus {
   box-shadow: none;
 }
-.project-link__title {
+.transcript-link__title {
   margin-top: 0.5rem;
   white-space: nowrap;
   overflow: hidden;

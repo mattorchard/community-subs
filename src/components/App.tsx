@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
-import ProjectList from "./ProjectList";
+import TranscriptList from "./TranscriptList";
 import "./App.css";
 import useModifierKeyClasses from "../hooks/useModifierKeyClasses";
 import { TranscriptContextProvider } from "../contexts/TranscriptContext";
@@ -44,8 +44,8 @@ const LandingPage = () => (
       </p>
       {/*Todo: Warning to Safari users about storage issue */}
     </section>
-    <section className="landing-page__project-section">
-      <ProjectList />
+    <section className="landing-page__transcript-section">
+      <TranscriptList />
     </section>
   </div>
 );
