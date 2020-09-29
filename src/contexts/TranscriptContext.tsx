@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { v4 as uuidV4 } from "uuid";
 import { Transcript } from "../types/cue";
 import useAsRef from "../hooks/useAsRef";
@@ -7,14 +7,20 @@ import {
   putTranscript,
 } from "../repositories/EntityRepository";
 
-type TranscriptCreate = Omit<Transcript, "id" | "createdAt">;
 type TranscriptUpdate = Partial<Transcript> & Pick<Transcript, "id">;
-export type TranscriptToSave = TranscriptCreate | TranscriptUpdate;
 
 const TranscriptsContext = React.createContext<Transcript[] | null>(null);
-const SaveTranscriptContext = React.createContext<
-  (t: TranscriptToSave) => Promise<void>
->(async () => {});
+const TranscriptActionsContext = React.createContext<{
+  createTranscript: () => Promise<Transcript>;
+  updateTranscript: (t: TranscriptUpdate) => Promise<Transcript>;
+}>({
+  createTranscript: async () => {
+    throw new Error(`Accessing actions outside context root`);
+  },
+  updateTranscript: async () => {
+    throw new Error(`Accessing actions outside context root`);
+  },
+});
 
 export const TranscriptContextProvider: React.FC = ({ children }) => {
   const [state, setState] = useState<Transcript[] | null>(null);
@@ -27,21 +33,23 @@ export const TranscriptContextProvider: React.FC = ({ children }) => {
       .catch((error) => console.error("Failed to load transcripts", error));
   }, []);
 
-  const saveTranscript = useCallback(
-    async (partialTranscript: TranscriptToSave) => {
-      const oldTranscript =
-        "id" in partialTranscript
-          ? stateRef.current?.find(
-              (existingTranscript) =>
-                existingTranscript.id === partialTranscript.id
-            )
-          : null;
+  const actions = useMemo(
+    () => ({
+      updateTranscript: async (partialTranscript: TranscriptUpdate) => {
+        const oldTranscript = stateRef.current?.find(
+          (existingTranscript) => existingTranscript.id === partialTranscript.id
+        );
 
-      if (oldTranscript) {
+        if (!oldTranscript) {
+          throw new Error(
+            `No transcript with ID ${partialTranscript.id} to update`
+          );
+        }
         const savedTranscript = await putTranscript({
           ...oldTranscript,
           ...partialTranscript,
         });
+
         setState((state) =>
           state
             ? state.map((otherTranscript) =>
@@ -51,29 +59,33 @@ export const TranscriptContextProvider: React.FC = ({ children }) => {
               )
             : [savedTranscript]
         );
-      } else {
+        return savedTranscript;
+      },
+      createTranscript: async () => {
         const savedTranscript = await putTranscript({
-          ...(partialTranscript as TranscriptCreate),
           id: uuidV4(),
+          name: "New Transcript",
           createdAt: new Date(),
+          accessedAt: new Date(),
         });
         setState((transcripts) =>
           transcripts ? [savedTranscript, ...transcripts] : [savedTranscript]
         );
-      }
-    },
+        return savedTranscript;
+      },
+    }),
     [setState, stateRef]
   );
 
   return (
-    <SaveTranscriptContext.Provider value={saveTranscript}>
+    <TranscriptActionsContext.Provider value={actions}>
       <TranscriptsContext.Provider value={state}>
         {children}
       </TranscriptsContext.Provider>
-    </SaveTranscriptContext.Provider>
+    </TranscriptActionsContext.Provider>
   );
 };
 
 export const useTranscripts = () => useContext(TranscriptsContext);
 
-export const useTranscriptActions = () => useContext(SaveTranscriptContext);
+export const useTranscriptActions = () => useContext(TranscriptActionsContext);
