@@ -4,6 +4,7 @@ import TranscriptList from "./TranscriptList";
 import "./App.css";
 import useModifierKeyClasses from "../hooks/useModifierKeyClasses";
 import { TranscriptContextProvider } from "../contexts/TranscriptContext";
+import NewTranscriptPage from "./NewTranscriptPage";
 
 const App = () => {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
@@ -14,6 +15,10 @@ const App = () => {
         <BrowserRouter>
           <Switch>
             <Route path="/" exact component={LandingPage} />
+            <Route
+              path="/transcript/:transcriptId/new"
+              component={NewTranscriptPage}
+            />
             <Route>
               <Redirect to="/" />
             </Route>
