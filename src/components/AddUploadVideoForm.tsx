@@ -5,13 +5,13 @@ import {
   getVideoFileDetails,
 } from "../helpers/videoHelpers";
 import { getFileExtension } from "../helpers/fileHelpers";
-import { ProjectVideo, saveFile } from "../repositories/ProjectRepository";
+import { VideoMeta } from "../types/cue";
 import "./AddUploadVideoForm.css";
+import { createFile } from "../repositories/EntityRepository";
 
 const AddUploadVideoForm: React.FC<{
-  projectId: string;
-  onSubmit: (video: ProjectVideo) => void;
-}> = ({ projectId, onSubmit }) => {
+  onSubmit: (video: VideoMeta) => void;
+}> = ({ onSubmit }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>(
     undefined
@@ -47,11 +47,12 @@ const AddUploadVideoForm: React.FC<{
 
           try {
             const details = await getVideoFileDetails(file);
-            const { id: fileId } = await saveFile(projectId, file);
+            const { id } = await createFile(file);
             onSubmit({
               ...details,
+              id,
               type: "upload",
-              fileId,
+              createdAt: new Date(),
             });
           } catch (error) {
             console.error("Failed to get video details", error);

@@ -4,7 +4,7 @@ import Spinner from "./Spinner";
 import Button from "./Button";
 import { Alert } from "./Alert";
 import "./AddYouTubeVideoForm.css";
-import { ProjectVideo } from "../repositories/ProjectRepository";
+import { VideoMeta } from "../types/cue";
 
 const isValidVideoId = (value: string) => /^[A-Za-z0-9_-]{11}$/.test(value);
 
@@ -25,9 +25,6 @@ const getVideoIdFromUrl = (rawUrl: string) => {
   } catch {}
   return null;
 };
-
-const getThumbnailForYouTubeId = (videoId: string) =>
-  `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
 
 const YoutubeIdInput: React.FC<{
   onVideoIdChange: (videoId: string | null) => void;
@@ -90,7 +87,7 @@ const YoutubeIdInput: React.FC<{
 };
 
 const AddYoutubeVideoForm: React.FC<{
-  onSubmit: (video: ProjectVideo) => void;
+  onSubmit: (video: VideoMeta) => void;
 }> = ({ onSubmit }) => {
   const [videoId, setVideoId] = useState<null | string>(null);
   const [videoDetails, setVideoDetails] = useState<{
@@ -134,9 +131,9 @@ const AddYoutubeVideoForm: React.FC<{
                         onClick={() => {
                           onSubmit({
                             type: "youtube",
-                            youtubeId: videoId,
+                            id: videoId,
+                            createdAt: new Date(),
                             duration: videoDetails?.duration,
-                            thumbnailUrl: getThumbnailForYouTubeId(videoId),
                           });
                         }}
                       >

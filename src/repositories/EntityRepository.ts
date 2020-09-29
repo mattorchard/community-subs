@@ -1,6 +1,12 @@
 import { DBSchema, openDB } from "idb";
 import { Cue, Transcript } from "../types/cue";
+import { v4 as uuidV4 } from "uuid";
 
+type FileExtended = {
+  id: string;
+  createdAt: Date;
+  file: File;
+}
 
 interface EntityRepository extends DBSchema {
   transcripts: {
@@ -20,11 +26,7 @@ interface EntityRepository extends DBSchema {
   },
   files: {
     key: string;
-    value: {
-      id: string;
-      createdAt: Date;
-      file: File;
-    };
+    value: FileExtended;
     indexes: {
       createdAt: "createdAt"
     }
@@ -57,4 +59,15 @@ export const putTranscript = async(transcript: Transcript) => {
   const db = await dbPromise;
   await db.put("transcripts", transcript);
   return transcript;
+}
+
+export const createFile = async (file: File) => {
+  const db = await dbPromise;
+  const completeFile = {
+    id: uuidV4(),
+    createdAt: new Date(),
+    file
+  };
+  await db.put("files", completeFile);
+  return completeFile;
 }

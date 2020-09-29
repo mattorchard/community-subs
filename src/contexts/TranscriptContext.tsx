@@ -7,7 +7,7 @@ import {
   putTranscript,
 } from "../repositories/EntityRepository";
 
-type TranscriptUpdate = Partial<Transcript> & Pick<Transcript, "id">;
+export type TranscriptUpdate = Partial<Transcript> & Pick<Transcript, "id">;
 
 const TranscriptsContext = React.createContext<Transcript[] | null>(null);
 const TranscriptActionsContext = React.createContext<{

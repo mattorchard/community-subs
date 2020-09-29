@@ -19,6 +19,10 @@ const App = () => {
               path="/transcript/:transcriptId/new"
               component={NewTranscriptPage}
             />
+            <Route
+              path="/transcript/:transcriptId"
+              render={() => <h1>Testing</h1>}
+            />
             <Route>
               <Redirect to="/" />
             </Route>
