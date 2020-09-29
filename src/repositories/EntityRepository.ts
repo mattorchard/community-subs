@@ -71,3 +71,12 @@ export const createFile = async (file: File) => {
   await db.put("files", completeFile);
   return completeFile;
 }
+
+export const getFile = async (fileId: string) => {
+  const db = await dbPromise;
+  const file = await db.get("files", fileId);
+  if (!file) {
+    throw new Error(`No file with ID ${fileId}`);
+  }
+  return file;
+}
