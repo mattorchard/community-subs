@@ -1,10 +1,8 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
-import { useTranscriptMatch } from "../hooks/RouteHooks";
 import {
   TranscriptUpdate,
   useTranscriptActions,
-  useTranscripts,
 } from "../contexts/TranscriptContext";
 import Spinner from "./Spinner";
 import Thumbnail from "./Thumbnail";
@@ -13,24 +11,7 @@ import { toDateTimeString } from "../helpers/dateHelpers";
 import AddVideoForm from "./AddVideoForm";
 import { getThumbnailUrl } from "../helpers/entityHelpers";
 import "./NewTranscriptPage.css";
-
-const useTranscript = () => {
-  const transcriptId = useTranscriptMatch();
-  const transcripts = useTranscripts();
-
-  return useMemo(() => {
-    if (!transcripts) {
-      return null;
-    }
-    const transcript = transcripts.find(
-      (transcript) => transcript.id === transcriptId
-    );
-    if (!transcript) {
-      throw new Error(`No transcript with ID ${transcriptId}`);
-    }
-    return transcript;
-  }, [transcriptId, transcripts]);
-};
+import useTranscript from "../hooks/useTranscript";
 
 const NewTranscriptPage = () => {
   const [isSaving, setIsSaving] = useState(false);

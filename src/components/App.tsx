@@ -5,6 +5,7 @@ import "./App.css";
 import useModifierKeyClasses from "../hooks/useModifierKeyClasses";
 import { TranscriptContextProvider } from "../contexts/TranscriptContext";
 import NewTranscriptPage from "./NewTranscriptPage";
+import Studio from "./Studio";
 
 const App = () => {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
@@ -19,10 +20,7 @@ const App = () => {
               path="/transcript/:transcriptId/new"
               component={NewTranscriptPage}
             />
-            <Route
-              path="/transcript/:transcriptId"
-              render={() => <h1>Testing</h1>}
-            />
+            <Route path="/transcript/:transcriptId" component={Studio} />
             <Route>
               <Redirect to="/" />
             </Route>

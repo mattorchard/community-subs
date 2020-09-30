@@ -10,9 +10,9 @@ import Button from "./Button";
 import { createVttBlob, downloadFile } from "../helpers/fileHelpers";
 import { toWebVtt } from "../helpers/exportHelpers";
 import Spinner from "./Spinner";
-import { Transcript } from "../types/cue";
+import WithTranscript from "./WithTranscript";
 
-const Studio: React.FC<{ transcript: Transcript }> = ({ transcript }) => {
+const Studio = WithTranscript(({ transcript }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0.1);
   const [selectedCue, setSelectedCue] = useState<string | null>(null);
@@ -78,5 +78,6 @@ const Studio: React.FC<{ transcript: Transcript }> = ({ transcript }) => {
       />
     </div>
   );
-};
+});
+
 export default Studio;
