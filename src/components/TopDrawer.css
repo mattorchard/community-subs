@@ -6,9 +6,9 @@
   right: 0;
   height: 300px;
   overflow: auto;
-  animation: slide-in 0.5s ease forwards 1;
+  animation: top-drawer__slide-in 0.5s ease forwards 1;
 }
-@keyframes slide-in {
+@keyframes top-drawer__slide-in {
   from {
     transform: translateY(-100%);
   }
@@ -21,9 +21,9 @@
   left: 0;
   background-color: #171923f0;
   backdrop-filter: blur(3px);
-  animation: fade-in 0.5s ease-in-out forwards 1;
+  animation: top-drawer__fade-in 0.5s ease-in-out forwards 1;
 }
-@keyframes fade-in {
+@keyframes top-drawer__fade-in {
   from {
     background-color: transparent;
     filter: blur(0px);
