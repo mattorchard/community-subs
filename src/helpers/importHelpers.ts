@@ -2,9 +2,8 @@ import { Cue } from "../types/cue";
 import { v4 as uuidV4 } from "uuid";
 import { timeCodeToMillis } from "./timeCodeHelpers";
 
-export const fromVtt = (rawVtt: string) => {
-  const transcriptId = uuidV4();
-  const cues: Cue[] = rawVtt
+export const fromVtt = (transcriptId: string, rawVtt: string): Cue[] =>
+  rawVtt
     .split(/\r?\n\r?\n/g)
     .filter(
       (block, index) =>
@@ -19,12 +18,6 @@ export const fromVtt = (rawVtt: string) => {
       id: uuidV4(),
       layer: 0,
     }));
-  const transcript = {
-    id: transcriptId,
-    // Todo: Parse language from header
-  }
-  return {cues, transcript}
-};
 
 const getBlockType = (block: string) => {
   if (block.startsWith("NOTE")) {
@@ -102,4 +95,3 @@ const parseSettings = () => {
   console.warn("Currently cue settings are not parsed during import");
   return undefined;
 };
-

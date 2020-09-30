@@ -95,3 +95,10 @@ export const saveCue = async (cue: Cue) => {
   await db.put("cues", cue);
   return cue;
 };
+
+export const putCuesBulk = async (cues: Cue[]) => {
+  const db = await dbPromise;
+  const transaction = db.transaction("cues", "readwrite");
+  cues.forEach((cue) => transaction.objectStore("cues").put(cue));
+  return await transaction.done;
+};

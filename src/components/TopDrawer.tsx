@@ -6,6 +6,10 @@ import DebouncedInput from "./DebouncedInput";
 import { useTranscriptActions } from "../contexts/TranscriptContext";
 import Button from "./Button";
 import { toDateTimeString } from "../helpers/dateHelpers";
+import FileDropTarget from "./FileDropTarget";
+import { fromVtt } from "../helpers/importHelpers";
+import { readAsText } from "../helpers/fileHelpers";
+import { putCuesBulk } from "../repositories/EntityRepository";
 
 const TranscriptNameInput: React.FC<{ transcript: Transcript }> = ({
   transcript,
@@ -29,6 +33,43 @@ const TranscriptNameInput: React.FC<{ transcript: Transcript }> = ({
   );
 };
 
+const ImportCueArea: React.FC<{ transcriptId: string }> = ({
+  transcriptId,
+}) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(
+    undefined
+  );
+  return (
+    <FileDropTarget
+      buttonLabel="Choose a transcript to import"
+      dropLabel="Or drag an drop one"
+      accept="text/*"
+      isLoading={isLoading}
+      errorMessage={errorMessage}
+      onDrop={async (files) => {
+        const [file] = files;
+        if (!file) {
+          return;
+        }
+        setErrorMessage("");
+        try {
+          setIsLoading(true);
+          const cues = fromVtt(transcriptId, await readAsText(file));
+          await putCuesBulk(cues);
+
+          // Todo: Fix this disgusting hack
+          window.location.reload();
+        } catch (error) {
+          setErrorMessage("Error loading file");
+        } finally {
+          setIsLoading(false);
+        }
+      }}
+    />
+  );
+};
+
 const TopDrawer: React.FC<{
   isOpen: boolean;
   onRequestClose: () => void;
@@ -46,6 +87,7 @@ const TopDrawer: React.FC<{
 
       <Button onClick={onRequestExport}>Export as WebVTT</Button>
     </header>
+
     <time
       className="top-drawer__date"
       dateTime={transcript.createdAt.toISOString()}
@@ -59,8 +101,7 @@ const TopDrawer: React.FC<{
       Accessed {toDateTimeString(transcript.accessedAt)}
     </time>
 
-    {/*Todo: Import */}
-    {/*Todo: Show Dates*/}
+    <ImportCueArea transcriptId={transcript.id} />
   </Modal>
 );
 
