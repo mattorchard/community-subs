@@ -10,6 +10,8 @@ import FileDropTarget from "./FileDropTarget";
 import { fromVtt } from "../helpers/importHelpers";
 import { readAsText } from "../helpers/fileHelpers";
 import { putCuesBulk } from "../repositories/EntityRepository";
+import { faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const TranscriptNameInput: React.FC<{ transcript: Transcript }> = ({
   transcript,
@@ -82,26 +84,35 @@ const TopDrawer: React.FC<{
     className="top-drawer"
     overlayClassName="top-drawer__overlay"
   >
-    <header className="top-drawer__header">
-      <TranscriptNameInput transcript={transcript} />
-
-      <Button onClick={onRequestExport}>Export as WebVTT</Button>
-    </header>
-
-    <time
-      className="top-drawer__date"
-      dateTime={transcript.createdAt.toISOString()}
+    <button
+      className="top-drawer-close"
+      title="Close top drawer"
+      onClick={onRequestClose}
     >
-      Created {toDateTimeString(transcript.createdAt)}
-    </time>
-    <time
-      className="top-drawer__date"
-      dateTime={transcript.createdAt.toISOString()}
-    >
-      Accessed {toDateTimeString(transcript.accessedAt)}
-    </time>
+      <FontAwesomeIcon icon={faChevronUp} />
+    </button>
+    <div className="top-drawer__content">
+      <header className="top-drawer__header">
+        <TranscriptNameInput transcript={transcript} />
 
-    <ImportCueArea transcriptId={transcript.id} />
+        <Button onClick={onRequestExport}>Export as WebVTT</Button>
+      </header>
+
+      <time
+        className="top-drawer__date"
+        dateTime={transcript.createdAt.toISOString()}
+      >
+        Created {toDateTimeString(transcript.createdAt)}
+      </time>
+      <time
+        className="top-drawer__date"
+        dateTime={transcript.createdAt.toISOString()}
+      >
+        Accessed {toDateTimeString(transcript.accessedAt)}
+      </time>
+
+      <ImportCueArea transcriptId={transcript.id} />
+    </div>
   </Modal>
 );
 
