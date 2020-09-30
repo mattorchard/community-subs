@@ -6,31 +6,31 @@ type FileExtended = {
   id: string;
   createdAt: Date;
   file: File;
-}
+};
 
 interface EntityRepository extends DBSchema {
   transcripts: {
     key: string;
     value: Transcript;
     indexes: {
-      accessedAt: "accessedAt"
-      "videoId": ["video", "id"]
-    }
-  },
+      accessedAt: "accessedAt";
+      videoId: ["video", "id"];
+    };
+  };
   cues: {
     key: string;
-    value: Cue
+    value: Cue;
     indexes: {
-      transcriptId: "transcriptId"
-    }
-  },
+      transcriptId: "transcriptId";
+    };
+  };
   files: {
     key: string;
     value: FileExtended;
     indexes: {
-      createdAt: "createdAt"
-    }
-  },
+      createdAt: "createdAt";
+    };
+  };
 }
 
 const dbPromise = openDB<EntityRepository>("entity-repository", 1, {
@@ -40,37 +40,37 @@ const dbPromise = openDB<EntityRepository>("entity-repository", 1, {
     const cueStore = db.createObjectStore("cues", idForKey);
     const fileStore = db.createObjectStore("files", idForKey);
 
-    transcriptStore.createIndex("accessedAt", "accessedAt")
-    transcriptStore.createIndex("videoId", ["video", "id"])
+    transcriptStore.createIndex("accessedAt", "accessedAt");
+    transcriptStore.createIndex("videoId", ["video", "id"]);
 
-    cueStore.createIndex("transcriptId", "transcriptId")
+    cueStore.createIndex("transcriptId", "transcriptId");
 
-    fileStore.createIndex("createdAt", "createdAt")
-  }
+    fileStore.createIndex("createdAt", "createdAt");
+  },
 });
 
 export const getTranscripts = async () => {
   const db = await dbPromise;
   const transcripts = await db.getAllFromIndex("transcripts", "accessedAt");
-  return transcripts.reverse()
-}
+  return transcripts.reverse();
+};
 
-export const putTranscript = async(transcript: Transcript) => {
+export const putTranscript = async (transcript: Transcript) => {
   const db = await dbPromise;
   await db.put("transcripts", transcript);
   return transcript;
-}
+};
 
 export const createFile = async (file: File) => {
   const db = await dbPromise;
   const completeFile = {
     id: uuidV4(),
     createdAt: new Date(),
-    file
+    file,
   };
   await db.put("files", completeFile);
   return completeFile;
-}
+};
 
 export const getFile = async (fileId: string) => {
   const db = await dbPromise;
@@ -79,4 +79,19 @@ export const getFile = async (fileId: string) => {
     throw new Error(`No file with ID ${fileId}`);
   }
   return file;
-}
+};
+
+export const getCues = async (transcriptId: string) => {
+  const db = await dbPromise;
+  return await db.getAllFromIndex(
+    "cues",
+    "transcriptId",
+    IDBKeyRange.only(transcriptId)
+  );
+};
+
+export const saveCue = async (cue: Cue) => {
+  const db = await dbPromise;
+  await db.put("cues", cue);
+  return cue;
+};

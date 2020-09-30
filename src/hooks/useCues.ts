@@ -1,7 +1,7 @@
 import { Cue } from "../types/cue";
 import { useCallback, useEffect, useState } from "react";
 import { v4 as uuidV4 } from "uuid";
-import { getCues, saveCue } from "../repositories/ProjectRepository";
+import { getCues, saveCue } from "../repositories/EntityRepository";
 import useAsRef from "./useAsRef";
 
 export type CueState = {
