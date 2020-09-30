@@ -231,9 +231,6 @@ fieldset {
   padding-left: 1rem;
 }
 
-.input-flush {
-  width: 100%;
-}
 .input-flush:focus {
   box-shadow: none;
   text-decoration: underline;

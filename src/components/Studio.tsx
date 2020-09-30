@@ -12,6 +12,9 @@ import { toWebVtt } from "../helpers/exportHelpers";
 import Spinner from "./Spinner";
 import WithTranscript from "./WithTranscript";
 import TopDrawer from "./TopDrawer";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { getClassName } from "../helpers/domHelpers";
 
 const Studio = WithTranscript(({ transcript }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -47,6 +50,19 @@ const Studio = WithTranscript(({ transcript }) => {
         }
         transcript={transcript}
       />
+      <button
+        className={getClassName(
+          "studio__open-drawer-button",
+          {
+            open: isTopDrawerOpen,
+          },
+          "lg"
+        )}
+        onClick={() => setIsTopDrawerOpen(true)}
+        title="Open drawer"
+      >
+        <FontAwesomeIcon icon={faChevronDown} />
+      </button>
       <VideoPlayer
         video={transcript.video}
         onTimeChange={onTimeChange}
@@ -69,7 +85,6 @@ const Studio = WithTranscript(({ transcript }) => {
         >
           Toggle View
         </Button>
-        <Button onClick={() => setIsTopDrawerOpen(true)}>Open Drawer</Button>
       </div>
       <Timeline
         duration={transcript.video.duration}

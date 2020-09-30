@@ -38,7 +38,7 @@ const NewTranscriptPage = () => {
           <Thumbnail url={getThumbnailUrl(transcript.video)} />
         )}
 
-        <div className="new-transcript-page__header__content_info">
+        <div className="new-transcript-page__header__info">
           <DebouncedInput
             className="input-flush xxxl"
             initialValue={transcript.name}

@@ -25,3 +25,27 @@
   padding: 1rem;
   background-color: var(--gray-900);
 }
+.studio__open-drawer-button {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  background-color: var(--gray-700);
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease-in-out;
+  --bs: 0 0.5rem 1rem 0.5rem var(--color-darken);
+  box-shadow: var(--bs);
+}
+.studio__open-drawer-button:focus {
+  box-shadow: var(--focus-bs), var(--bs);
+}
+.studio__open-drawer-button--open {
+  transform: rotateZ(-0.5turn);
+}
+.studio__open-drawer-button:hover {
+  transform: translateY(10%);
+}
