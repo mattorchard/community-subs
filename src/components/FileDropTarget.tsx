@@ -22,14 +22,15 @@ const FileDropTarget: React.FC<{
   className,
   isLoading = false,
 }) => {
-  const contentRef = useRef<HTMLDivElement | null>(null);
+  const dropRef = useRef<HTMLDivElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const isDraggingOver = useFileDrop(onDrop);
 
   useEffect(() => {
-    if (contentRef.current) {
-      const bounds = contentRef.current.getBoundingClientRect();
-      const style = contentRef.current.style;
+    if (dropRef.current) {
+      const bounds = dropRef.current.getBoundingClientRect();
+      const style = dropRef.current.style;
+      console.log("Re-applying the bounds", bounds);
       style.setProperty("--initial-x", `${bounds.left}px`);
       style.setProperty("--initial-y", `${bounds.top}px`);
       style.setProperty("--initial-width", `${bounds.width}px`);
@@ -38,14 +39,18 @@ const FileDropTarget: React.FC<{
   }, [isDraggingOver]);
 
   return (
-    <div className={`file-drop-target xl ${className}`}>
-      <div
-        ref={contentRef}
-        className={getClassName("file-drop-target__content", {
+    <div
+      ref={dropRef}
+      className={getClassName(
+        "file-drop-target",
+        {
           dragging: isDraggingOver,
           "has-error": errorMessage,
-        })}
-      >
+        },
+        `xl ${className}`
+      )}
+    >
+      <div className="file-drop-target__content">
         <Button
           onClick={() => fileInputRef.current?.click()}
           disabled={isLoading}

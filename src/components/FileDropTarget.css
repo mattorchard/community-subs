@@ -12,22 +12,27 @@
   padding: 2rem;
   border: 0.25rem dashed var(--color-lighten);
   border-radius: 1rem;
+  position: relative;
 }
-.file-drop-target__content--dragging {
+.file-drop-target--dragging {
+  width: var(--initial-width);
+  height: var(--initial-height);
+}
+.file-drop-target--dragging > .file-drop-target__content {
   position: fixed;
   top: 1rem;
   left: 1rem;
   width: calc(100vw - 2rem);
   height: calc(100vh - 2rem);
-  animation: file-drop-target__foo 0.5s ease-in-out forwards 1;
+  animation: file-drop-target__fill-screen 0.5s ease-in-out forwards 1;
 }
-.file-drop-target__content--has-error {
+.file-drop-target--has-error > .file-drop-target__content {
   border-color: var(--color-danger);
 }
-@keyframes file-drop-target__foo {
+@keyframes file-drop-target__fill-screen {
   from {
-    top: var(--initial-x);
-    left: var(--initial-y);
+    top: var(--initial-y);
+    left: var(--initial-x);
     width: var(--initial-width);
     height: var(--initial-height);
   }
