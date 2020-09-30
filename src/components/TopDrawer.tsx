@@ -4,6 +4,8 @@ import "./TopDrawer.css";
 import { Transcript } from "../types/cue";
 import DebouncedInput from "./DebouncedInput";
 import { useTranscriptActions } from "../contexts/TranscriptContext";
+import Button from "./Button";
+import { toDateTimeString } from "../helpers/dateHelpers";
 
 const TranscriptNameInput: React.FC<{ transcript: Transcript }> = ({
   transcript,
@@ -31,16 +33,33 @@ const TopDrawer: React.FC<{
   isOpen: boolean;
   onRequestClose: () => void;
   transcript: Transcript;
-}> = ({ isOpen, onRequestClose, transcript }) => (
+  onRequestExport: () => void;
+}> = ({ isOpen, onRequestClose, transcript, onRequestExport }) => (
   <Modal
     isOpen={isOpen}
     onRequestClose={onRequestClose}
     className="top-drawer"
     overlayClassName="top-drawer__overlay"
   >
-    <TranscriptNameInput transcript={transcript} />
+    <header className="top-drawer__header">
+      <TranscriptNameInput transcript={transcript} />
+
+      <Button onClick={onRequestExport}>Export as WebVTT</Button>
+    </header>
+    <time
+      className="top-drawer__date"
+      dateTime={transcript.createdAt.toISOString()}
+    >
+      Created {toDateTimeString(transcript.createdAt)}
+    </time>
+    <time
+      className="top-drawer__date"
+      dateTime={transcript.createdAt.toISOString()}
+    >
+      Accessed {toDateTimeString(transcript.accessedAt)}
+    </time>
+
     {/*Todo: Import */}
-    {/*Todo: Export*/}
     {/*Todo: Show Dates*/}
   </Modal>
 );

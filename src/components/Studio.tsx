@@ -39,6 +39,12 @@ const Studio = WithTranscript(({ transcript }) => {
       <TopDrawer
         isOpen={isTopDrawerOpen}
         onRequestClose={() => setIsTopDrawerOpen(false)}
+        onRequestExport={() =>
+          downloadFile(
+            `${transcript.name}.vtt`,
+            createVttBlob(toWebVtt(cueState))
+          )
+        }
         transcript={transcript}
       />
       <VideoPlayer
@@ -64,16 +70,6 @@ const Studio = WithTranscript(({ transcript }) => {
           Toggle View
         </Button>
         <Button onClick={() => setIsTopDrawerOpen(true)}>Open Drawer</Button>
-        <Button
-          onClick={() => {
-            downloadFile(
-              "CommunitySubs.vtt",
-              createVttBlob(toWebVtt(cueState))
-            );
-          }}
-        >
-          Export
-        </Button>
       </div>
       <Timeline
         duration={transcript.video.duration}
