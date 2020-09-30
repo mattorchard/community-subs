@@ -1,19 +1,28 @@
 import React from "react";
 import useObjectUrl from "../hooks/useObjectUrl";
 import Spinner from "./Spinner";
-import { useFile } from "../hooks/ProjectRepositoryHooks";
+import useAsyncValue from "../hooks/useAsyncValue";
+import { getFile } from "../repositories/EntityRepository";
+import { Alert } from "./Alert";
+
+const useFile = (fileId: string) =>
+  useAsyncValue(() => getFile(fileId), [fileId]);
 
 const FilePlayer = React.forwardRef<HTMLVideoElement, { id: string }>(
   ({ id }, ref) => {
-    const { file, loading, error } = useFile(id);
-    const objectUrl = useObjectUrl(file || undefined);
+    const { result: file, loading, error } = useFile(id);
+    const objectUrl = useObjectUrl(file?.file);
     if (loading || !objectUrl) {
       return <Spinner />;
     }
-    if (error || !file) {
-      // Todo: Error
-      console.error("Failed to get file", error);
-      return <p>Unable to get file</p>;
+    if (error) {
+      return (
+        <Alert
+          type="error"
+          heading="Failed to load video"
+          description={error.message}
+        />
+      );
     }
     return <video ref={ref} controls src={objectUrl} />;
   }

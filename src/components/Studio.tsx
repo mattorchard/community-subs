@@ -1,4 +1,5 @@
 import React, { useCallback, useRef, useState } from "react";
+import { Redirect } from "react-router-dom";
 import Timeline from "./Timeline";
 import ZoomRange from "./ZoomRange";
 import useCues from "../hooks/useCues";
@@ -9,17 +10,13 @@ import Button from "./Button";
 import { createVttBlob, downloadFile } from "../helpers/fileHelpers";
 import { toWebVtt } from "../helpers/exportHelpers";
 import Spinner from "./Spinner";
-import { Project } from "../repositories/ProjectRepository";
-import { Link } from "react-router-dom";
+import WithTranscript from "./WithTranscript";
 
-const Studio: React.FC<{ project: Project; transcriptId: string }> = ({
-  project,
-  transcriptId,
-}) => {
+const Studio = WithTranscript(({ transcript }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0.1);
   const [selectedCue, setSelectedCue] = useState<string | null>(null);
-  const [cueState, setCue] = useCues(transcriptId);
+  const [cueState, setCue] = useCues(transcript.id);
   const [seekTo, setSeekTo] = useState<number | null>(null);
 
   const onTimeChange = useCallback((time: number) => {
@@ -31,20 +28,14 @@ const Studio: React.FC<{ project: Project; transcriptId: string }> = ({
     return <Spinner fadeIn>Loading transcript</Spinner>;
   }
 
-  if (!project.video) {
-    // Todo: Error Message
-    console.error("Project has no video, but has transcript?");
-    return (
-      <p>
-        Something went wrong <Link to="/">back to home page</Link>
-      </p>
-    );
+  if (!transcript.video) {
+    return <Redirect to={`/transcript/${transcript.id}/add-video`} />;
   }
 
   return (
     <div className="studio" ref={containerRef}>
       <VideoPlayer
-        video={project.video}
+        video={transcript.video}
         onTimeChange={onTimeChange}
         seekTo={seekTo}
       />
@@ -54,7 +45,7 @@ const Studio: React.FC<{ project: Project; transcriptId: string }> = ({
         setCue={setCue}
         selectedCue={selectedCue}
         onSelectCue={setSelectedCue}
-        duration={project.video.duration}
+        duration={transcript.video.duration}
       />
       <div className="toolbar">
         <ZoomRange zoom={scale} onZoomChange={setScale} />
@@ -77,7 +68,7 @@ const Studio: React.FC<{ project: Project; transcriptId: string }> = ({
         </Button>
       </div>
       <Timeline
-        duration={project.video.duration}
+        duration={transcript.video.duration}
         scale={scale}
         cues={cueState.cues}
         setCue={setCue}
@@ -87,5 +78,6 @@ const Studio: React.FC<{ project: Project; transcriptId: string }> = ({
       />
     </div>
   );
-};
+});
+
 export default Studio;

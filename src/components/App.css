@@ -8,12 +8,11 @@
 }
 .landing-page__welcome-section__title {
   font-size: 3rem;
-
   color: var(--color-focus);
 }
 .landing-page__welcome-section__explainer {
   margin-top: 1rem;
 }
-.landing-page__project-section {
+.landing-page__transcript-section {
   margin-top: 3rem;
 }

@@ -1,4 +1,3 @@
-import input from "./mock";
 import { Cue } from "../types/cue";
 import { v4 as uuidV4 } from "uuid";
 import { timeCodeToMillis } from "./timeCodeHelpers";
@@ -104,4 +103,3 @@ const parseSettings = () => {
   return undefined;
 };
 
-console.log("Created VTT", fromVtt(input));

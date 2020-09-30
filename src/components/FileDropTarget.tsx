@@ -12,12 +12,14 @@ const FileDropTarget: React.FC<{
   accept?: string;
   isLoading?: boolean;
   errorMessage?: string;
+  className?: string;
 }> = ({
   buttonLabel,
   dropLabel,
   accept,
   onDrop,
   errorMessage,
+  className,
   isLoading = false,
 }) => {
   const contentRef = useRef<HTMLDivElement | null>(null);
@@ -36,7 +38,7 @@ const FileDropTarget: React.FC<{
   }, [isDraggingOver]);
 
   return (
-    <div className="file-drop-target xl">
+    <div className={`file-drop-target xl ${className}`}>
       <div
         ref={contentRef}
         className={getClassName("file-drop-target__content", {

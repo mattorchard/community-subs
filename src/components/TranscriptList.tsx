@@ -1,58 +1,72 @@
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
-import { useTranscripts } from "../hooks/ProjectRepositoryHooks";
-import { createTranscript } from "../repositories/ProjectRepository";
-import "./TranscriptList.css";
+import AspectRatio from "./AspectRatio";
 import Spinner from "./Spinner";
+import Thumbnail from "./Thumbnail";
+import {
+  useTranscriptActions,
+  useTranscripts,
+} from "../contexts/TranscriptContext";
+import "./TranscripttList.css";
+import { getThumbnailUrl } from "../helpers/entityHelpers";
 
-const TranscriptList: React.FC<{ projectId: string }> = ({ projectId }) => {
+const TranscriptList: React.FC = () => {
   const history = useHistory();
-  const [creatingTranscript, setCreatingTranscript] = useState(false);
-  const { transcripts, loading: loadingTranscripts, error } = useTranscripts(
-    projectId
-  );
-  if (error && !loadingTranscripts) {
-    // Todo: Proper error message styles
-    return <p>Uh-oh unable to get Project list {error!.message}</p>;
-  }
+  const transcripts = useTranscripts();
+  const { createTranscript } = useTranscriptActions();
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleCreateTranscript = async () => {
+    try {
+      setIsSaving(true);
+      const transcript = await createTranscript();
+      history.push(`/transcript/${transcript.id}/add-video`);
+    } catch (error) {
+      // Todo: Toast
+      console.error("Create transcript failed", error);
+      setIsSaving(false);
+    }
+  };
   return (
     <ol className="transcript-list">
-      <li className="transcript-list__item">
-        {creatingTranscript ? (
+      <AspectRatio as="li" ratio={9 / 16}>
+        {isSaving ? (
           <Spinner size="xl">Creating new transcript</Spinner>
         ) : (
           <button
-            className="transcript-list__add-transcript-button placeholder-button xl"
-            onClick={async () => {
-              try {
-                setCreatingTranscript(true);
-                const transcript = await createTranscript(projectId);
-                history.push(`/studio/${projectId}/${transcript.id}`);
-              } catch (error) {
-                // Todo: Toast
-                console.error("Unable to create transcript", error);
-                setCreatingTranscript(false);
-              }
-            }}
+            type="button"
+            className="transcript-list__create-transcript-button placeholder-button xl"
+            onClick={handleCreateTranscript}
           >
             + New Transcript
           </button>
         )}
-      </li>
-      {loadingTranscripts && (
-        <li className="transcript-list__item">
+      </AspectRatio>
+
+      {!transcripts && (
+        <AspectRatio as="li" center ratio={9 / 16}>
           <Spinner size="xl" fadeIn>
             Loading transcripts
           </Spinner>
-        </li>
+        </AspectRatio>
       )}
+
       {transcripts?.map((transcript) => (
         <li key={transcript.id} className="transcript-list__item">
           <Link
-            to={`/studio/${projectId}/${transcript.id}`}
+            to={
+              transcript.video
+                ? `/transcript/${transcript.id}`
+                : `/transcript/${transcript.id}/add-video`
+            }
             className="transcript-list__item__link"
           >
-            {transcript.name} ({transcript.language})
+            <Thumbnail
+              url={
+                transcript.video ? getThumbnailUrl(transcript.video) : undefined
+              }
+            />
+            <h3 className="transcript-link__title lg">{transcript.name}</h3>
           </Link>
         </li>
       ))}

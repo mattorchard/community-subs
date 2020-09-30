@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import YouTube from "react-youtube";
-import { ProjectVideo } from "../repositories/ProjectRepository";
+import { VideoMeta } from "../types/cue";
 import "./VideoPlayer.css";
 import FilePlayer from "./FilePlayer";
 import useInterval from "../hooks/useInterval";
@@ -21,7 +21,7 @@ const getPlayerSize = (windowWidth: number) => {
 };
 
 type VideoPlayerProps = {
-  video: ProjectVideo;
+  video: VideoMeta;
   onTimeChange: (time: number) => void;
   seekTo: number | null;
 };
@@ -98,7 +98,7 @@ const YouTubePlayer: React.FC<VideoPlayerProps> = ({
   return (
     <div className="player">
       <YouTube
-        videoId={video.youtubeId}
+        videoId={video.id}
         id="player"
         ref={(component: any) => {
           if (component?.internalPlayer)
@@ -138,7 +138,7 @@ const UploadPlayer: React.FC<VideoPlayerProps> = ({
 
   return (
     <div className="player">
-      <FilePlayer id={video.fileId} ref={videoRef} />
+      <FilePlayer id={video.id} ref={videoRef} />
     </div>
   );
 };

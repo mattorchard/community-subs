@@ -249,7 +249,7 @@ const TimelineCue: React.FC<{
         }
         event.preventDefault();
         const target = event.target as HTMLElement;
-        const type = target.dataset.dragType as CueDragType | undefined;
+        const type = target.dataset?.dragType as CueDragType | undefined;
         if (type) {
           const offset =
             event.nativeEvent.offsetX +

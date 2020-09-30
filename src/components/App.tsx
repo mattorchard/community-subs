@@ -1,68 +1,34 @@
-import React, { ReactElement, useRef } from "react";
+import React, { useRef } from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
-import { useProject } from "../hooks/ProjectRepositoryHooks";
-import ProjectList from "./ProjectList";
-import ProjectOverview from "./ProjectOverview";
-import Spinner from "./Spinner";
-import Studio from "./Studio";
+import TranscriptList from "./TranscriptList";
 import "./App.css";
-import { Project } from "../repositories/ProjectRepository";
 import useModifierKeyClasses from "../hooks/useModifierKeyClasses";
+import { TranscriptContextProvider } from "../contexts/TranscriptContext";
+import NewTranscriptPage from "./NewTranscriptPage";
+import Studio from "./Studio";
 
 const App = () => {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   useModifierKeyClasses(wrapperRef);
   return (
     <div ref={wrapperRef}>
-      <BrowserRouter>
-        <Switch>
-          <Route path="/" exact component={LandingPage} />
-          <Route
-            path="/project/:projectId"
-            render={({ match }) => (
-              <ProjectLoadingWrapper
-                projectId={match.params.projectId}
-                render={(project) => <ProjectOverview project={project} />}
-              />
-            )}
-          />
-          <Route
-            path="/studio/:projectId/:transcriptId"
-            render={({ match }) => (
-              <ProjectLoadingWrapper
-                projectId={match.params.projectId}
-                render={(project) => (
-                  <Studio
-                    project={project}
-                    transcriptId={match.params.transcriptId}
-                  />
-                )}
-              />
-            )}
-          />
-
-          <Route>
-            <Redirect to="/" />
-          </Route>
-        </Switch>
-      </BrowserRouter>
+      <TranscriptContextProvider>
+        <BrowserRouter>
+          <Switch>
+            <Route path="/" exact component={LandingPage} />
+            <Route
+              path="/transcript/:transcriptId/add-video"
+              component={NewTranscriptPage}
+            />
+            <Route path="/transcript/:transcriptId" component={Studio} />
+            <Route>
+              <Redirect to="/" />
+            </Route>
+          </Switch>
+        </BrowserRouter>
+      </TranscriptContextProvider>
     </div>
   );
-};
-
-const ProjectLoadingWrapper: React.FC<{
-  projectId: string;
-  render: (project: Project) => ReactElement<any, any> | null;
-}> = ({ projectId, render }) => {
-  const { project, error, loading } = useProject(projectId);
-  if (loading) {
-    return <Spinner fadeIn />;
-  }
-  if (error || !project) {
-    // Todo: proper error message
-    return <Redirect to="/" />;
-  }
-  return render(project);
 };
 
 const LandingPage = () => (
@@ -85,8 +51,8 @@ const LandingPage = () => (
       </p>
       {/*Todo: Warning to Safari users about storage issue */}
     </section>
-    <section className="landing-page__project-section">
-      <ProjectList />
+    <section className="landing-page__transcript-section">
+      <TranscriptList />
     </section>
   </div>
 );
