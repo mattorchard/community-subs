@@ -31,14 +31,14 @@ const TranscriptList: React.FC = () => {
     <ol className="transcript-list">
       <AspectRatio as="li" ratio={9 / 16}>
         {isSaving ? (
-          <Spinner size="xl">Creating new project</Spinner>
+          <Spinner size="xl">Creating new transcript</Spinner>
         ) : (
           <button
             type="button"
             className="transcript-list__create-transcript-button placeholder-button xl"
             onClick={handleCreateTranscript}
           >
-            + New Project
+            + New Transcript
           </button>
         )}
       </AspectRatio>

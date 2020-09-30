@@ -11,8 +11,8 @@ const AddVideoForm: React.FC<{
   return (
     <form className="add-video-form" onSubmit={(e) => e.preventDefault()}>
       <Alert
-        heading={<h2>New Project</h2>}
-        description="Add a video to your new project either from YouTube or by uploading in the area below"
+        heading={<h2>New Transcript</h2>}
+        description="Add a video to your new transcript either from YouTube or by uploading in the area below"
       />
       <AddYoutubeVideoForm onSubmit={onSubmit} />
       <AddUploadVideoForm onSubmit={onSubmit} />
