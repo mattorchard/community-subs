@@ -1,0 +1,31 @@
+.top-drawer {
+  position: absolute;
+  background-color: var(--gray-700);
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 300px;
+  overflow: auto;
+  animation: slide-in 0.5s ease forwards 1;
+}
+@keyframes slide-in {
+  from {
+    transform: translateY(-100%);
+  }
+}
+.top-drawer__overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: #171923f0;
+  backdrop-filter: blur(3px);
+  animation: fade-in 0.5s ease-in-out forwards 1;
+}
+@keyframes fade-in {
+  from {
+    background-color: transparent;
+    filter: blur(0px);
+  }
+}

@@ -54,7 +54,7 @@ const YoutubeIdInput: React.FC<{
         <label className="youtube-id-input__label">
           From a Link
           <input
-            placeholder="https://youtu.be/video-id"
+            placeholder="youtu.be/video-id"
             type="url"
             value={videoUrlDraft}
             id="add-youtube-video-form--video-url"

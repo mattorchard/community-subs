@@ -11,6 +11,7 @@ import { createVttBlob, downloadFile } from "../helpers/fileHelpers";
 import { toWebVtt } from "../helpers/exportHelpers";
 import Spinner from "./Spinner";
 import WithTranscript from "./WithTranscript";
+import TopDrawer from "./TopDrawer";
 
 const Studio = WithTranscript(({ transcript }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -18,6 +19,7 @@ const Studio = WithTranscript(({ transcript }) => {
   const [selectedCue, setSelectedCue] = useState<string | null>(null);
   const [cueState, setCue] = useCues(transcript.id);
   const [seekTo, setSeekTo] = useState<number | null>(null);
+  const [isTopDrawerOpen, setIsTopDrawerOpen] = useState(false);
 
   const onTimeChange = useCallback((time: number) => {
     console.debug("Currently at", time);
@@ -34,6 +36,11 @@ const Studio = WithTranscript(({ transcript }) => {
 
   return (
     <div className="studio" ref={containerRef}>
+      <TopDrawer
+        isOpen={isTopDrawerOpen}
+        onRequestClose={() => setIsTopDrawerOpen(false)}
+        transcript={transcript}
+      />
       <VideoPlayer
         video={transcript.video}
         onTimeChange={onTimeChange}
@@ -56,6 +63,7 @@ const Studio = WithTranscript(({ transcript }) => {
         >
           Toggle View
         </Button>
+        <Button onClick={() => setIsTopDrawerOpen(true)}>Open Drawer</Button>
         <Button
           onClick={() => {
             downloadFile(

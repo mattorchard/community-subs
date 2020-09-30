@@ -212,10 +212,12 @@ fieldset {
 .xxl {
   font-size: 2rem;
 }
+.xxxl {
+  font-size: 3rem;
+}
 .placeholder-button {
   border: 0.25rem dashed var(--color-lighten);
 }
-
 .placeholder-button {
   border: 0.25rem dashed var(--color-lighten);
   border-radius: 1rem;
@@ -227,4 +229,13 @@ fieldset {
 .disc-list {
   list-style: disc;
   padding-left: 1rem;
+}
+
+.input-flush {
+  width: 100%;
+}
+.input-flush:focus {
+  box-shadow: none;
+  text-decoration: underline;
+  text-decoration-color: var(--color-focus);
 }

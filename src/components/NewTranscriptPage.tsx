@@ -40,12 +40,12 @@ const NewTranscriptPage = () => {
 
         <div className="new-transcript-page__header__content_info">
           <DebouncedInput
+            className="input-flush xxxl"
             initialValue={transcript.name}
             disabled={isSaving}
             onValueChange={(name) =>
               handleSaveTranscript({ id: transcript.id, name })
             }
-            className="new-transcript-page__name-input"
           />
           <time
             className="new-transcript-page__date"
