@@ -17,7 +17,7 @@ const App = () => {
           <Switch>
             <Route path="/" exact component={LandingPage} />
             <Route
-              path="/transcript/:transcriptId/new"
+              path="/transcript/:transcriptId/add-video"
               component={NewTranscriptPage}
             />
             <Route path="/transcript/:transcriptId" component={Studio} />

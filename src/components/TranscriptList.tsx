@@ -20,7 +20,7 @@ const TranscriptList: React.FC = () => {
     try {
       setIsSaving(true);
       const transcript = await createTranscript();
-      history.push(`/transcript/${transcript.id}/new`);
+      history.push(`/transcript/${transcript.id}/add-video`);
     } catch (error) {
       // Todo: Toast
       console.error("Create transcript failed", error);
@@ -57,7 +57,7 @@ const TranscriptList: React.FC = () => {
             to={
               transcript.video
                 ? `/transcript/${transcript.id}`
-                : `/transcript/${transcript.id}/new`
+                : `/transcript/${transcript.id}/add-video`
             }
             className="transcript-list__item__link"
           >

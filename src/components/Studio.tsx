@@ -29,7 +29,7 @@ const Studio = WithTranscript(({ transcript }) => {
   }
 
   if (!transcript.video) {
-    return <Redirect to={`/transcript/${transcript.id}/new`} />;
+    return <Redirect to={`/transcript/${transcript.id}/add-video`} />;
   }
 
   return (
