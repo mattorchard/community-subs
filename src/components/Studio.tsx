@@ -1,6 +1,5 @@
 import React, { useCallback, useRef, useState } from "react";
 import { Redirect } from "react-router-dom";
-import Timeline from "./Timeline";
 import ZoomRange from "./ZoomRange";
 import useCues from "../hooks/useCues";
 import VideoPlayer from "./VideoPlayer";
@@ -86,15 +85,15 @@ const Studio = WithTranscript(({ transcript }) => {
           Toggle View
         </Button>
       </div>
-      <Timeline
-        duration={transcript.video.duration}
-        scale={scale}
-        cues={cueState.cues}
-        setCue={setCue}
-        selectedCue={selectedCue}
-        onSelectCue={setSelectedCue}
-        onSeek={setSeekTo}
-      />
+      {/*<Timeline*/}
+      {/*  duration={transcript.video.duration}*/}
+      {/*  scale={scale}*/}
+      {/*  cues={cueState.cues}*/}
+      {/*  setCue={setCue}*/}
+      {/*  selectedCue={selectedCue}*/}
+      {/*  onSelectCue={setSelectedCue}*/}
+      {/*  onSeek={setSeekTo}*/}
+      {/*/>*/}
     </div>
   );
 });

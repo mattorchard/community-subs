@@ -5,6 +5,7 @@ import { debounce } from "../helpers/timingHelpers";
 import { matchScrollHeight } from "../helpers/domHelpers";
 import "./CueEditor.css";
 import { toTimeRangeString } from "../helpers/timeCodeHelpers";
+import { getLineCount } from "../helpers/textHelpers";
 
 type KE = React.KeyboardEvent<HTMLTextAreaElement>;
 
@@ -52,8 +53,8 @@ const CueEditor: React.FC<{
     }, [selected]);
 
     const {
-      immediate: handleBlur,
-      debounced: saveLinesDebounced,
+      immediate: saveImmediate,
+      debounced: saveTextDebounced,
     } = React.useMemo(
       () =>
         debounce(() => {
@@ -65,9 +66,13 @@ const CueEditor: React.FC<{
       [id, setCue]
     );
 
-    const handleChange = () => {
-      matchScrollHeight(textAreaRef.current!);
-      saveLinesDebounced();
+    const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+      if (getLineCount(event.currentTarget.value) !== getLineCount(cue.text)) {
+        matchScrollHeight(textAreaRef.current!);
+        saveImmediate();
+      } else {
+        saveTextDebounced();
+      }
     };
 
     const onKeyDown = onArrowOut(
@@ -81,7 +86,7 @@ const CueEditor: React.FC<{
           id={cue.id}
           ref={textAreaRef}
           onChange={handleChange}
-          onBlur={handleBlur}
+          onBlur={saveImmediate}
           onKeyDown={onKeyDown}
           className="cue-editor__textarea"
           placeholder="Blank"
