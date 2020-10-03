@@ -35,6 +35,9 @@ const DebouncedInput: React.FC<
     ref.current!.value = initialValue;
   }, [initialValue]);
 
+  // Invokes on unmount
+  useEffect(() => handleBlur, [handleBlur]);
+
   return (
     <input
       {...inputProps}
