@@ -29,7 +29,6 @@
   --timeline-duration: 1000;
   --marker-spacing: 0;
   width: calc(1px * var(--timeline-scale) * var(--timeline-duration));
-  padding-bottom: 1rem;
 }
 .timeline__content {
   background: repeating-linear-gradient(
