@@ -8,7 +8,7 @@ import ScriptEditor from "./ScriptEditor";
 import { createVttBlob, downloadFile } from "../helpers/fileHelpers";
 import { toWebVtt } from "../helpers/exportHelpers";
 import Spinner from "./Spinner";
-import WithTranscript from "./WithTranscript";
+import withTranscript from "./WithTranscript";
 import TopDrawer from "./TopDrawer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
@@ -17,7 +17,7 @@ import Timeline from "./Timeline";
 import { usePlayerTimeCallback } from "../contexts/VideoTimeContext";
 import CuePreview from "./CuePreview";
 
-const Studio = WithTranscript(({ transcript }) => {
+const Studio = withTranscript(function Studio({ transcript }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0.1);
   const [selectedCue, setSelectedCue] = useState<string | null>(null);
