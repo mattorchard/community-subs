@@ -13,6 +13,10 @@ import { getClassName } from "../helpers/domHelpers";
 import useTimelineMarkerSpacing from "../helpers/useTimelineMarkerSpacing";
 import "./Timeline.css";
 import useBounds from "../hooks/useBounds";
+import {
+  useCueSelection,
+  useCueSelectionActions,
+} from "../contexts/CueSelectionContext";
 
 type CueDragType = "start" | "end" | "both";
 type CueDragDetails = {
@@ -87,12 +91,12 @@ const Timeline: React.FC<{
   scale: number;
   cues: Cue[];
   setCue: SetCue;
-  selectedCue: string | null;
-  onSelectCue: (cueId: string) => void;
   onSeek: (time: number) => void;
-}> = ({ duration, scale, cues, setCue, onSelectCue, onSeek }) => {
+}> = ({ duration, scale, cues, setCue, onSeek }) => {
   const markerSpacing = useTimelineMarkerSpacing(scale);
   const layers = useCueLayers(cues);
+  const cueSelection = useCueSelection();
+  const selectionActions = useCueSelectionActions();
 
   const timelineRef = useRef<HTMLDivElement>(null);
   const pointerXRef = useRef<number>(0);
@@ -176,6 +180,20 @@ const Timeline: React.FC<{
     scale,
   };
 
+  const handleSelect = (cueId: string, action: SelectionActions) => {
+    switch (action) {
+      case "replace":
+        selectionActions.setSelection(cueId);
+        break;
+      case "add":
+        selectionActions.addToSelection(cueId);
+        break;
+      case "remove":
+        selectionActions.removeFromSelection(cueId);
+        break;
+    }
+  };
+
   return (
     <div
       {...containerProps}
@@ -236,12 +254,13 @@ const Timeline: React.FC<{
               isWithinView(viewportDetails, cue) ? (
                 <TimelineCue
                   key={cue.id}
+                  isSelected={cueSelection.has(cue.id)}
+                  onSelect={handleSelect}
                   cue={cue}
                   dragDetails={
                     cue.id === cueDragDetails?.id ? cueDragDetails : null
                   }
                   onDragStart={setCueDraggingDetails}
-                  onSelect={onSelectCue}
                 />
               ) : null
             )}
@@ -254,13 +273,16 @@ const Timeline: React.FC<{
   );
 };
 
+type SelectionActions = "replace" | "add" | "remove";
+
 const TimelineCue: React.FC<{
   cue: Cue;
   onDragStart: (dragDetails: CueDragDetails) => void;
-  onSelect: (cueId: string) => void;
+  isSelected: boolean;
+  onSelect: (cueId: string, action: SelectionActions) => void;
   dragDetails: CueDragDetails | null;
 }> = React.memo(
-  ({ cue, dragDetails, onDragStart, onSelect }) => {
+  ({ cue, dragDetails, onDragStart, isSelected, onSelect }) => {
     return (
       <div
         className={
@@ -309,7 +331,13 @@ const TimelineCue: React.FC<{
           data-drag-type="start"
         />
         <button
-          onClick={() => onSelect(cue.id)}
+          onClick={(event) => {
+            if (event.ctrlKey) {
+              onSelect(cue.id, isSelected ? "remove" : "add");
+            } else {
+              onSelect(cue.id, "replace");
+            }
+          }}
           className="timeline-cue__body ellipses"
           title={cue.text}
           data-drag-type="both"
@@ -325,7 +353,11 @@ const TimelineCue: React.FC<{
       </div>
     );
   },
-  (a, b) => a.cue === b.cue && a.dragDetails === b.dragDetails
+  (a, b) =>
+    a.cue === b.cue &&
+    a.dragDetails === b.dragDetails &&
+    a.isSelected &&
+    b.isSelected
 );
 
 export default Timeline;

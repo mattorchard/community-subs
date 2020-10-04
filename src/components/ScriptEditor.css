@@ -9,6 +9,7 @@
 }
 .script-editor__cue-list {
   list-style: none;
+  scroll-behavior: smooth;
 }
 .script-editor__add-cue-between-button {
   font-weight: bold;

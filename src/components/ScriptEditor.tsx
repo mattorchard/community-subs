@@ -1,4 +1,10 @@
-import React, { CSSProperties, useCallback, useEffect, useRef } from "react";
+import React, {
+  CSSProperties,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { SetCue } from "../hooks/useCues";
 import "./ScriptEditor.css";
 import CueEditor from "./CueEditor";
@@ -9,38 +15,72 @@ import { getLineCount } from "../helpers/textHelpers";
 import useBounds from "../hooks/useBounds";
 import { Alert } from "./Alert";
 
+import {
+  useCueSelection,
+  useIsCueSelected,
+} from "../contexts/CueSelectionContext";
+
 const TARGET_DURATION = 2500;
 const MIN_DURATION = 1000;
 
-const useSequentialSelectors = (
+type CueToFocus = {
+  time: number;
+  id: string;
+};
+
+const useCueFocus = (
   cues: Cue[],
   cueIndex: Map<string, number>,
-  onSelectCue: (cueId: string) => void
+  scrollToCue: (index: number) => void
 ) => {
+  const [cueToFocus, setCueToFocus] = useState<CueToFocus | null>(null);
   const cuesRef = useAsRef(cues);
   const cueIndexRef = useAsRef(cueIndex);
 
-  const onSelectPrevious = useCallback(
+  const focusCue = useCallback(
+    (cueId: string) => {
+      const index = cueIndexRef.current.get(cueId);
+      if (index !== undefined) {
+        scrollToCue(index);
+        setCueToFocus({ id: cueId, time: Date.now() });
+      }
+    },
+    // All stable, so never should re-define
+    [cueIndexRef, scrollToCue]
+  );
+
+  // Focus when selection is only one item
+  const selection = useCueSelection();
+  useEffect(() => {
+    if (selection.size === 1) {
+      const [selectedCueId] = selection.keys();
+      focusCue(selectedCueId);
+    }
+  }, [focusCue, selection]);
+
+  const focusPreviousCue = useCallback(
     (cueId: string) => {
       const indexToSelect = cueIndexRef.current.get(cueId)! - 1;
       if (indexToSelect >= 0) {
-        onSelectCue(cuesRef.current[indexToSelect].id);
+        focusCue(cuesRef.current[indexToSelect].id);
       }
     },
-    [onSelectCue, cuesRef, cueIndexRef]
+    // All stable, so never should re-define
+    [focusCue, cuesRef, cueIndexRef]
   );
 
-  const onSelectNext = useCallback(
+  const focusNextCue = useCallback(
     (cueId: string) => {
       const indexToSelect = cueIndexRef.current.get(cueId)! + 1;
       if (indexToSelect < cuesRef.current.length) {
-        onSelectCue(cuesRef.current[indexToSelect].id);
+        focusCue(cuesRef.current[indexToSelect].id);
       }
     },
-    [onSelectCue, cuesRef, cueIndexRef]
+    // All stable, so never should re-define
+    [focusCue, cuesRef, cueIndexRef]
   );
 
-  return { onSelectPrevious, onSelectNext };
+  return { cueToFocus, focusNextCue, focusPreviousCue };
 };
 
 const betweenButtonSize = 32;
@@ -62,19 +102,24 @@ const ScriptEditor: React.FC<{
   cueIndex: Map<string, number>;
   setCue: SetCue;
   duration: number;
-  selectedCue: string | null;
-  onSelectCue: (cueId: string) => void;
-}> = ({ cues, setCue, duration, selectedCue, onSelectCue, cueIndex }) => {
+}> = ({ cues, setCue, duration, cueIndex }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const listRef = useRef<VariableSizeList | null>(null);
   const { height: containerHeight } = useBounds(containerRef);
 
-  const { onSelectPrevious, onSelectNext } = useSequentialSelectors(
-    cues,
-    cueIndex,
-    onSelectCue
+  const scrollToCue = useCallback(
+    (index: number) => listRef.current?.scrollToItem(index),
+    []
   );
 
+  const { cueToFocus, focusNextCue, focusPreviousCue } = useCueFocus(
+    cues,
+    cueIndex,
+    scrollToCue
+  );
+
+  // By default sizes are cached, but since any change can result in all sizes
+  // needing to be updated we manually reset the cache
   useEffect(() => {
     listRef.current?.resetAfterIndex(0);
   }, [cues]);
@@ -117,6 +162,16 @@ const ScriptEditor: React.FC<{
     }
   };
 
+  const itemData: ItemData = {
+    cues,
+    focusNextCue,
+    focusPreviousCue,
+    handleAddBeforeAll,
+    handleAddBetween,
+    setCue,
+    cueToFocus,
+  };
+
   return (
     <section className="script-editor" ref={containerRef}>
       {cues.length === 0 ? (
@@ -127,15 +182,7 @@ const ScriptEditor: React.FC<{
           className="script-editor__cue-list"
           innerElementType="ol"
           itemKey={(index) => cues[index].id}
-          itemData={{
-            cues,
-            onSelectNext,
-            onSelectPrevious,
-            handleAddBeforeAll,
-            handleAddBetween,
-            setCue,
-            selectedCue,
-          }}
+          itemData={itemData}
           width="calc(50vw - 1rem)"
           height={containerHeight}
           itemCount={cues.length}
@@ -150,12 +197,12 @@ const ScriptEditor: React.FC<{
 
 type ItemData = {
   cues: Cue[];
-  onSelectNext: (cueId: string) => void;
-  onSelectPrevious: (cueId: string) => void;
+  focusNextCue: (cueId: string) => void;
+  focusPreviousCue: (cueId: string) => void;
   handleAddBeforeAll: () => void;
   handleAddBetween: (event: React.MouseEvent<HTMLButtonElement>) => void;
   setCue: SetCue;
-  selectedCue: string | null;
+  cueToFocus: CueToFocus | null;
 };
 
 const Row = ({
@@ -169,13 +216,16 @@ const Row = ({
 }) => {
   const {
     cues,
-    onSelectNext,
-    onSelectPrevious,
+    focusNextCue,
+    focusPreviousCue,
     handleAddBeforeAll,
     handleAddBetween,
-    selectedCue,
+    cueToFocus,
     setCue,
   } = data;
+  const cueId = cues[index].id;
+  const shouldFocus = cueToFocus?.id === cueId ? cueToFocus.time : null;
+  const isSelected = useIsCueSelected(cueId);
   return (
     <li style={style}>
       {index === 0 && (
@@ -190,9 +240,10 @@ const Row = ({
       <CueEditor
         cue={cues[index]}
         setCue={setCue}
-        selected={selectedCue === cues[index].id}
-        onSelectPrevious={onSelectPrevious}
-        onSelectNext={onSelectNext}
+        isSelected={isSelected}
+        shouldFocus={shouldFocus}
+        onArrowOutUp={focusPreviousCue}
+        onArrowOutDown={focusNextCue}
       />
       <button
         type="button"

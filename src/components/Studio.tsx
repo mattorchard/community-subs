@@ -22,7 +22,6 @@ const Studio = withStudioContextProviders(
   withTranscript(function Studio({ transcript }) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [scale, setScale] = useState(0.1);
-    const [selectedCue, setSelectedCue] = useState<string | null>(null);
     const [cueState, setCue] = useCues(transcript.id);
     const [seekTo, setSeekTo] = useState<number | null>(null);
     const [isTopDrawerOpen, setIsTopDrawerOpen] = useState(false);
@@ -71,8 +70,6 @@ const Studio = withStudioContextProviders(
           cues={cueState.cues}
           cueIndex={cueState.index}
           setCue={setCue}
-          selectedCue={selectedCue}
-          onSelectCue={setSelectedCue}
           duration={transcript.video.duration}
         />
         <div className="toolbar">
@@ -83,8 +80,6 @@ const Studio = withStudioContextProviders(
           scale={scale}
           cues={cueState.cues}
           setCue={setCue}
-          selectedCue={selectedCue}
-          onSelectCue={setSelectedCue}
           onSeek={setSeekTo}
         />
       </div>

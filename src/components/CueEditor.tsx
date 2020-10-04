@@ -2,10 +2,11 @@ import React, { useEffect } from "react";
 import { Cue } from "../types/cue";
 import { SetCue } from "../hooks/useCues";
 import { debounce } from "../helpers/timingHelpers";
-import { matchScrollHeight } from "../helpers/domHelpers";
+import { getClassName, matchScrollHeight } from "../helpers/domHelpers";
 import "./CueEditor.css";
 import { toTimeRangeString } from "../helpers/timeCodeHelpers";
 import { getLineCount } from "../helpers/textHelpers";
+import { useCueSelectionActions } from "../contexts/CueSelectionContext";
 
 type KE = React.KeyboardEvent<HTMLTextAreaElement>;
 
@@ -31,11 +32,13 @@ const onArrowOut = (onUp: (event: KE) => void, onDown: (event: KE) => void) => (
 const CueEditor: React.FC<{
   cue: Cue;
   setCue: SetCue;
-  selected: boolean;
-  onSelectPrevious: (cueId: string) => void;
-  onSelectNext: (cueId: string) => void;
+  isSelected: boolean;
+  shouldFocus: number | null;
+  onArrowOutUp: (cueId: string) => void;
+  onArrowOutDown: (cueId: string) => void;
 }> = React.memo(
-  ({ cue, setCue, selected, onSelectPrevious, onSelectNext }) => {
+  ({ cue, setCue, isSelected, shouldFocus, onArrowOutUp, onArrowOutDown }) => {
+    const { setSelection } = useCueSelectionActions();
     const { id } = cue;
     const textAreaRef = React.useRef<HTMLTextAreaElement>(null);
 
@@ -47,10 +50,10 @@ const CueEditor: React.FC<{
     }, []);
 
     useEffect(() => {
-      if (selected) {
+      if (shouldFocus) {
         textAreaRef.current!.focus();
       }
-    }, [selected]);
+    }, [shouldFocus]);
 
     const {
       immediate: saveImmediate,
@@ -81,17 +84,22 @@ const CueEditor: React.FC<{
     };
 
     const onKeyDown = onArrowOut(
-      () => onSelectPrevious(cue.id),
-      () => onSelectNext(cue.id)
+      () => onArrowOutUp(cue.id),
+      () => onArrowOutDown(cue.id)
     );
 
     return (
-      <label className="cue-editor">
+      <label
+        className={getClassName("cue-editor", { "is-selected": isSelected })}
+      >
         <textarea
           id={cue.id}
           ref={textAreaRef}
           onChange={handleChange}
           onBlur={handleBlur}
+          onFocus={() => {
+            if (!isSelected) setSelection(cue.id);
+          }}
           onKeyDown={onKeyDown}
           className="cue-editor__textarea"
           placeholder="Blank"
@@ -101,7 +109,9 @@ const CueEditor: React.FC<{
     );
   },
   (oldProps, newProps) =>
-    oldProps.selected === newProps.selected && oldProps.cue === newProps.cue
+    oldProps.isSelected === newProps.isSelected &&
+    oldProps.cue === newProps.cue &&
+    oldProps.shouldFocus === newProps.shouldFocus
 );
 
 export default CueEditor;

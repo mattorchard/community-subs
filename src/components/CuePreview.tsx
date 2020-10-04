@@ -65,7 +65,6 @@ const CuePreview: React.FC<{ cues: Cue[]; cueIndex: Map<string, number> }> = ({
       updateCuesToShow();
     }
   });
-  console.log(cuesToShow);
   return (
     <div className="cue-preview">
       {cuesToShow.map((cue) => (
