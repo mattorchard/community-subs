@@ -195,6 +195,9 @@ fieldset {
 ::-webkit-scrollbar-thumb {
   background-color: var(--scroll-thumb);
 }
+small {
+  font-size: 0.75rem;
+}
 .xs {
   font-size: 0.5rem;
 }

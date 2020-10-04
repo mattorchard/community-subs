@@ -43,7 +43,7 @@ const useSequentialSelectors = (
 };
 
 const betweenButtonSize = 32;
-const baseItemSize = 39;
+const baseItemSize = 38;
 const perLineSize = 16;
 
 const getItemSize = (cue: Cue, isFirst: boolean) => {
