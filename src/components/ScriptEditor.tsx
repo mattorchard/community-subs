@@ -122,6 +122,7 @@ const ScriptEditor: React.FC<{
         ref={(list) => (listRef.current = list || undefined)}
         className="script-editor__cue-list"
         innerElementType="ol"
+        itemKey={(index) => cues[index].id}
         itemData={{
           cues,
           onSelectNext,
