@@ -2,5 +2,7 @@
   grid-area: preview;
 }
 .cue-preview__cue {
+  text-align: center;
+  white-space: pre;
   background-color: var(--gray-900);
 }

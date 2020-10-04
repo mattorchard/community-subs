@@ -2,8 +2,8 @@
   overflow: hidden;
   display: grid;
   grid-template:
-    "player script" 1fr
-    "preview script"
+    "player script"
+    "preview script" 1fr
     "toolbar toolbar"
     "timeline timeline"
     / minmax(auto, 50vw) 1fr;
@@ -12,8 +12,8 @@
 }
 .studio--long-script {
   grid-template:
-    "player script" 1fr
-    "preview script"
+    "player script"
+    "preview script" 1fr
     "toolbar script"
     "timeline script"
     / 50vw 1fr;
