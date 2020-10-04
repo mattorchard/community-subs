@@ -1,0 +1,6 @@
+.zoom-range {
+  display: flex;
+}
+.zoom-range > button {
+  padding: 0.5rem;
+}
