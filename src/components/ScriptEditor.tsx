@@ -6,6 +6,7 @@ import { Cue } from "../types/cue";
 import useAsRef from "../hooks/useAsRef";
 import { VariableSizeList } from "react-window";
 import { getLineCount } from "../helpers/textHelpers";
+import useBounds from "../hooks/useBounds";
 
 const TARGET_DURATION = 2500;
 const MIN_DURATION = 1000;
@@ -63,7 +64,10 @@ const ScriptEditor: React.FC<{
   selectedCue: string | null;
   onSelectCue: (cueId: string) => void;
 }> = ({ cues, setCue, duration, selectedCue, onSelectCue, cueIndex }) => {
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const listRef = useRef<VariableSizeList | undefined>();
+  const { height: containerHeight } = useBounds(containerRef);
+
   const { onSelectPrevious, onSelectNext } = useSequentialSelectors(
     cues,
     cueIndex,
@@ -113,7 +117,7 @@ const ScriptEditor: React.FC<{
   };
 
   return (
-    <section className="script-editor">
+    <section className="script-editor" ref={containerRef}>
       <VariableSizeList
         ref={(list) => (listRef.current = list || undefined)}
         className="script-editor__cue-list"
@@ -127,8 +131,8 @@ const ScriptEditor: React.FC<{
           setCue,
           selectedCue,
         }}
-        width="50vw"
-        height={540}
+        width="calc(50vw - 1rem)"
+        height={containerHeight}
         itemCount={cues.length}
         itemSize={(index) => getItemSize(cues[index], index === 0)}
       >

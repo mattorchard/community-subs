@@ -1,11 +1,8 @@
 .script-editor {
   grid-area: script;
-  /*display: flex;*/
-  /*flex-direction: column;*/
-  /*overflow-y: auto;*/
-  /*scroll-behavior: smooth;*/
-  /*padding: 1rem 1rem 0;*/
+  overflow-y: hidden;
   background-color: var(--gray-800);
+  padding-left: 1rem;
 }
 .script-editor__cue-list {
   list-style: none;
