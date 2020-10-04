@@ -16,6 +16,7 @@ import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { getClassName } from "../helpers/domHelpers";
 import Timeline from "./Timeline";
 import { usePlayerTimeCallback } from "../contexts/VideoTimeContext";
+import CuePreview from "./CuePreview";
 
 const Studio = WithTranscript(({ transcript }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -64,6 +65,7 @@ const Studio = WithTranscript(({ transcript }) => {
         <FontAwesomeIcon icon={faChevronDown} />
       </button>
       <VideoPlayer video={transcript.video} seekTo={seekTo} />
+      <CuePreview cues={cueState.cues} cueIndex={cueState.index} />
       <ScriptEditor
         cues={cueState.cues}
         cueIndex={cueState.index}

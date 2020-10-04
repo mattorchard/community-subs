@@ -1,0 +1,6 @@
+.cue-preview {
+  grid-area: preview;
+}
+.cue-preview__cue {
+  background-color: var(--gray-900);
+}

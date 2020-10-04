@@ -310,7 +310,7 @@ const TimelineCue: React.FC<{
         />
         <button
           onClick={() => onSelect(cue.id)}
-          className="timeline-cue__body"
+          className="timeline-cue__body ellipses"
           title={cue.text}
           data-drag-type="both"
         >

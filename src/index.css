@@ -231,7 +231,11 @@ fieldset {
   list-style: disc;
   padding-left: 1rem;
 }
-
+.ellipses {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 .input-flush:focus {
   box-shadow: none;
   text-decoration: underline;

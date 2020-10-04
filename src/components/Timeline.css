@@ -85,9 +85,6 @@
 }
 
 .timeline-cue__body {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
   cursor: move;
   flex-grow: 2;
   flex-shrink: 1;

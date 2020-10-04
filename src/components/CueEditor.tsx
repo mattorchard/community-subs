@@ -66,12 +66,17 @@ const CueEditor: React.FC<{
       [id, setCue]
     );
 
-    const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-      if (getLineCount(event.currentTarget.value) !== getLineCount(cue.text)) {
+    const handleChange = () => {
+      if (getLineCount(textAreaRef.current!.value) !== getLineCount(cue.text)) {
         matchScrollHeight(textAreaRef.current!);
         saveImmediate();
       } else {
         saveTextDebounced();
+      }
+    };
+    const handleBlur = () => {
+      if (textAreaRef.current!.value !== cue.text) {
+        saveImmediate();
       }
     };
 
@@ -86,7 +91,7 @@ const CueEditor: React.FC<{
           id={cue.id}
           ref={textAreaRef}
           onChange={handleChange}
-          onBlur={saveImmediate}
+          onBlur={handleBlur}
           onKeyDown={onKeyDown}
           className="cue-editor__textarea"
           placeholder="Blank"
