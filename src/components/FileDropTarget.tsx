@@ -30,7 +30,6 @@ const FileDropTarget: React.FC<{
     if (dropRef.current) {
       const bounds = dropRef.current.getBoundingClientRect();
       const style = dropRef.current.style;
-      console.log("Re-applying the bounds", bounds);
       style.setProperty("--initial-x", `${bounds.left}px`);
       style.setProperty("--initial-y", `${bounds.top}px`);
       style.setProperty("--initial-width", `${bounds.width}px`);

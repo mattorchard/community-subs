@@ -2,10 +2,24 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Cue } from "../types/cue";
 import { usePlayerTimeCallback } from "../contexts/VideoTimeContext";
 import "./CuePreview.css";
-import { arraysAreEqual, filterConsecutive } from "../helpers/algoHelpers";
+import { arraysAreEqual } from "../helpers/algoHelpers";
 
 const isCueOngoing = (currentTime: number, cue: Cue) =>
   cue.start <= currentTime && currentTime <= cue.end;
+
+const filterCues = (currentTime: number, cues: Cue[], startIndex = 0) => {
+  const filteredItems: Cue[] = [];
+  for (let index = startIndex; index < cues.length; index++) {
+    const cue = cues[index];
+    if (isCueOngoing(currentTime, cue)) {
+      filteredItems.push(cue);
+    } else if (cue.start > currentTime) {
+      // Early return once no more cues will ever be ongoing
+      return filteredItems;
+    }
+  }
+  return filteredItems;
+};
 
 const CuePreview: React.FC<{ cues: Cue[]; cueIndex: Map<string, number> }> = ({
   cues,
@@ -15,9 +29,7 @@ const CuePreview: React.FC<{ cues: Cue[]; cueIndex: Map<string, number> }> = ({
   const lastTimeRef = useRef(0);
 
   const updateCuesToShow = useCallback(() => {
-    const newCuesToShow = filterConsecutive(cues, (cue) =>
-      isCueOngoing(lastTimeRef.current, cue)
-    );
+    const newCuesToShow = filterCues(lastTimeRef.current, cues);
 
     setCuesToShow((oldCuesToShow) =>
       arraysAreEqual(oldCuesToShow, newCuesToShow)
@@ -40,11 +52,7 @@ const CuePreview: React.FC<{ cues: Cue[]; cueIndex: Map<string, number> }> = ({
       if (startIndex === undefined) {
         return;
       }
-      const newCuesToShow = filterConsecutive(
-        cues,
-        (cue) => isCueOngoing(lastTimeRef.current, cue),
-        startIndex
-      );
+      const newCuesToShow = filterCues(lastTimeRef.current, cues, startIndex);
 
       setCuesToShow((oldCuesToShow) =>
         arraysAreEqual(oldCuesToShow, newCuesToShow)
@@ -57,7 +65,7 @@ const CuePreview: React.FC<{ cues: Cue[]; cueIndex: Map<string, number> }> = ({
       updateCuesToShow();
     }
   });
-
+  console.log(cuesToShow);
   return (
     <div className="cue-preview">
       {cuesToShow.map((cue) => (
