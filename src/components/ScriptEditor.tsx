@@ -7,6 +7,7 @@ import useAsRef from "../hooks/useAsRef";
 import { VariableSizeList } from "react-window";
 import { getLineCount } from "../helpers/textHelpers";
 import useBounds from "../hooks/useBounds";
+import { Alert } from "./Alert";
 
 const TARGET_DURATION = 2500;
 const MIN_DURATION = 1000;
@@ -65,7 +66,7 @@ const ScriptEditor: React.FC<{
   onSelectCue: (cueId: string) => void;
 }> = ({ cues, setCue, duration, selectedCue, onSelectCue, cueIndex }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const listRef = useRef<VariableSizeList | undefined>();
+  const listRef = useRef<VariableSizeList | null>(null);
   const { height: containerHeight } = useBounds(containerRef);
 
   const { onSelectPrevious, onSelectNext } = useSequentialSelectors(
@@ -75,7 +76,7 @@ const ScriptEditor: React.FC<{
   );
 
   useEffect(() => {
-    listRef.current!.resetAfterIndex(0);
+    listRef.current?.resetAfterIndex(0);
   }, [cues]);
 
   const handleAddBeforeAll = () => {
@@ -118,27 +119,31 @@ const ScriptEditor: React.FC<{
 
   return (
     <section className="script-editor" ref={containerRef}>
-      <VariableSizeList
-        ref={(list) => (listRef.current = list || undefined)}
-        className="script-editor__cue-list"
-        innerElementType="ol"
-        itemKey={(index) => cues[index].id}
-        itemData={{
-          cues,
-          onSelectNext,
-          onSelectPrevious,
-          handleAddBeforeAll,
-          handleAddBetween,
-          setCue,
-          selectedCue,
-        }}
-        width="calc(50vw - 1rem)"
-        height={containerHeight}
-        itemCount={cues.length}
-        itemSize={(index) => getItemSize(cues[index], index === 0)}
-      >
-        {Row}
-      </VariableSizeList>
+      {cues.length === 0 ? (
+        <NoCuesMessage />
+      ) : (
+        <VariableSizeList
+          ref={listRef}
+          className="script-editor__cue-list"
+          innerElementType="ol"
+          itemKey={(index) => cues[index].id}
+          itemData={{
+            cues,
+            onSelectNext,
+            onSelectPrevious,
+            handleAddBeforeAll,
+            handleAddBetween,
+            setCue,
+            selectedCue,
+          }}
+          width="calc(50vw - 1rem)"
+          height={containerHeight}
+          itemCount={cues.length}
+          itemSize={(index) => getItemSize(cues[index], index === 0)}
+        >
+          {Row}
+        </VariableSizeList>
+      )}
     </section>
   );
 };
@@ -200,5 +205,13 @@ const Row = ({
     </li>
   );
 };
+
+const NoCuesMessage = () => (
+  <Alert
+    className="script-editor__no-cues-message"
+    heading={<h3>New Transcript</h3>}
+    description="Add cues by double clicking the timeline below."
+  />
+);
 
 export default ScriptEditor;
