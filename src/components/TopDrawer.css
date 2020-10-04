@@ -20,6 +20,7 @@
   left: 0;
   background-color: #171923f0;
   backdrop-filter: blur(3px);
+  z-index: 3;
   animation: top-drawer__fade-in 0.5s ease-in-out forwards 1;
 }
 @keyframes top-drawer__fade-in {
