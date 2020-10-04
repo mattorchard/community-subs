@@ -5,7 +5,6 @@ import useCues from "../hooks/useCues";
 import VideoPlayer from "./VideoPlayer";
 import "./Studio.css";
 import ScriptEditor from "./ScriptEditor";
-import Button from "./Button";
 import { createVttBlob, downloadFile } from "../helpers/fileHelpers";
 import { toWebVtt } from "../helpers/exportHelpers";
 import Spinner from "./Spinner";
@@ -76,13 +75,6 @@ const Studio = WithTranscript(({ transcript }) => {
       />
       <div className="toolbar">
         <ZoomRange zoom={scale} onZoomChange={setScale} />
-        <Button
-          onClick={() =>
-            containerRef.current?.classList?.toggle("studio--long-script")
-          }
-        >
-          Toggle View
-        </Button>
       </div>
       <Timeline
         duration={transcript.video.duration}

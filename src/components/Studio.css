@@ -10,14 +10,6 @@
   height: 100vh;
   --player-time: 0;
 }
-.studio--long-script {
-  grid-template:
-    "player script"
-    "preview script" 1fr
-    "toolbar script"
-    "timeline script"
-    / 50vw 1fr;
-}
 .toolbar {
   grid-area: toolbar;
   display: flex;
