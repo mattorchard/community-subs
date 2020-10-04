@@ -5,11 +5,9 @@ import {
   useTranscriptActions,
 } from "../contexts/TranscriptContext";
 import Spinner from "./Spinner";
-import Thumbnail from "./Thumbnail";
 import DebouncedInput from "./DebouncedInput";
 import { toDateTimeString } from "../helpers/dateHelpers";
 import AddVideoForm from "./AddVideoForm";
-import { getThumbnailUrl } from "../helpers/entityHelpers";
 import "./NewTranscriptPage.css";
 import useTranscript from "../hooks/useTranscript";
 
@@ -34,10 +32,6 @@ const NewTranscriptPage = () => {
   return (
     <div className="new-transcript-page">
       <header className="new-transcript-page__header">
-        {transcript.video && (
-          <Thumbnail url={getThumbnailUrl(transcript.video)} />
-        )}
-
         <div className="new-transcript-page__header__info">
           <DebouncedInput
             className="input-flush xxxl"

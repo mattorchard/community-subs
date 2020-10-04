@@ -11,14 +11,6 @@
   align-items: flex-end;
   margin-bottom: 2rem;
 }
-.new-transcript-page__header .thumbnail {
-  width: 200px;
-  margin-right: 1rem;
-}
-.new-transcript-page__thumbnail .thumbnail-background {
-  width: 100%;
-  height: 100%;
-}
 .new-transcript-page__name-input {
   font-size: 3rem;
   width: 100%;
