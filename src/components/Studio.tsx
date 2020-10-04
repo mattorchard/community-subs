@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Redirect } from "react-router-dom";
 import ZoomRange from "./ZoomRange";
 import useCues from "../hooks/useCues";
@@ -15,6 +15,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { getClassName } from "../helpers/domHelpers";
 import Timeline from "./Timeline";
+import { usePlayerTimeCallback } from "../contexts/VideoTimeContext";
 
 const Studio = WithTranscript(({ transcript }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -24,10 +25,9 @@ const Studio = WithTranscript(({ transcript }) => {
   const [seekTo, setSeekTo] = useState<number | null>(null);
   const [isTopDrawerOpen, setIsTopDrawerOpen] = useState(false);
 
-  const onTimeChange = useCallback((time: number) => {
-    console.debug("Currently at", time);
-    containerRef.current?.style?.setProperty("--player-time", time.toString());
-  }, []);
+  usePlayerTimeCallback((time: number) =>
+    containerRef.current?.style?.setProperty("--player-time", time.toString())
+  );
 
   if (!cueState) {
     return <Spinner fadeIn>Loading transcript</Spinner>;
@@ -63,11 +63,7 @@ const Studio = WithTranscript(({ transcript }) => {
       >
         <FontAwesomeIcon icon={faChevronDown} />
       </button>
-      <VideoPlayer
-        video={transcript.video}
-        onTimeChange={onTimeChange}
-        seekTo={seekTo}
-      />
+      <VideoPlayer video={transcript.video} seekTo={seekTo} />
       <ScriptEditor
         cues={cueState.cues}
         cueIndex={cueState.index}

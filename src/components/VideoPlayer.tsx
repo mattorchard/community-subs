@@ -5,6 +5,7 @@ import "./VideoPlayer.css";
 import FilePlayer from "./FilePlayer";
 import useInterval from "../hooks/useInterval";
 import useWindowSize from "../hooks/useWindowSize";
+import { usePlayerTimePublisher } from "../contexts/VideoTimeContext";
 
 interface YtPlayer {
   getDuration: () => Promise<number>;
@@ -22,7 +23,6 @@ const getPlayerSize = (windowWidth: number) => {
 
 type VideoPlayerProps = {
   video: VideoMeta;
-  onTimeChange: (time: number) => void;
   seekTo: number | null;
 };
 
@@ -35,11 +35,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = (props) => {
   }
 };
 
-const YouTubePlayer: React.FC<VideoPlayerProps> = ({
-  video,
-  onTimeChange,
-  seekTo,
-}) => {
+const YouTubePlayer: React.FC<VideoPlayerProps> = ({ video, seekTo }) => {
   if (video.type !== "youtube") {
     throw new Error(`Non Youtube video in youtube player`);
   }
@@ -68,6 +64,8 @@ const YouTubePlayer: React.FC<VideoPlayerProps> = ({
       playerRef.current?.seekTo(seekTo / 1000);
     }
   }, [seekTo]);
+
+  const onTimeChange = usePlayerTimePublisher();
 
   useEffect(() => {
     let cancelled = false;
@@ -110,16 +108,13 @@ const YouTubePlayer: React.FC<VideoPlayerProps> = ({
   );
 };
 
-const UploadPlayer: React.FC<VideoPlayerProps> = ({
-  video,
-  onTimeChange,
-  seekTo,
-}) => {
+const UploadPlayer: React.FC<VideoPlayerProps> = ({ video, seekTo }) => {
   if (video.type !== "upload")
     throw new Error(`Upload player got video of type ${video.type}`);
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const currentTimeRef = useRef(0);
+  const onTimeChange = usePlayerTimePublisher();
 
   useInterval(() => {
     if (videoRef.current) {
