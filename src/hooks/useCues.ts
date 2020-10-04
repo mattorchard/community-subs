@@ -35,6 +35,7 @@ const useCues = (transcriptId: string): [CueState | null, SetCue] => {
     getCues(transcriptId)
       .then((cues) => {
         if (!cancelled) {
+          console.debug(`Loaded ${cues.length} cues`);
           cues.sort(cueComparator);
           setCues({
             cues,

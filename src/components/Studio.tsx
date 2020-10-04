@@ -14,6 +14,7 @@ import TopDrawer from "./TopDrawer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { getClassName } from "../helpers/domHelpers";
+import Timeline from "./Timeline";
 
 const Studio = WithTranscript(({ transcript }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -85,15 +86,15 @@ const Studio = WithTranscript(({ transcript }) => {
           Toggle View
         </Button>
       </div>
-      {/*<Timeline*/}
-      {/*  duration={transcript.video.duration}*/}
-      {/*  scale={scale}*/}
-      {/*  cues={cueState.cues}*/}
-      {/*  setCue={setCue}*/}
-      {/*  selectedCue={selectedCue}*/}
-      {/*  onSelectCue={setSelectedCue}*/}
-      {/*  onSeek={setSeekTo}*/}
-      {/*/>*/}
+      <Timeline
+        duration={transcript.video.duration}
+        scale={scale}
+        cues={cueState.cues}
+        setCue={setCue}
+        selectedCue={selectedCue}
+        onSelectCue={setSelectedCue}
+        onSeek={setSeekTo}
+      />
     </div>
   );
 });

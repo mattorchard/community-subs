@@ -26,6 +26,7 @@
   background-color: var(--gray-900);
 }
 .studio__open-drawer-button {
+  z-index: 2;
   position: fixed;
   top: 1rem;
   right: 1rem;
