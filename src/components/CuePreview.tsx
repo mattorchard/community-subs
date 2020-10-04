@@ -15,19 +15,8 @@ const CuePreview: React.FC<{ cues: Cue[]; cueIndex: Map<string, number> }> = ({
   const lastTimeRef = useRef(0);
 
   const updateCuesToShow = useCallback(() => {
-    // Todo: Get startIndex using binary search
-    const startIndex = cues.findIndex((cue) =>
+    const newCuesToShow = filterConsecutive(cues, (cue) =>
       isCueOngoing(lastTimeRef.current, cue)
-    );
-
-    if (startIndex === -1) {
-      return;
-    }
-
-    const newCuesToShow = filterConsecutive(
-      cues,
-      (cue) => isCueOngoing(lastTimeRef.current, cue),
-      startIndex
     );
 
     setCuesToShow((oldCuesToShow) =>

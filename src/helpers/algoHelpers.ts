@@ -1,14 +1,14 @@
 export const filterConsecutive = <T>(
   array: Array<T>,
   predicate: (value: T, index: number, array: Array<T>) => boolean,
-  startIndex: number
+  startIndex = 0
 ) => {
   const filteredItems: Array<T> = [];
   for (let index = startIndex; index < array.length; index++) {
     const value = array[index];
     if (predicate(value, index, array)) {
       filteredItems.push(value);
-    } else {
+    } else if (filteredItems.length > 0) {
       return filteredItems;
     }
   }
