@@ -11,11 +11,11 @@ const LandingPage = () => (
         type="warning"
         heading={<h2>Warning Pre-Release</h2>}
         description={
-          <p>
+          <>
             This is a pre-release version of <strong>Community Subs</strong>. As
             such, transcripts may be deleted during updates without warning.
             Please regularly export any work you want to keep.
-          </p>
+          </>
         }
       />
 
