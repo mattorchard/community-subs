@@ -133,7 +133,8 @@ const AddYoutubeVideoForm: React.FC<{
                             type: "youtube",
                             id: videoId,
                             createdAt: new Date(),
-                            duration: videoDetails?.duration,
+                            name: videoDetails.title,
+                            duration: videoDetails.duration,
                           });
                         }}
                       >

@@ -4,6 +4,7 @@ import AddYoutubeVideoForm from "./AddYouTubeVideoForm";
 import { Alert } from "./Alert";
 import AddUploadVideoForm from "./AddUploadVideoForm";
 import "./AddVideoForm.css";
+import LinkExistingVideoForm from "./LinkExistingVideoForm";
 
 const AddVideoForm: React.FC<{
   onSubmit: (video: VideoMeta) => void;
@@ -16,7 +17,7 @@ const AddVideoForm: React.FC<{
       />
       <AddYoutubeVideoForm onSubmit={onSubmit} />
       <AddUploadVideoForm onSubmit={onSubmit} />
-      {/* Todo: Reuse video option */}
+      <LinkExistingVideoForm onSubmit={onSubmit} />
     </form>
   );
 };

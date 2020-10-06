@@ -13,10 +13,8 @@
   color: var(--color-focus);
 }
 .transcript-list__item__link {
+  display: block;
   transition: color 0.3s ease-in-out;
-}
-.transcript-list__item__link:focus {
-  box-shadow: none;
 }
 .transcript-link__title {
   margin-top: 0.5rem;

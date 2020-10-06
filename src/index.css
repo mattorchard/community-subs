@@ -141,6 +141,11 @@ body {
   outline: 0;
   box-shadow: var(--focus-bs);
 }
+.focus-outline:focus {
+  box-shadow: none;
+  outline: 0.25rem solid var(--color-focus);
+  outline-offset: 0.25rem;
+}
 button,
 textarea,
 input {

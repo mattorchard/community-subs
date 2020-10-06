@@ -24,14 +24,20 @@ export type Transcript = {
   name: string;
   createdAt: Date;
   accessedAt: Date;
-  video?: VideoMeta
-}
+  video?: VideoMeta;
+};
 
-
-export type VideoMeta = { id: string, createdAt: Date, duration: number } &
-  ({
-    type: "youtube";
-  } | {
-    type: "upload";
-    thumbnailUrl: string;
-  })
+export type VideoMeta = {
+  id: string;
+  createdAt: Date;
+  name: string;
+  duration: number;
+} & (
+  | {
+      type: "youtube";
+    }
+  | {
+      type: "upload";
+      thumbnailUrl: string;
+    }
+);

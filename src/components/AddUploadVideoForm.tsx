@@ -52,6 +52,7 @@ const AddUploadVideoForm: React.FC<{
               ...details,
               id,
               type: "upload",
+              name: file.name || "Unknown file",
               createdAt: new Date(),
             });
           } catch (error) {

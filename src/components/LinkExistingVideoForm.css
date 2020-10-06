@@ -1,0 +1,16 @@
+.existing-video-list {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-gap: 2rem;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+.existing-video-list__item__button {
+  width: 100%;
+  height: 100%;
+  text-align: start;
+}
+.existing-video-list__item__name {
+  margin-top: 0.5rem;
+}

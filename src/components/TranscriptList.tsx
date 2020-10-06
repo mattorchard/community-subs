@@ -52,14 +52,14 @@ const TranscriptList: React.FC = () => {
       )}
 
       {transcripts?.map((transcript) => (
-        <li key={transcript.id} className="transcript-list__item">
+        <li key={transcript.id}>
           <Link
             to={
               transcript.video
                 ? `/transcript/${transcript.id}`
                 : `/transcript/${transcript.id}/add-video`
             }
-            className="transcript-list__item__link"
+            className="transcript-list__item__link focus-outline"
           >
             <Thumbnail
               url={
