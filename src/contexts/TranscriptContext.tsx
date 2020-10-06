@@ -64,7 +64,7 @@ export const TranscriptContextProvider: React.FC = ({ children }) => {
       createTranscript: async () => {
         const savedTranscript = await putTranscript({
           id: uuidV4(),
-          name: "New Transcript",
+          name: "Untitled Transcript",
           createdAt: new Date(),
           accessedAt: new Date(),
         });
