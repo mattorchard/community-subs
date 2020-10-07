@@ -7,6 +7,7 @@ import "./CueEditor.css";
 import { toTimeRangeString } from "../helpers/timeCodeHelpers";
 import { getLineCount } from "../helpers/textHelpers";
 import { useCueSelectionActions } from "../contexts/CueSelectionContext";
+import { useModifierKeys } from "../contexts/ModifierKeysContext";
 
 type KE = React.KeyboardEvent<HTMLTextAreaElement>;
 
@@ -38,7 +39,8 @@ const CueEditor: React.FC<{
   onArrowOutDown: (cueId: string) => void;
 }> = React.memo(
   ({ cue, setCue, isSelected, shouldFocus, onArrowOutUp, onArrowOutDown }) => {
-    const { setSelection } = useCueSelectionActions();
+    const modifierKeys = useModifierKeys();
+    const { setSelection, addToSelection } = useCueSelectionActions();
     const { id } = cue;
     const textAreaRef = React.useRef<HTMLTextAreaElement>(null);
 
@@ -98,7 +100,11 @@ const CueEditor: React.FC<{
           onChange={handleChange}
           onBlur={handleBlur}
           onFocus={() => {
-            if (!isSelected) setSelection(cue.id);
+            if (modifierKeys.ctrl) {
+              addToSelection(cue.id);
+            } else if (!isSelected) {
+              setSelection(cue.id);
+            }
           }}
           onKeyDown={onKeyDown}
           className="cue-editor__textarea"
