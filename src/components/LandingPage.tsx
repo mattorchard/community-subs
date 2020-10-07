@@ -17,6 +17,7 @@ const LandingPage = () => (
             Please regularly export any work you want to keep.
           </>
         }
+        passive
       />
 
       {/*Todo: Warning to Safari users about storage issue */}

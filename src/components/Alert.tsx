@@ -3,14 +3,22 @@ import "./Alert.css";
 
 type AlertType = "info" | "success" | "warning" | "error";
 
-type BaseAlertProps = { type?: AlertType; className?: string };
+type BaseAlertProps = {
+  type?: AlertType;
+  className?: string;
+  passive?: boolean;
+};
 
 export const BaseAlert: React.FC<BaseAlertProps> = ({
   type = "info",
   className,
+  passive = false,
   children,
 }) => (
-  <div className={`base-alert base-alert--${type} ${className}`} role="alert">
+  <div
+    className={`base-alert base-alert--${type} ${className}`}
+    role={passive ? undefined : "alert"}
+  >
     {children}
   </div>
 );

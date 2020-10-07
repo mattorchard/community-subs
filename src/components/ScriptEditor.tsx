@@ -262,6 +262,7 @@ const NoCuesMessage = () => (
     className="script-editor__no-cues-message"
     heading={<h3>New Transcript</h3>}
     description="Add cues by double clicking the timeline below."
+    passive
   />
 );
 

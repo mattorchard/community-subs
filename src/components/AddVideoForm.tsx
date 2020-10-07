@@ -14,6 +14,7 @@ const AddVideoForm: React.FC<{
       <Alert
         heading={<h2>New Transcript</h2>}
         description="Add a video to your new transcript either from YouTube or by uploading in the area below"
+        passive
       />
       <AddYoutubeVideoForm onSubmit={onSubmit} />
       <AddUploadVideoForm onSubmit={onSubmit} />
