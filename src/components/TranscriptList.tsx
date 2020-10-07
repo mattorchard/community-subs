@@ -8,7 +8,6 @@ import {
   useTranscripts,
 } from "../contexts/TranscriptContext";
 import "./TranscripttList.css";
-import { getThumbnailUrl } from "../helpers/entityHelpers";
 
 const TranscriptList: React.FC = () => {
   const history = useHistory();
@@ -61,11 +60,7 @@ const TranscriptList: React.FC = () => {
             }
             className="transcript-list__item__link focus-outline"
           >
-            <Thumbnail
-              url={
-                transcript.video ? getThumbnailUrl(transcript.video) : undefined
-              }
-            />
+            <Thumbnail video={transcript.video} />
             <h3 className="transcript-link__title lg">{transcript.name}</h3>
           </Link>
         </li>

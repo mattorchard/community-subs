@@ -2,7 +2,6 @@ import React from "react";
 import { VideoMeta } from "../types/cue";
 import useVideos from "../hooks/useVideos";
 import Thumbnail from "./Thumbnail";
-import { getThumbnailUrl } from "../helpers/entityHelpers";
 import "./LinkExistingVideoForm.css";
 import Spinner from "./Spinner";
 
@@ -29,7 +28,7 @@ const LinkExistingVideoForm: React.FC<{
               title={video.name}
               onClick={() => onSubmit(video)}
             >
-              <Thumbnail url={getThumbnailUrl(video)} />
+              <Thumbnail video={video} />
               <div className="existing-video-list__item__name lg ellipses">
                 {video.name}
               </div>

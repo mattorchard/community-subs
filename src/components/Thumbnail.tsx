@@ -1,15 +1,17 @@
 import React from "react";
 import AspectRatio from "./AspectRatio";
 import "./Thumbnail.css";
+import { VideoMeta } from "../types/cue";
+import { getThumbnailUrl } from "../helpers/entityHelpers";
 
 const Thumbnail: React.FC<{
-  url?: string;
+  video?: VideoMeta;
   className?: string;
-}> = ({ url, className }) => (
+}> = ({ video, className }) => (
   <AspectRatio ratio={9 / 16} className={`thumbnail ${className}`}>
     <div
       className="thumbnail__image"
-      style={{ backgroundImage: `url(${url})` }}
+      style={{ backgroundImage: video && `url(${getThumbnailUrl(video)})` }}
     />
   </AspectRatio>
 );
