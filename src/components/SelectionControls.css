@@ -1,0 +1,22 @@
+.selection-controls {
+  padding-left: 1rem;
+}
+.selection-controls__label {
+  align-self: center;
+  display: inline-block;
+  min-width: 7.5rem;
+  margin-right: 0.5rem;
+}
+.selection-controls__button {
+  cursor: pointer;
+  width: 2.5rem;
+  transition: background-color 0.2s ease-in-out;
+}
+.selection-controls__button:focus,
+.selection-controls__button:hover {
+  background-color: var(--blue-600);
+}
+.selection-controls__button--deselect:focus,
+.selection-controls__button--deselect:hover {
+  background-color: var(--red-600);
+}

@@ -10,7 +10,3 @@
   white-space: nowrap;
   user-select: none;
 }
-.button:focus {
-  outline: none;
-  box-shadow: var(--focus-bs);
-}

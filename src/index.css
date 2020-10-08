@@ -118,6 +118,7 @@
 
   /* Other Vars */
   --focus-bs: 0 0 0 0.125rem var(--color-focus);
+  --focus-bs-thin: 0 0 0 0.0625rem var(--color-focus);
   --scroll-track: var(--gray-900);
   --scroll-thumb: var(--color-focus);
 }
@@ -248,4 +249,34 @@ small {
   box-shadow: none;
   text-decoration: underline;
   text-decoration-color: var(--color-focus);
+}
+.button-group {
+  display: flex;
+  background-color: var(--color-lighten);
+  height: 2.5rem;
+  font-weight: 600;
+  border-radius: 0.25rem;
+  user-select: none;
+  overflow: hidden;
+}
+.icon-button {
+  cursor: pointer;
+  width: 2.5rem;
+}
+.icon-button:focus {
+  box-shadow: var(--focus-bs) inset;
+}
+.with-dividers > * {
+  position: relative;
+}
+.with-dividers > *::before {
+  content: "";
+  position: absolute;
+  border-left: 0.125rem solid var(--color-darken);
+  top: 0;
+  right: calc(100% - 0.0625rem);
+  bottom: 0;
+}
+.with-dividers > *:first-child::before {
+  content: unset;
 }

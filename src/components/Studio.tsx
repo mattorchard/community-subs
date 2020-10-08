@@ -17,6 +17,10 @@ import Timeline from "./Timeline";
 import { usePlayerTimeCallback } from "../contexts/VideoTimeContext";
 import CuePreview from "./CuePreview";
 import withStudioContextProviders from "./WithStudioContextProviders";
+import SelectionControls from "./SelectionControls";
+import MediaControls from "./MediaControls";
+import FormatControls from "./FormatControls";
+import TimelineControls from "./TimelineControls";
 
 const Studio = withStudioContextProviders(
   withTranscript(function Studio({ transcript }) {
@@ -73,7 +77,11 @@ const Studio = withStudioContextProviders(
           duration={transcript.video.duration}
         />
         <div className="toolbar">
+          <TimelineControls />
           <ZoomRange zoom={scale} onZoomChange={setScale} />
+          <MediaControls />
+          <SelectionControls />
+          <FormatControls />
         </div>
         <Timeline
           duration={transcript.video.duration}
