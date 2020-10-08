@@ -14,7 +14,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { getClassName } from "../helpers/domHelpers";
 import Timeline from "./Timeline";
-import { usePlayerTimeCallback } from "../contexts/VideoTimeContext";
+import { useOnPlayerTimeChange } from "../contexts/VideoTimeContext";
 import CuePreview from "./CuePreview";
 import withStudioContextProviders from "./WithStudioContextProviders";
 import SelectionControls from "./SelectionControls";
@@ -30,7 +30,7 @@ const Studio = withStudioContextProviders(
     const [seekTo, setSeekTo] = useState<number | null>(null);
     const [isTopDrawerOpen, setIsTopDrawerOpen] = useState(false);
 
-    usePlayerTimeCallback((time: number) =>
+    useOnPlayerTimeChange((time: number) =>
       containerRef.current?.style?.setProperty("--player-time", time.toString())
     );
 

@@ -13,14 +13,14 @@ export const VideoTimeContextProvider: React.FC = ({ children }) => {
   );
 };
 
-export const usePlayerTimeCallback = (callback: (time: number) => void) => {
+export const useOnPlayerTimeChange = (onChange: (time: number) => void) => {
   const videoTimeObserver = useContext(VideoTimeContext);
   if (!videoTimeObserver) {
     throw new Error(
       "usePlayerTimeCallback cannot be used outside of VideoTimeContextProvider"
     );
   }
-  const callbackRef = useAsRef(callback);
+  const callbackRef = useAsRef(onChange);
   useEffect(
     () => videoTimeObserver.subscribe((time) => callbackRef.current(time)),
     [videoTimeObserver, callbackRef]

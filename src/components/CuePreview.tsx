@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Cue } from "../types/cue";
-import { usePlayerTimeCallback } from "../contexts/VideoTimeContext";
+import { useOnPlayerTimeChange } from "../contexts/VideoTimeContext";
 import "./CuePreview.css";
 import { arraysAreEqual } from "../helpers/algoHelpers";
 
@@ -40,7 +40,7 @@ const CuePreview: React.FC<{ cues: Cue[]; cueIndex: Map<string, number> }> = ({
 
   useEffect(updateCuesToShow, [updateCuesToShow]);
 
-  usePlayerTimeCallback((time) => {
+  useOnPlayerTimeChange((time) => {
     const delta = time - lastTimeRef.current;
     lastTimeRef.current = time;
 
