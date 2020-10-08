@@ -1,5 +1,8 @@
 import React from "react";
-import { useCueSelection } from "../contexts/CueSelectionContext";
+import {
+  useCueSelection,
+  useCueSelectionActions,
+} from "../contexts/CueSelectionContext";
 import "./SelectionControls.css";
 import {
   faArrowsAltH,
@@ -20,6 +23,7 @@ const getSelectionMessage = (size: number) => {
 
 const SelectionControls = () => {
   const selection = useCueSelection();
+  const { setSelection } = useCueSelectionActions();
 
   return (
     <div className="selection-controls button-group with-dividers">
@@ -44,6 +48,7 @@ const SelectionControls = () => {
         className="selection-controls__button icon-button selection-controls__button--deselect"
         disabled={selection.size === 0}
         title="Deselect"
+        onClick={() => setSelection(new Set())}
       >
         <FontAwesomeIcon icon={faTimesCircle} />
       </button>
