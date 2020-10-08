@@ -24,3 +24,16 @@ export const debounce = <T extends Array<any>, R>(
     },
   };
 };
+
+export const throttle = <T extends Array<any>, R>(
+  callback: (...args: T) => R,
+  windowAmount: number
+) => {
+  let allowedAfter = 0;
+  return (...args: T) => {
+    if (Date.now() > allowedAfter) {
+      allowedAfter = Date.now() + windowAmount;
+      return callback(...args);
+    }
+  };
+};
