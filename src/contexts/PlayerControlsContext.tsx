@@ -13,6 +13,7 @@ type PlayerControlsContextValue = {
   setIsPlaying: (isPlaying: boolean) => void;
   currentTimeObserver: Observable<number>;
   seekObserver: Observable<number>;
+  seekStep: (stepSize: number) => void;
 };
 
 const PlayerControlsContext = React.createContext<PlayerControlsContextValue | null>(
@@ -24,6 +25,22 @@ export const PlayerControlsContextProvider: React.FC = ({ children }) => {
   const currentTimeObserver = useRef(new Observable<number>());
   const seekObserver = useRef(new Observable<number>());
 
+  const currentTimeRef = useRef(0);
+  useEffect(
+    () =>
+      currentTimeObserver.current.subscribe(
+        (time) => (currentTimeRef.current = time)
+      ),
+    [currentTimeObserver]
+  );
+  const seekObserverValue = seekObserver.current;
+  const seekStep = useCallback(
+    (stepSize) => {
+      seekObserverValue.publish(currentTimeRef.current + stepSize);
+    },
+    [seekObserverValue]
+  );
+
   return (
     <PlayerControlsContext.Provider
       value={{
@@ -31,6 +48,7 @@ export const PlayerControlsContextProvider: React.FC = ({ children }) => {
         setIsPlaying,
         currentTimeObserver: currentTimeObserver.current,
         seekObserver: seekObserver.current,
+        seekStep,
       }}
     >
       {children}
@@ -88,4 +106,10 @@ export const useIsPlayingState = (): [
 
   const { isPlaying, setIsPlaying } = context;
   return [isPlaying, setIsPlaying];
+};
+
+export const useSeekStep = () => {
+  const context = useContext(PlayerControlsContext);
+  if (!context) throw new Error(NO_PROVIDER_ERROR);
+  return context.seekStep;
 };

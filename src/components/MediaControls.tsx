@@ -7,13 +7,24 @@ import {
   faStepForward,
 } from "@fortawesome/free-solid-svg-icons";
 import "./MediaControls.css";
-import { useIsPlayingState } from "../contexts/PlayerControlsContext";
+import {
+  useIsPlayingState,
+  useSeekStep,
+} from "../contexts/PlayerControlsContext";
+
+const STEP_AMOUNT = 2500;
 
 const MediaControls = () => {
   const [isPlaying, setIsPlaying] = useIsPlayingState();
+  const seekStep = useSeekStep();
+
   return (
     <div role="group" className="media-controls">
-      <button className="media-controls__step xxl" title="Step Backward (J)">
+      <button
+        className="media-controls__step xxl"
+        title="Step Backward (J)"
+        onClick={() => seekStep(-STEP_AMOUNT)}
+      >
         <FontAwesomeIcon icon={faStepBackward} />
       </button>
       <button
@@ -27,7 +38,11 @@ const MediaControls = () => {
           <FontAwesomeIcon icon={faPlay} />
         )}
       </button>
-      <button className="media-controls__step xxl" title="Step Forward (L)">
+      <button
+        className="media-controls__step xxl"
+        title="Step Forward (L)"
+        onClick={() => seekStep(STEP_AMOUNT)}
+      >
         <FontAwesomeIcon icon={faStepForward} />
       </button>
     </div>
