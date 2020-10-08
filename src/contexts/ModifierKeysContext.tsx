@@ -55,7 +55,7 @@ export const useModifierKeys = () => {
   if (!context) {
     throw new Error(NO_PROVIDER_ERROR);
   }
-  return context.valueRef.current;
+  return context.valueRef;
 };
 
 export const useOnModifierKeysChange = (

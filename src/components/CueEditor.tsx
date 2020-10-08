@@ -39,7 +39,7 @@ const CueEditor: React.FC<{
   onArrowOutDown: (cueId: string) => void;
 }> = React.memo(
   ({ cue, setCue, isSelected, shouldFocus, onArrowOutUp, onArrowOutDown }) => {
-    const modifierKeys = useModifierKeys();
+    const modifierKeysRef = useModifierKeys();
     const { setSelection, addToSelection } = useCueSelectionActions();
     const { id } = cue;
     const textAreaRef = React.useRef<HTMLTextAreaElement>(null);
@@ -100,7 +100,7 @@ const CueEditor: React.FC<{
           onChange={handleChange}
           onBlur={handleBlur}
           onFocus={() => {
-            if (modifierKeys.ctrl) {
+            if (modifierKeysRef.current.ctrl) {
               addToSelection(cue.id);
             } else if (!isSelected) {
               setSelection(cue.id);
