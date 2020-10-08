@@ -56,14 +56,17 @@
   margin: 1rem 0;
   left: calc(1px * var(--timeline-scale) * var(--cue-start));
   right: calc(100% - 1px * var(--timeline-scale) * var(--cue-end));
-  background-color: var(--color-primary);
+  background-color: var(--blue-900);
   display: flex;
   height: 2rem;
   min-width: 2rem;
   transition-timing-function: ease-in-out;
   transition-duration: 0.2s;
-  transition-property: transform, filter;
+  transition-property: transform, filter, background-color;
   opacity: 0.9;
+}
+.timeline-cue--is-selected {
+  background-color: var(--blue-600);
 }
 .timeline-cue--dragging {
   z-index: 3;

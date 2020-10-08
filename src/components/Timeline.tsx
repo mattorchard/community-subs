@@ -282,82 +282,76 @@ const TimelineCue: React.FC<{
   onSelect: (cueId: string, action: SelectionActions) => void;
   dragDetails: CueDragDetails | null;
 }> = React.memo(
-  ({ cue, dragDetails, onDragStart, isSelected, onSelect }) => {
-    return (
-      <div
-        className={
-          dragDetails
-            ? getClassName("timeline-cue", {
-                dragging: dragDetails,
-                "dragging-start": dragDetails.type === "start",
-                "dragging-end": dragDetails.type === "end",
-                "dragging-both": dragDetails.type === "both",
-              })
-            : "timeline-cue"
+  ({ cue, dragDetails, onDragStart, isSelected, onSelect }) => (
+    <div
+      className={getClassName("timeline-cue", {
+        dragging: dragDetails,
+        "is-selected": isSelected,
+        "dragging-start": dragDetails?.type === "start",
+        "dragging-end": dragDetails?.type === "end",
+        "dragging-both": dragDetails?.type === "both",
+      })}
+      style={
+        {
+          "--cue-start": cue.start,
+          "--cue-end": cue.end,
+          "--cue-duration": cue.end - cue.start,
+        } as CSSProperties
+      }
+      data-cue-id={cue.id}
+      onPointerDown={(event) => {
+        if (event.shiftKey) {
+          return;
         }
-        style={
-          {
-            "--cue-start": cue.start,
-            "--cue-end": cue.end,
-            "--cue-duration": cue.end - cue.start,
-          } as CSSProperties
+        event.preventDefault();
+        const target = event.target as HTMLElement;
+        const type = target.dataset?.dragType as CueDragType | undefined;
+        if (type) {
+          const offset =
+            event.nativeEvent.offsetX +
+            (target === event.currentTarget ? 0 : target.offsetLeft);
+          onDragStart({
+            type,
+            id: cue.id,
+            start: cue.start,
+            end: cue.end,
+            offset,
+          });
         }
-        data-cue-id={cue.id}
-        onPointerDown={(event) => {
-          if (event.shiftKey) {
-            return;
-          }
-          event.preventDefault();
-          const target = event.target as HTMLElement;
-          const type = target.dataset?.dragType as CueDragType | undefined;
-          if (type) {
-            const offset =
-              event.nativeEvent.offsetX +
-              (target === event.currentTarget ? 0 : target.offsetLeft);
-            onDragStart({
-              type,
-              id: cue.id,
-              start: cue.start,
-              end: cue.end,
-              offset,
-            });
+      }}
+    >
+      <button
+        type="button"
+        className="timeline-cue__drag-handle"
+        aria-label="Adjust start time"
+        data-drag-type="start"
+      />
+      <button
+        onClick={(event) => {
+          if (event.ctrlKey) {
+            onSelect(cue.id, isSelected ? "remove" : "add");
+          } else {
+            onSelect(cue.id, "replace");
           }
         }}
+        className="timeline-cue__body ellipses"
+        title={cue.text}
+        data-drag-type="both"
       >
-        <button
-          type="button"
-          className="timeline-cue__drag-handle"
-          aria-label="Adjust start time"
-          data-drag-type="start"
-        />
-        <button
-          onClick={(event) => {
-            if (event.ctrlKey) {
-              onSelect(cue.id, isSelected ? "remove" : "add");
-            } else {
-              onSelect(cue.id, "replace");
-            }
-          }}
-          className="timeline-cue__body ellipses"
-          title={cue.text}
-          data-drag-type="both"
-        >
-          {cue.text || "Blank"}
-        </button>
-        <button
-          type="button"
-          className="timeline-cue__drag-handle"
-          aria-label="Adjust end time"
-          data-drag-type="end"
-        />
-      </div>
-    );
-  },
+        {cue.text || "Blank"}
+      </button>
+      <button
+        type="button"
+        className="timeline-cue__drag-handle"
+        aria-label="Adjust end time"
+        data-drag-type="end"
+      />
+    </div>
+  ),
   (a, b) =>
     a.cue === b.cue &&
     a.dragDetails === b.dragDetails &&
-    a.isSelected &&
-    b.isSelected
+    a.isSelected === b.isSelected
 );
 
 export default Timeline;
