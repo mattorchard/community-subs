@@ -5,13 +5,19 @@ import "./VideoPlayer.css";
 import FilePlayer from "./FilePlayer";
 import useInterval from "../hooks/useInterval";
 import useWindowSize from "../hooks/useWindowSize";
-import { usePlayerTimePublisher } from "../contexts/VideoTimeContext";
+import {
+  useIsPlayingState,
+  useOnSeekTo,
+  usePlayerTimePublisher,
+} from "../contexts/PlayerControlsContext";
 
 interface YtPlayer {
   getDuration: () => Promise<number>;
   getCurrentTime: () => Promise<number>;
   seekTo: (timeSeconds: number) => Promise<void>;
   setSize: (width: number, height: number) => void;
+  playVideo: () => Promise<void>;
+  pauseVideo: () => Promise<void>;
 }
 
 const getPlayerSize = (windowWidth: number) => {
@@ -23,7 +29,6 @@ const getPlayerSize = (windowWidth: number) => {
 
 type VideoPlayerProps = {
   video: VideoMeta;
-  seekTo: number | null;
 };
 
 const VideoPlayer: React.FC<VideoPlayerProps> = (props) => {
@@ -35,13 +40,14 @@ const VideoPlayer: React.FC<VideoPlayerProps> = (props) => {
   }
 };
 
-const YouTubePlayer: React.FC<VideoPlayerProps> = ({ video, seekTo }) => {
-  if (video.type !== "youtube") {
+const YouTubePlayer: React.FC<VideoPlayerProps> = ({ video }) => {
+  if (video.type !== "youtube")
     throw new Error(`Non Youtube video in youtube player`);
-  }
+
   const playerRef = React.useRef<YtPlayer | null>(null);
   const currentTimeRef = React.useRef(0);
   const windowSize = useWindowSize();
+  const [isPlaying, setIsPlaying] = useIsPlayingState();
 
   // Any change to this results in the Youtube player unloading the video
   const playerOptions = useMemo(() => {
@@ -59,13 +65,8 @@ const YouTubePlayer: React.FC<VideoPlayerProps> = ({ video, seekTo }) => {
     }
   }, [windowSize]);
 
-  useEffect(() => {
-    if (seekTo !== null) {
-      playerRef.current?.seekTo(seekTo / 1000);
-    }
-  }, [seekTo]);
-
   const onTimeChange = usePlayerTimePublisher();
+  useOnSeekTo((time) => playerRef.current?.seekTo(time / 1000));
 
   useEffect(() => {
     let cancelled = false;
@@ -93,6 +94,16 @@ const YouTubePlayer: React.FC<VideoPlayerProps> = ({ video, seekTo }) => {
     };
   }, [onTimeChange]);
 
+  useEffect(() => {
+    if (playerRef.current) {
+      if (isPlaying) {
+        playerRef.current.playVideo();
+      } else {
+        playerRef.current.pauseVideo();
+      }
+    }
+  }, [isPlaying]);
+
   return (
     <div className="player">
       <YouTube
@@ -102,18 +113,35 @@ const YouTubePlayer: React.FC<VideoPlayerProps> = ({ video, seekTo }) => {
           if (component?.internalPlayer)
             playerRef.current = component.internalPlayer;
         }}
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
         opts={playerOptions}
       />
     </div>
   );
 };
 
-const UploadPlayer: React.FC<VideoPlayerProps> = ({ video, seekTo }) => {
+const UploadPlayer: React.FC<VideoPlayerProps> = ({ video }) => {
   if (video.type !== "upload")
     throw new Error(`Upload player got video of type ${video.type}`);
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const currentTimeRef = useRef(0);
+  const [isPlaying, setIsPlaying] = useIsPlayingState();
+
+  useEffect(() => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.play();
+      } else {
+        videoRef.current.pause();
+      }
+    }
+  }, [isPlaying]);
+
+  useOnSeekTo((time) => {
+    if (videoRef.current) videoRef.current.currentTime = time / 1000;
+  });
   const onTimeChange = usePlayerTimePublisher();
 
   useInterval(() => {
@@ -126,14 +154,13 @@ const UploadPlayer: React.FC<VideoPlayerProps> = ({ video, seekTo }) => {
     }
   }, 40);
 
-  useEffect(() => {
-    if (seekTo !== null && videoRef.current)
-      videoRef.current.currentTime = seekTo / 1000;
-  }, [seekTo]);
-
   return (
     <div className="player">
-      <FilePlayer id={video.id} ref={videoRef} />
+      <FilePlayer
+        id={video.id}
+        ref={videoRef}
+        onIsPlayingChange={setIsPlaying}
+      />
     </div>
   );
 };

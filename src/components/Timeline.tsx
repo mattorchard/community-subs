@@ -17,6 +17,7 @@ import {
   useCueSelection,
   useCueSelectionActions,
 } from "../contexts/CueSelectionContext";
+import { useSeekTo } from "../contexts/PlayerControlsContext";
 
 type CueDragType = "start" | "end" | "both";
 type CueDragDetails = {
@@ -91,12 +92,12 @@ const Timeline: React.FC<{
   scale: number;
   cues: Cue[];
   setCue: SetCue;
-  onSeek: (time: number) => void;
-}> = ({ duration, scale, cues, setCue, onSeek }) => {
+}> = ({ duration, scale, cues, setCue }) => {
   const markerSpacing = useTimelineMarkerSpacing(scale);
   const layers = useCueLayers(cues);
   const cueSelection = useCueSelection();
   const selectionActions = useCueSelectionActions();
+  const seekTo = useSeekTo();
 
   const timelineRef = useRef<HTMLDivElement>(null);
   const pointerXRef = useRef<number>(0);
@@ -229,7 +230,7 @@ const Timeline: React.FC<{
         }
         onPointerUp={() => {
           if (isSeeking) {
-            onSeek(pointerXRef.current / scale);
+            seekTo(pointerXRef.current / scale);
           }
           setIsPanning(false);
           setIsSeeking(false);

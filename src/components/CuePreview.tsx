@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Cue } from "../types/cue";
-import { useOnPlayerTimeChange } from "../contexts/VideoTimeContext";
+import { useOnPlayerTimeChange } from "../contexts/PlayerControlsContext";
 import "./CuePreview.css";
 import { arraysAreEqual } from "../helpers/algoHelpers";
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPause,
@@ -7,9 +7,10 @@ import {
   faStepForward,
 } from "@fortawesome/free-solid-svg-icons";
 import "./MediaControls.css";
+import { useIsPlayingState } from "../contexts/PlayerControlsContext";
 
 const MediaControls = () => {
-  const [playing, setPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useIsPlayingState();
   return (
     <div role="group" className="media-controls">
       <button className="media-controls__step xxl" title="Step Backward (J)">
@@ -17,10 +18,10 @@ const MediaControls = () => {
       </button>
       <button
         className="media-controls__play-pause xl"
-        onClick={() => setPlaying(!playing)}
-        title={playing ? "Pause (K)" : "Play (K)"}
+        onClick={() => setIsPlaying(!isPlaying)}
+        title={isPlaying ? "Pause (K)" : "Play (K)"}
       >
-        {playing ? (
+        {isPlaying ? (
           <FontAwesomeIcon icon={faPause} />
         ) : (
           <FontAwesomeIcon icon={faPlay} />

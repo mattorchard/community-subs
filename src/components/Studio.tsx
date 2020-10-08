@@ -14,7 +14,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { getClassName } from "../helpers/domHelpers";
 import Timeline from "./Timeline";
-import { useOnPlayerTimeChange } from "../contexts/VideoTimeContext";
+import { useOnPlayerTimeChange } from "../contexts/PlayerControlsContext";
 import CuePreview from "./CuePreview";
 import withStudioContextProviders from "./WithStudioContextProviders";
 import SelectionControls from "./SelectionControls";
@@ -27,7 +27,6 @@ const Studio = withStudioContextProviders(
     const containerRef = useRef<HTMLDivElement>(null);
     const [scale, setScale] = useState(0.1);
     const [cueState, setCue] = useCues(transcript.id);
-    const [seekTo, setSeekTo] = useState<number | null>(null);
     const [isTopDrawerOpen, setIsTopDrawerOpen] = useState(false);
 
     useOnPlayerTimeChange((time: number) =>
@@ -68,7 +67,7 @@ const Studio = withStudioContextProviders(
         >
           <FontAwesomeIcon icon={faChevronDown} />
         </button>
-        <VideoPlayer video={transcript.video} seekTo={seekTo} />
+        <VideoPlayer video={transcript.video} />
         <CuePreview cues={cueState.cues} cueIndex={cueState.index} />
         <ScriptEditor
           cues={cueState.cues}
@@ -88,7 +87,6 @@ const Studio = withStudioContextProviders(
           scale={scale}
           cues={cueState.cues}
           setCue={setCue}
-          onSeek={setSeekTo}
         />
       </div>
     );
