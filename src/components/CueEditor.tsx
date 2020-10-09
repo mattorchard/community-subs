@@ -1,6 +1,5 @@
 import React, { CSSProperties, useEffect } from "react";
 import { Cue } from "../types/cue";
-import { SetCue } from "../hooks/useCues";
 import { debounce } from "../helpers/timingHelpers";
 import { getClassName, matchScrollHeight } from "../helpers/domHelpers";
 import "./CueEditor.css";
@@ -8,6 +7,7 @@ import { toTimeRangeString } from "../helpers/timeCodeHelpers";
 import { getLineCount } from "../helpers/textHelpers";
 import { useCueSelectionActions } from "../contexts/CueSelectionContext";
 import { useModifierKeys } from "../contexts/ModifierKeysContext";
+import { useCuesContext } from "../contexts/CuesContext";
 
 type KE = React.KeyboardEvent<HTMLTextAreaElement>;
 
@@ -32,17 +32,17 @@ const onArrowOut = (onUp: (event: KE) => void, onDown: (event: KE) => void) => (
 
 const CueEditor: React.FC<{
   cue: Cue;
-  setCue: SetCue;
   isSelected: boolean;
   shouldFocus: number | null;
   onArrowOutUp: (cueId: string) => void;
   onArrowOutDown: (cueId: string) => void;
 }> = React.memo(
-  ({ cue, setCue, isSelected, shouldFocus, onArrowOutUp, onArrowOutDown }) => {
+  ({ cue, isSelected, shouldFocus, onArrowOutUp, onArrowOutDown }) => {
     const modifierKeysRef = useModifierKeys();
     const { setSelection, addToSelection } = useCueSelectionActions();
     const { id } = cue;
     const textAreaRef = React.useRef<HTMLTextAreaElement>(null);
+    const { updateCue } = useCuesContext();
 
     useEffect(() => {
       textAreaRef.current!.value = cue.text || "";
@@ -63,12 +63,12 @@ const CueEditor: React.FC<{
     } = React.useMemo(
       () =>
         debounce(() => {
-          setCue({
+          updateCue({
             id,
             text: textAreaRef.current!.value,
           });
         }, 2500),
-      [id, setCue]
+      [id, updateCue]
     );
 
     const handleChange = () => {

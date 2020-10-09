@@ -3,6 +3,7 @@ import { Cue } from "../types/cue";
 import { useOnPlayerTimeChange } from "../contexts/PlayerControlsContext";
 import "./CuePreview.css";
 import { arraysAreEqual } from "../helpers/algoHelpers";
+import { useCuesContext } from "../contexts/CuesContext";
 
 const isCueOngoing = (currentTime: number, cue: Cue) =>
   cue.start <= currentTime && currentTime <= cue.end;
@@ -21,12 +22,10 @@ const filterCues = (currentTime: number, cues: Cue[], startIndex = 0) => {
   return filteredItems;
 };
 
-const CuePreview: React.FC<{ cues: Cue[]; cueIndex: Map<string, number> }> = ({
-  cues,
-  cueIndex,
-}) => {
+const CuePreview: React.FC = () => {
   const [cuesToShow, setCuesToShow] = useState<Cue[]>([]);
   const lastTimeRef = useRef(0);
+  const { cues, cueIndexById } = useCuesContext();
 
   const updateCuesToShow = useCallback(() => {
     const newCuesToShow = filterCues(lastTimeRef.current, cues);
@@ -48,7 +47,7 @@ const CuePreview: React.FC<{ cues: Cue[]; cueIndex: Map<string, number> }> = ({
 
     if (smallForwardAdjustment && cuesToShow.length > 0) {
       // Moved forward just a few frames
-      const startIndex = cueIndex.get(cuesToShow[0].id);
+      const startIndex = cueIndexById.get(cuesToShow[0].id);
       if (startIndex === undefined) {
         return;
       }

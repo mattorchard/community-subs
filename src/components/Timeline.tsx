@@ -8,7 +8,6 @@ import React, {
 } from "react";
 import { Cue } from "../types/cue";
 import useWindowEvent from "../hooks/useWindowEvent";
-import { SetCue } from "../hooks/useCues";
 import { getClassName } from "../helpers/domHelpers";
 import useTimelineMarkerSpacing from "../helpers/useTimelineMarkerSpacing";
 import "./Timeline.css";
@@ -18,7 +17,7 @@ import {
   useCueSelectionActions,
 } from "../contexts/CueSelectionContext";
 import { useSeekTo } from "../contexts/PlayerControlsContext";
-import { defaultGroup } from "../types/Groups";
+import { useCuesContext } from "../contexts/CuesContext";
 
 type CueDragType = "start" | "end" | "both";
 type CueDragDetails = {
@@ -91,9 +90,8 @@ const useCueLayers = (cues: Cue[]) =>
 const Timeline: React.FC<{
   duration: number;
   scale: number;
-  cues: Cue[];
-  setCue: SetCue;
-}> = ({ duration, scale, cues, setCue }) => {
+}> = ({ duration, scale }) => {
+  const { cues, updateCue, createCue } = useCuesContext();
   const markerSpacing = useTimelineMarkerSpacing(scale);
   const layers = useCueLayers(cues);
   const cueSelection = useCueSelection();
@@ -139,20 +137,20 @@ const Timeline: React.FC<{
           const offsetPosition = Math.round(cueDragDetails.offset / scale);
           const start = timelinePosition - offsetPosition;
           const end = start + (cueDragDetails.end - cueDragDetails.start);
-          setCue({ id: cueDragDetails.id, start, end });
+          updateCue({ id: cueDragDetails.id, start, end });
           break;
         case "start":
-          setCue({ id: cueDragDetails.id, start: timelinePosition });
+          updateCue({ id: cueDragDetails.id, start: timelinePosition });
           break;
         case "end":
-          setCue({ id: cueDragDetails.id, end: timelinePosition });
+          updateCue({ id: cueDragDetails.id, end: timelinePosition });
           break;
       }
       setCueDraggingDetails(null);
     }
     setIsPanning(false);
     setIsSeeking(false);
-  }, [cueDragDetails, scale, setCue]);
+  }, [cueDragDetails, scale, updateCue]);
 
   useWindowEvent("pointerup", handleDragStop);
   useWindowEvent("pointerleave", handleDragStop);
@@ -162,19 +160,17 @@ const Timeline: React.FC<{
       const layerId = parseInt(currentTarget.dataset.layerId!);
       hoveredLayerIdRef.current = layerId;
       if (cueDragDetails) {
-        setCue({ id: cueDragDetails.id, layer: layerId });
+        updateCue({ id: cueDragDetails.id, layer: layerId });
       }
     },
-    [cueDragDetails, setCue]
+    [cueDragDetails, updateCue]
   );
 
   const addCue = (time: number) =>
-    setCue({
+    createCue({
       layer: hoveredLayerIdRef.current,
-      text: "",
       start: time,
       end: time + 2500,
-      group: defaultGroup, // Todo: Pull from current group
     });
 
   const viewportDetails = {
