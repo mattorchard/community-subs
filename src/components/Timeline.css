@@ -56,7 +56,7 @@
   margin: 1rem 0;
   left: calc(1px * var(--timeline-scale) * var(--cue-start));
   right: calc(100% - 1px * var(--timeline-scale) * var(--cue-end));
-  background-color: var(--blue-900);
+  background-color: var(--secondary-group-color);
   display: flex;
   height: 2rem;
   min-width: 2rem;

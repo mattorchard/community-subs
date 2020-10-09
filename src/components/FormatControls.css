@@ -1,2 +1,24 @@
-.format-controls {
+.color-button {
+  background-color: transparent;
+  transition-property: color, background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
+}
+.color-button:focus > svg,
+.color-button:hover > svg {
+  color: currentColor;
+}
+.color-button:focus,
+.color-button:hover {
+  color: white;
+  background-color: var(--selection-color);
+}
+.color-button--square {
+  --selection-color: var(--color-group-square-primary);
+}
+.color-button--circle {
+  --selection-color: var(--color-group-circle-primary);
+}
+.color-button--triangle {
+  --selection-color: var(--color-group-triangle-primary);
 }

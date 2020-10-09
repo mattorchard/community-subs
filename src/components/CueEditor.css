@@ -1,7 +1,7 @@
 .cue-editor {
   display: flex;
   flex-direction: column;
-  border-left: 0.5rem solid var(--color-primary);
+  border-left: 0.5rem solid var(--primary-group-color);
   background-color: var(--gray-900);
   transition-property: border-color, background-color;
   transition-duration: 0.3s;
@@ -10,7 +10,7 @@
   cursor: text;
 }
 .cue-editor--is-selected {
-  background-color: var(--blue-900);
+  background-color: var(--secondary-group-color);
 }
 .cue-editor:focus-within {
   border-left-color: var(--color-focus);

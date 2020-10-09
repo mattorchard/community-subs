@@ -23,7 +23,7 @@
 .script-editor__add-cue-between-button::before {
   content: "+";
   transition: color 0.3s ease-in-out;
-  color: var(--color-primary);
+  color: var(--gray-300);
   font-size: 1rem;
   padding-right: 0.5rem;
 }

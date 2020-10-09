@@ -18,6 +18,7 @@ import {
   useCueSelectionActions,
 } from "../contexts/CueSelectionContext";
 import { useSeekTo } from "../contexts/PlayerControlsContext";
+import { defaultGroup } from "../types/Groups";
 
 type CueDragType = "start" | "end" | "both";
 type CueDragDetails = {
@@ -173,6 +174,7 @@ const Timeline: React.FC<{
       text: "",
       start: time,
       end: time + 2500,
+      group: defaultGroup, // Todo: Pull from current group
     });
 
   const viewportDetails = {
@@ -297,6 +299,7 @@ const TimelineCue: React.FC<{
           "--cue-start": cue.start,
           "--cue-end": cue.end,
           "--cue-duration": cue.end - cue.start,
+          "--selection-secondary-color": `var(--color-group-${cue.group}-secondary)`,
         } as CSSProperties
       }
       data-cue-id={cue.id}

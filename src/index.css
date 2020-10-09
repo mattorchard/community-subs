@@ -116,6 +116,17 @@
   --color-focus: var(--yellow-400);
   --color-danger: var(--red-500);
 
+  --color-group-square-primary: var(--blue-500);
+  --color-group-circle-primary: var(--green-500);
+  --color-group-triangle-primary: var(--purple-600);
+
+  --color-group-square-secondary: var(--blue-900);
+  --color-group-circle-secondary: var(--green-900);
+  --color-group-triangle-secondary: var(--purple-800);
+
+  --primary-group-color: var(--color-group-square-primary);
+  --secondary-group-color: var(--color-group-square-secondary);
+
   /* Other Vars */
   --focus-bs: 0 0 0 0.125rem var(--color-focus);
   --focus-bs-thin: 0 0 0 0.0625rem var(--color-focus);

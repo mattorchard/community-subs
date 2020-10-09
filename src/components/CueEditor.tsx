@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { CSSProperties, useEffect } from "react";
 import { Cue } from "../types/cue";
 import { SetCue } from "../hooks/useCues";
 import { debounce } from "../helpers/timingHelpers";
@@ -93,6 +93,12 @@ const CueEditor: React.FC<{
     return (
       <label
         className={getClassName("cue-editor", { "is-selected": isSelected })}
+        style={
+          {
+            "--primary-group-color": `var(--color-group-${cue.group}-primary)`,
+            "--secondary-group-color": `var(--color-group-${cue.group}-secondary)`,
+          } as CSSProperties
+        }
       >
         <textarea
           id={cue.id}
