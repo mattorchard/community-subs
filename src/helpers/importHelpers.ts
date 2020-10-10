@@ -1,6 +1,7 @@
 import { Cue } from "../types/cue";
 import { v4 as uuidV4 } from "uuid";
 import { timeCodeToMillis } from "./timeCodeHelpers";
+import { defaultGroup } from "../types/Groups";
 
 export const fromVtt = (transcriptId: string, rawVtt: string): Cue[] =>
   rawVtt
@@ -17,6 +18,7 @@ export const fromVtt = (transcriptId: string, rawVtt: string): Cue[] =>
       transcriptId,
       id: uuidV4(),
       layer: 0,
+      group: defaultGroup,
     }));
 
 const getBlockType = (block: string) => {

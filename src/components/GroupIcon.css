@@ -1,0 +1,12 @@
+.group-icon--square {
+  color: var(--color-group-square-primary);
+}
+
+.group-icon--circle {
+  color: var(--color-group-circle-primary);
+}
+
+.group-icon--triangle {
+  color: var(--color-group-triangle-primary);
+  transform: rotateZ(-90deg);
+}

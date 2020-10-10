@@ -4,17 +4,32 @@
 }
 .media-controls__play-pause {
   transform: scale(2);
-  transform-origin: 50% 100%;
+  transform-origin: 50% 75%;
   margin: 0 2rem;
   padding: 0.75rem;
-  background-color: var(--gray-900);
   border-radius: 50%;
+  position: relative;
+  border: 0.05rem solid transparent;
 }
-.media-controls__play-pause:focus {
-  box-shadow: var(--focus-bs-thin) inset;
+.media-controls__play-pause::before {
+  content: "";
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 40 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.85786 6H0V16H40V6H34.1421C31.49 6 28.9464 4.94643 27.0711 3.07107C23.1658 -0.834177 16.8342 -0.834177 12.9289 3.07107C11.0536 4.94643 8.51003 6 5.85786 6Z' fill='%23171923'/%3E%3C/svg%3E%0A");
+  background-repeat: no-repeat;
+  position: absolute;
+  z-index: -1;
+  left: -2rem;
+  right: -2rem;
+  top: -0.25rem;
+  bottom: 0;
+}
+.media-controls > button:focus {
+  box-shadow: none;
+  color: var(--color-focus);
 }
 .media-controls__step {
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 1000px;
+  position: relative;
+  z-index: 1;
 }

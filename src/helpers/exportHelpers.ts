@@ -1,8 +1,7 @@
-import { CueState } from "../hooks/useCues";
 import { Cue, CueSettings } from "../types/cue";
 import { timeCodeToFullString, toTimeCode } from "./timeCodeHelpers";
 
-export const toWebVtt = ({ cues }: CueState) => {
+export const toWebVtt = (cues: Cue[]) => {
   return [
     getHeaders("Created with Community Subs"),
     getGlobalStyles(),
@@ -11,7 +10,7 @@ export const toWebVtt = ({ cues }: CueState) => {
 };
 
 const getHeaders = (title: string) =>
-  `WEBVTT  - ${title}
+  `WEBVTT - ${title}
 
 NOTE Created with Community Subs`;
 

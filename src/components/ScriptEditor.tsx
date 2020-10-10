@@ -5,7 +5,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { SetCue } from "../hooks/useCues";
 import "./ScriptEditor.css";
 import CueEditor from "./CueEditor";
 import { Cue } from "../types/cue";
@@ -19,6 +18,7 @@ import {
   useCueSelection,
   useIsCueSelected,
 } from "../contexts/CueSelectionContext";
+import { useCuesContext } from "../contexts/CuesContext";
 
 const TARGET_DURATION = 2500;
 const MIN_DURATION = 1000;
@@ -98,11 +98,9 @@ const getItemSize = (cue: Cue, isFirst: boolean) => {
 };
 
 const ScriptEditor: React.FC<{
-  cues: Cue[];
-  cueIndex: Map<string, number>;
-  setCue: SetCue;
   duration: number;
-}> = ({ cues, setCue, duration, cueIndex }) => {
+}> = ({ duration }) => {
+  const { cues, cueIndexById, createCue } = useCuesContext();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const listRef = useRef<VariableSizeList | null>(null);
   const { height: containerHeight } = useBounds(containerRef);
@@ -114,7 +112,7 @@ const ScriptEditor: React.FC<{
 
   const { cueToFocus, focusNextCue, focusPreviousCue } = useCueFocus(
     cues,
-    cueIndex,
+    cueIndexById,
     scrollToCue
   );
 
@@ -129,11 +127,11 @@ const ScriptEditor: React.FC<{
     if (cueBefore.start < MIN_DURATION) {
       alert("No room to add in a cue before that");
     } else {
-      setCue({
+      createCue({
         start: Math.max(0, cueBefore.start - TARGET_DURATION),
         end: cueBefore.start,
-        text: "",
         layer: cueBefore.layer,
+        group: cueBefore.group,
       });
     }
   };
@@ -144,20 +142,21 @@ const ScriptEditor: React.FC<{
     if (cueBefore.end > duration - MIN_DURATION) {
       alert("No room to add in a cue after that");
     } else if (!cueAfter) {
-      setCue({
+      createCue({
         start: cueBefore.end,
         end: Math.min(cueBefore.end + TARGET_DURATION, duration - MIN_DURATION),
-        text: "",
         layer: cueBefore.layer,
+        group: cueBefore.group,
       });
     } else if (cueAfter.start - cueBefore.end < MIN_DURATION) {
       alert("No room to add in a cue between");
     } else {
-      setCue({
+      createCue({
         start: cueBefore.end,
         end: cueAfter.start,
         text: "",
         layer: cueBefore.layer,
+        group: cueBefore.group,
       });
     }
   };
@@ -168,7 +167,6 @@ const ScriptEditor: React.FC<{
     focusPreviousCue,
     handleAddBeforeAll,
     handleAddBetween,
-    setCue,
     cueToFocus,
   };
 
@@ -201,7 +199,6 @@ type ItemData = {
   focusPreviousCue: (cueId: string) => void;
   handleAddBeforeAll: () => void;
   handleAddBetween: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  setCue: SetCue;
   cueToFocus: CueToFocus | null;
 };
 
@@ -221,7 +218,6 @@ const Row = ({
     handleAddBeforeAll,
     handleAddBetween,
     cueToFocus,
-    setCue,
   } = data;
   const cueId = cues[index].id;
   const shouldFocus = cueToFocus?.id === cueId ? cueToFocus.time : null;
@@ -239,7 +235,6 @@ const Row = ({
       )}
       <CueEditor
         cue={cues[index]}
-        setCue={setCue}
         isSelected={isSelected}
         shouldFocus={shouldFocus}
         onArrowOutUp={focusPreviousCue}

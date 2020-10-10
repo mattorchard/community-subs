@@ -8,7 +8,6 @@ import React, {
 } from "react";
 import { Cue } from "../types/cue";
 import useWindowEvent from "../hooks/useWindowEvent";
-import { SetCue } from "../hooks/useCues";
 import { getClassName } from "../helpers/domHelpers";
 import useTimelineMarkerSpacing from "../helpers/useTimelineMarkerSpacing";
 import "./Timeline.css";
@@ -18,6 +17,7 @@ import {
   useCueSelectionActions,
 } from "../contexts/CueSelectionContext";
 import { useSeekTo } from "../contexts/PlayerControlsContext";
+import { useCuesContext } from "../contexts/CuesContext";
 
 type CueDragType = "start" | "end" | "both";
 type CueDragDetails = {
@@ -90,9 +90,8 @@ const useCueLayers = (cues: Cue[]) =>
 const Timeline: React.FC<{
   duration: number;
   scale: number;
-  cues: Cue[];
-  setCue: SetCue;
-}> = ({ duration, scale, cues, setCue }) => {
+}> = ({ duration, scale }) => {
+  const { cues, updateCue, createCue } = useCuesContext();
   const markerSpacing = useTimelineMarkerSpacing(scale);
   const layers = useCueLayers(cues);
   const cueSelection = useCueSelection();
@@ -133,25 +132,36 @@ const Timeline: React.FC<{
   const handleDragStop = useCallback(() => {
     if (cueDragDetails) {
       const timelinePosition = Math.round(pointerXRef.current / scale);
+      const minDragAmount = 0.01;
       switch (cueDragDetails.type) {
         case "both":
           const offsetPosition = Math.round(cueDragDetails.offset / scale);
           const start = timelinePosition - offsetPosition;
           const end = start + (cueDragDetails.end - cueDragDetails.start);
-          setCue({ id: cueDragDetails.id, start, end });
+
+          // No-need to check start and end, since both moved together
+          if (Math.abs(cueDragDetails.end - end) > minDragAmount) {
+            updateCue({ id: cueDragDetails.id, start, end });
+          }
           break;
         case "start":
-          setCue({ id: cueDragDetails.id, start: timelinePosition });
+          if (
+            Math.abs(cueDragDetails.start - timelinePosition) > minDragAmount
+          ) {
+            updateCue({ id: cueDragDetails.id, start: timelinePosition });
+          }
           break;
         case "end":
-          setCue({ id: cueDragDetails.id, end: timelinePosition });
+          if (Math.abs(cueDragDetails.end - timelinePosition) > minDragAmount) {
+            updateCue({ id: cueDragDetails.id, end: timelinePosition });
+          }
           break;
       }
       setCueDraggingDetails(null);
     }
     setIsPanning(false);
     setIsSeeking(false);
-  }, [cueDragDetails, scale, setCue]);
+  }, [cueDragDetails, scale, updateCue]);
 
   useWindowEvent("pointerup", handleDragStop);
   useWindowEvent("pointerleave", handleDragStop);
@@ -161,16 +171,15 @@ const Timeline: React.FC<{
       const layerId = parseInt(currentTarget.dataset.layerId!);
       hoveredLayerIdRef.current = layerId;
       if (cueDragDetails) {
-        setCue({ id: cueDragDetails.id, layer: layerId });
+        updateCue({ id: cueDragDetails.id, layer: layerId });
       }
     },
-    [cueDragDetails, setCue]
+    [cueDragDetails, updateCue]
   );
 
   const addCue = (time: number) =>
-    setCue({
+    createCue({
       layer: hoveredLayerIdRef.current,
-      text: "",
       start: time,
       end: time + 2500,
     });
@@ -297,6 +306,8 @@ const TimelineCue: React.FC<{
           "--cue-start": cue.start,
           "--cue-end": cue.end,
           "--cue-duration": cue.end - cue.start,
+          "--primary-group-color": `var(--color-group-${cue.group}-primary)`,
+          "--secondary-group-color": `var(--color-group-${cue.group}-secondary)`,
         } as CSSProperties
       }
       data-cue-id={cue.id}

@@ -96,6 +96,18 @@ export const saveCue = async (cue: Cue) => {
   return cue;
 };
 
+export const saveCues = async (cues: Cue[]) => {
+  const db = await dbPromise;
+  if (cues.length === 1) {
+    // Skip transaction logic
+    return saveCue(cues[0]);
+  }
+  const transaction = db.transaction("cues", "readwrite");
+  cues.forEach((cue) => transaction.objectStore("cues").put(cue));
+  await transaction.done;
+  return cues;
+};
+
 export const putCuesBulk = async (cues: Cue[]) => {
   const db = await dbPromise;
   const transaction = db.transaction("cues", "readwrite");

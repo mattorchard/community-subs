@@ -1,4 +1,6 @@
 // Takes the form ###%
+import { GroupName } from "./Groups";
+
 type Percentage = string;
 
 export type CueSettings = Partial<{
@@ -16,6 +18,7 @@ export type Cue = {
   end: number;
   text: string;
   layer: number;
+  group: GroupName;
   settings?: CueSettings;
 };
 
