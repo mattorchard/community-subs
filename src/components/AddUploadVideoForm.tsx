@@ -8,11 +8,12 @@ import { getFileExtension } from "../helpers/fileHelpers";
 import { VideoMeta } from "../types/cue";
 import "./AddUploadVideoForm.css";
 import { createFile } from "../repositories/EntityRepository";
+import useAsyncSafeState from "../hooks/useAsyncSafeState";
 
 const AddUploadVideoForm: React.FC<{
   onSubmit: (video: VideoMeta) => void;
 }> = ({ onSubmit }) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useAsyncSafeState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>(
     undefined
   );

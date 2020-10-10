@@ -12,12 +12,13 @@ import { readAsText } from "../helpers/fileHelpers";
 import { putCuesBulk } from "../repositories/EntityRepository";
 import { faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import useAsyncSafeState from "../hooks/useAsyncSafeState";
 
 const TranscriptNameInput: React.FC<{ transcript: Transcript }> = ({
   transcript,
 }) => {
   const { updateTranscript } = useTranscriptActions();
-  const [isSaving, setIsSaving] = useState(false);
+  const [isSaving, setIsSaving] = useAsyncSafeState(false);
   return (
     <DebouncedInput
       initialValue={transcript.name}

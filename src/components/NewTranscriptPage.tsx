@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Redirect } from "react-router-dom";
 import { useTranscriptActions } from "../contexts/TranscriptContext";
 import Spinner from "./Spinner";
@@ -8,9 +8,10 @@ import AddVideoForm from "./AddVideoForm";
 import "./NewTranscriptPage.css";
 import useTranscript from "../hooks/useTranscript";
 import { TranscriptPatch } from "../repositories/EntityRepository";
+import useAsyncSafeState from "../hooks/useAsyncSafeState";
 
 const NewTranscriptPage = () => {
-  const [isSaving, setIsSaving] = useState(false);
+  const [isSaving, setIsSaving] = useAsyncSafeState(false);
   const { updateTranscript } = useTranscriptActions();
   const transcript = useTranscript();
   if (!transcript) {
