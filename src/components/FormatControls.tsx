@@ -20,28 +20,28 @@ const FormatControls = () => {
     updateCues([...cueSelection].map((id) => ({ id, group })));
   };
   useShortcut(
-    "1",
+    "!", // 1, with shift
     (event) => {
       event.preventDefault();
       setGroup("square");
     },
-    { ctrl: true }
+    { ctrl: true, shift: true }
   );
   useShortcut(
-    "2",
+    "@", // 2 with shift
     (event) => {
       event.preventDefault();
       setGroup("circle");
     },
-    { ctrl: true }
+    { ctrl: true, shift: true }
   );
   useShortcut(
-    "3",
+    "#", // 3 with shift
     (event) => {
       event.preventDefault();
       setGroup("triangle");
     },
-    { ctrl: true }
+    { ctrl: true, shift: true }
   );
 
   return (
@@ -54,19 +54,19 @@ const FormatControls = () => {
       </button>
 
       <SelectGroupButton
-        title="Set group to Square (ctrl + 1)"
+        title="Set group to Square (ctrl + shift + 1)"
         group="square"
         selectedGroup={selectedGroup}
         onChange={setGroup}
       />
       <SelectGroupButton
-        title="Set group to Circle (ctrl + 2)"
+        title="Set group to Circle (ctrl + shift + 2)"
         group="circle"
         selectedGroup={selectedGroup}
         onChange={setGroup}
       />
       <SelectGroupButton
-        title="Set group to Triangle (ctrl + 3)"
+        title="Set group to Triangle (ctrl + shift + 3)"
         group="triangle"
         selectedGroup={selectedGroup}
         onChange={setGroup}
