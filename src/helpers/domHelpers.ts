@@ -29,3 +29,11 @@ export const getClassName = (
   });
   return classes.join(" ");
 };
+
+export const getModifierKeys = (event: KeyboardEvent | PointerEvent) => ({
+  alt: event.altKey,
+  ctrl: event.ctrlKey,
+  meta: event.metaKey,
+  shift: event.shiftKey,
+});
+export type ModifierKeys = ReturnType<typeof getModifierKeys>;

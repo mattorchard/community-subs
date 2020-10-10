@@ -3,19 +3,13 @@ import { Observable } from "../helpers/observableHelpers";
 import useBodyEvent from "../hooks/useBodyEvent";
 import { objectsAreEqual } from "../helpers/algoHelpers";
 import useAsRef from "../hooks/useAsRef";
+import { getModifierKeys, ModifierKeys } from "../helpers/domHelpers";
 
 const ModifierKeysContext = React.createContext<{
   observer: Observable<ModifierKeys>;
   valueRef: { current: ModifierKeys };
 } | null>(null);
 
-const getModifierKeys = (event: KeyboardEvent | PointerEvent) => ({
-  alt: event.altKey,
-  ctrl: event.ctrlKey,
-  meta: event.metaKey,
-  shift: event.shiftKey,
-});
-type ModifierKeys = ReturnType<typeof getModifierKeys>;
 const initialValues = {
   alt: false,
   ctrl: false,

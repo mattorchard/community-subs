@@ -1,13 +1,19 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnet } from "@fortawesome/free-solid-svg-icons";
-import Button from "./Button";
+import { faMagnet, faRulerCombined } from "@fortawesome/free-solid-svg-icons";
 import React from "react";
 
 const TimelineControls = () => (
-  <div style={{ gridArea: "timeline" }}>
-    <Button>
+  <div
+    role="group"
+    className="button-group with-dividers"
+    style={{ gridArea: "timeline" }}
+  >
+    <button className="icon-button">
       <FontAwesomeIcon icon={faMagnet} />
-    </Button>
+    </button>
+    <button className="icon-button">
+      <FontAwesomeIcon icon={faRulerCombined} />
+    </button>
   </div>
 );
 

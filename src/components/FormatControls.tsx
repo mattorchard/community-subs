@@ -8,16 +8,42 @@ import { GroupName } from "../types/Groups";
 import { getClassName } from "../helpers/domHelpers";
 import { useCueSelection } from "../contexts/CueSelectionContext";
 import { useCuesContext } from "../contexts/CuesContext";
+import useShortcut from "../hooks/useShortcut";
 
 const FormatControls = () => {
   const { selectedGroup, setSelectedGroup } = useToolsContext();
   const cueSelection = useCueSelection();
   const { updateCues } = useCuesContext();
 
-  const handleChange = (group: GroupName) => {
+  const setGroup = (group: GroupName) => {
     setSelectedGroup(group);
     updateCues([...cueSelection].map((id) => ({ id, group })));
   };
+  useShortcut(
+    "1",
+    (event) => {
+      event.preventDefault();
+      setGroup("square");
+    },
+    { ctrl: true }
+  );
+  useShortcut(
+    "2",
+    (event) => {
+      event.preventDefault();
+      setGroup("circle");
+    },
+    { ctrl: true }
+  );
+  useShortcut(
+    "3",
+    (event) => {
+      event.preventDefault();
+      setGroup("triangle");
+    },
+    { ctrl: true }
+  );
+
   return (
     <div role="group" className="format-controls button-group with-dividers">
       <button className="icon-button">
@@ -28,30 +54,35 @@ const FormatControls = () => {
       </button>
 
       <SelectGroupButton
+        title="Set group to Square (ctrl + 1)"
         group="square"
         selectedGroup={selectedGroup}
-        onChange={handleChange}
+        onChange={setGroup}
       />
       <SelectGroupButton
+        title="Set group to Circle (ctrl + 2)"
         group="circle"
         selectedGroup={selectedGroup}
-        onChange={handleChange}
+        onChange={setGroup}
       />
       <SelectGroupButton
+        title="Set group to Triangle (ctrl + 3)"
         group="triangle"
         selectedGroup={selectedGroup}
-        onChange={handleChange}
+        onChange={setGroup}
       />
     </div>
   );
 };
 
 const SelectGroupButton: React.FC<{
+  title: string;
   group: GroupName;
   selectedGroup: GroupName;
   onChange: (group: GroupName) => void;
-}> = ({ group, selectedGroup, onChange }) => (
+}> = ({ title, group, selectedGroup, onChange }) => (
   <label
+    title={title}
     className={getClassName(
       "color-button",
       { [group]: true, "is-selected": group === selectedGroup },
