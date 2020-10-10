@@ -92,16 +92,31 @@
   flex-shrink: 1;
   text-align: start;
   user-select: none;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
   /*noinspection CssUnknownProperty*/
   user-drag: none;
   -webkit-user-drag: none !important;
+}
+.timeline-cue__body__text {
+  flex-grow: 2;
+}
+.timeline-cue__group {
+  transition: color 0.2s ease-in-out;
+}
+.timeline-cue--is-selected .timeline-cue__group {
+  color: white;
 }
 
 .timeline-cue__drag-handle {
   flex-grow: 0;
   flex-shrink: 0;
   width: 1rem;
-  background-color: var(--color-darken);
+  opacity: 0.5;
+}
+.timeline-cue__drag-handle > svg {
+  pointer-events: none;
 }
 .timeline-cue__drag-handle:first-child,
 .timeline-cue__drag-handle:last-child {

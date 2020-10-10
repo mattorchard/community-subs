@@ -8,6 +8,7 @@ import { getLineCount } from "../helpers/textHelpers";
 import { useCueSelectionActions } from "../contexts/CueSelectionContext";
 import { useModifierKeys } from "../contexts/ModifierKeysContext";
 import { useCuesContext } from "../contexts/CuesContext";
+import GroupIcon from "./GroupIcon";
 
 type KE = React.KeyboardEvent<HTMLTextAreaElement>;
 
@@ -117,6 +118,7 @@ const CueEditor: React.FC<{
           placeholder="Blank"
         />
         <small className="cue-editor__footer">{toTimeRangeString(cue)}</small>
+        <GroupIcon className="cue-editor__group" groupName={cue.group} />
       </label>
     );
   },

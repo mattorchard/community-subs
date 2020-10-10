@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { Cue } from "../types/cue";
 import useWindowEvent from "../hooks/useWindowEvent";
-import { getClassName } from "../helpers/domHelpers";
+import { getClassName, queryAncestor } from "../helpers/domHelpers";
 import useTimelineMarkerSpacing from "../helpers/useTimelineMarkerSpacing";
 import "./Timeline.css";
 import useBounds from "../hooks/useBounds";
@@ -18,6 +18,9 @@ import {
 } from "../contexts/CueSelectionContext";
 import { useSeekTo } from "../contexts/PlayerControlsContext";
 import { useCuesContext } from "../contexts/CuesContext";
+import { faGripLinesVertical } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import GroupIcon from "./GroupIcon";
 
 type CueDragType = "start" | "end" | "both";
 type CueDragDetails = {
@@ -315,13 +318,22 @@ const TimelineCue: React.FC<{
         if (event.shiftKey) {
           return;
         }
+        if (event.target === event.currentTarget) {
+          return;
+        }
         event.preventDefault();
-        const target = event.target as HTMLElement;
-        const type = target.dataset?.dragType as CueDragType | undefined;
+        const target = event.target as Node;
+        const type = ((target as HTMLElement).dataset?.dragType ||
+          queryAncestor(target, "[data-drag-type]")?.dataset?.dragType) as
+          | CueDragType
+          | undefined;
+
         if (type) {
           const offset =
             event.nativeEvent.offsetX +
-            (target === event.currentTarget ? 0 : target.offsetLeft);
+            (target instanceof HTMLElement
+              ? target.offsetLeft
+              : target.parentElement!.offsetLeft);
           onDragStart({
             type,
             id: cue.id,
@@ -337,7 +349,9 @@ const TimelineCue: React.FC<{
         className="timeline-cue__drag-handle"
         aria-label="Adjust start time"
         data-drag-type="start"
-      />
+      >
+        <FontAwesomeIcon icon={faGripLinesVertical} />
+      </button>
       <button
         onClick={(event) => {
           if (event.ctrlKey) {
@@ -346,18 +360,23 @@ const TimelineCue: React.FC<{
             onSelect(cue.id, "replace");
           }
         }}
-        className="timeline-cue__body ellipses"
+        className="timeline-cue__body"
         title={cue.text}
         data-drag-type="both"
       >
-        {cue.text || "Blank"}
+        <span className="timeline-cue__body__text ellipses">
+          {cue.text || "Blank"}
+        </span>
+        <GroupIcon className="timeline-cue__group" groupName={cue.group} />
       </button>
       <button
         type="button"
         className="timeline-cue__drag-handle"
         aria-label="Adjust end time"
         data-drag-type="end"
-      />
+      >
+        <FontAwesomeIcon icon={faGripLinesVertical} />
+      </button>
     </div>
   ),
   (a, b) =>

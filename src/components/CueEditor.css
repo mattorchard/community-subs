@@ -8,6 +8,7 @@
   transition-timing-function: ease-in-out;
   padding: 0.5rem;
   cursor: text;
+  position: relative;
 }
 .cue-editor--is-selected {
   background-color: var(--secondary-group-color);
@@ -28,5 +29,11 @@
 }
 .cue-editor__footer {
   user-select: none;
+  opacity: 0.5;
+}
+.cue-editor__group {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
   opacity: 0.5;
 }
