@@ -31,7 +31,7 @@ export const ModifierKeysContextProvider: React.FC = ({ children }) => {
 
   useBodyEvent("keydown", updateModifierKeys);
   useBodyEvent("keyup", updateModifierKeys);
-  useBodyEvent("pointerenter", updateModifierKeys);
+  useBodyEvent("pointerover", updateModifierKeys);
 
   return (
     <ModifierKeysContext.Provider
