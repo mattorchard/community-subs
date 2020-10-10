@@ -1,20 +1,36 @@
+import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnet, faRulerCombined } from "@fortawesome/free-solid-svg-icons";
-import React from "react";
+import "./TimelineControls.css";
+import { useToolsContext } from "../contexts/ToolsContext";
 
-const TimelineControls = () => (
-  <div
-    role="group"
-    className="button-group with-dividers"
-    style={{ gridArea: "timeline" }}
-  >
-    <button className="icon-button">
-      <FontAwesomeIcon icon={faMagnet} />
-    </button>
-    <button className="icon-button">
-      <FontAwesomeIcon icon={faRulerCombined} />
-    </button>
-  </div>
-);
+const TimelineControls = () => {
+  const {
+    isSnapToOthersEnabled,
+    isSnapToGridEnabled,
+    setIsSnapToOthersEnabled,
+    setIsSnapToGridEnabled,
+  } = useToolsContext();
+  return (
+    <div role="group" className="timeline-controls button-group with-dividers">
+      <button
+        title="Snap to others"
+        className="icon-button timeline__toggle-button"
+        aria-pressed={isSnapToOthersEnabled}
+        onClick={() => setIsSnapToOthersEnabled((enabled) => !enabled)}
+      >
+        <FontAwesomeIcon icon={faMagnet} />
+      </button>
+      <button
+        title="Snap to grid"
+        className="icon-button timeline__toggle-button"
+        aria-pressed={isSnapToGridEnabled}
+        onClick={() => setIsSnapToGridEnabled((enabled) => !enabled)}
+      >
+        <FontAwesomeIcon icon={faRulerCombined} />
+      </button>
+    </div>
+  );
+};
 
 export default TimelineControls;

@@ -1,0 +1,20 @@
+.timeline-controls {
+  grid-area: timeline;
+}
+.timeline__toggle-button {
+  transition-property: background-color, border-color;
+  transition-timing-function: ease-in-out;
+  transition-duration: 0.2s;
+}
+.timeline__toggle-button[aria-pressed="false"]:hover {
+  background-color: var(--gray-700);
+}
+.timeline__toggle-button[aria-pressed="true"]:hover {
+  background-color: var(--blue-500);
+}
+.timeline__toggle-button[aria-pressed="true"]:active {
+  background-color: var(--blue-800);
+}
+.timeline__toggle-button[aria-pressed="true"] {
+  background-color: var(--blue-600);
+}

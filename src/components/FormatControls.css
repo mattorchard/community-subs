@@ -19,12 +19,10 @@
   box-shadow: none;
 }
 .color-button--is-selected > svg,
-.color-button:focus-within > svg,
 .color-button:hover > svg {
   color: currentColor;
 }
 .color-button--is-selected,
-.color-button:focus-within,
 .color-button:hover {
   color: white;
   background-color: var(--selection-color);

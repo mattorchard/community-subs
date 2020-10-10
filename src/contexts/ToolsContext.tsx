@@ -1,17 +1,33 @@
-import React, { useContext, useState } from "react";
+import React, { Dispatch, SetStateAction, useContext, useState } from "react";
 import { defaultGroup, GroupName } from "../types/Groups";
 
 type ToolsContextType = {
   selectedGroup: GroupName;
-  setSelectedGroup: (group: GroupName) => void;
+  setSelectedGroup: Dispatch<SetStateAction<GroupName>>;
+  isSnapToOthersEnabled: boolean;
+  setIsSnapToOthersEnabled: Dispatch<SetStateAction<boolean>>;
+  isSnapToGridEnabled: boolean;
+  setIsSnapToGridEnabled: Dispatch<SetStateAction<boolean>>;
 };
 
 const ToolsContext = React.createContext<ToolsContextType | null>(null);
 
 export const ToolsContextProvider: React.FC = ({ children }) => {
   const [selectedGroup, setSelectedGroup] = useState<GroupName>(defaultGroup);
+  const [isSnapToOthersEnabled, setIsSnapToOthersEnabled] = useState(false);
+  const [isSnapToGridEnabled, setIsSnapToGridEnabled] = useState(false);
+
   return (
-    <ToolsContext.Provider value={{ selectedGroup, setSelectedGroup }}>
+    <ToolsContext.Provider
+      value={{
+        selectedGroup,
+        setSelectedGroup,
+        isSnapToOthersEnabled,
+        setIsSnapToOthersEnabled,
+        isSnapToGridEnabled,
+        setIsSnapToGridEnabled,
+      }}
+    >
       {children}
     </ToolsContext.Provider>
   );
