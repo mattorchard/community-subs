@@ -1,11 +1,13 @@
 .selection-controls {
   padding-left: 1rem;
+  grid-area: selection;
 }
 .selection-controls__label {
   align-self: center;
   display: inline-block;
   min-width: 7.5rem;
   margin-right: 0.5rem;
+  white-space: nowrap;
 }
 .selection-controls__button {
   cursor: pointer;

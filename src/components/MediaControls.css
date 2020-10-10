@@ -1,6 +1,7 @@
 .media-controls {
   display: flex;
   align-items: center;
+  grid-area: media;
 }
 .media-controls__play-pause {
   transform: scale(2);

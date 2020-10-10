@@ -19,7 +19,7 @@ const FormatControls = () => {
     updateCues([...cueSelection].map((id) => ({ id, group })));
   };
   return (
-    <div role="group" className="button-group with-dividers">
+    <div role="group" className="format-controls button-group with-dividers">
       <button className="icon-button">
         <FontAwesomeIcon icon={faBold} />
       </button>

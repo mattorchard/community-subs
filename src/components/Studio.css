@@ -12,22 +12,26 @@
 }
 .toolbar {
   grid-area: toolbar;
-  display: grid;
+  display: flex;
   justify-items: center;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto minmax(0, 1fr) minmax(
-      0,
-      1fr
-    );
+  justify-content: space-around;
   gap: 1rem;
   padding: 1rem;
   background-color: var(--gray-900);
 }
-
-.toolbar > :first-child {
-  justify-self: end;
-}
-.toolbar > :last-child {
-  justify-self: start;
+@media only screen and (min-width: 1500px) {
+  .toolbar {
+    display: grid;
+    grid-template:
+      "timeline zoom media selection format"
+      / minmax(0, 1fr) minmax(0, 1fr) auto minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .toolbar > :first-child {
+    justify-self: end;
+  }
+  .toolbar > :last-child {
+    justify-self: start;
+  }
 }
 
 .studio__open-drawer-button {

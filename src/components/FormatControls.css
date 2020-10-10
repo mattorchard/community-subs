@@ -1,3 +1,6 @@
+.format-controls {
+  grid-area: format;
+}
 .color-button {
   background-color: transparent;
   transition-property: color, background-color;

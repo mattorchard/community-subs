@@ -4,7 +4,7 @@ import Button from "./Button";
 import React from "react";
 
 const TimelineControls = () => (
-  <div>
+  <div style={{ gridArea: "timeline" }}>
     <Button>
       <FontAwesomeIcon icon={faMagnet} />
     </Button>
