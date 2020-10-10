@@ -306,7 +306,8 @@ const TimelineCue: React.FC<{
           "--cue-start": cue.start,
           "--cue-end": cue.end,
           "--cue-duration": cue.end - cue.start,
-          "--selection-secondary-color": `var(--color-group-${cue.group}-secondary)`,
+          "--primary-group-color": `var(--color-group-${cue.group}-primary)`,
+          "--secondary-group-color": `var(--color-group-${cue.group}-secondary)`,
         } as CSSProperties
       }
       data-cue-id={cue.id}

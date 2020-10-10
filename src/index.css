@@ -122,7 +122,7 @@
 
   --color-group-square-secondary: var(--blue-900);
   --color-group-circle-secondary: var(--green-900);
-  --color-group-triangle-secondary: var(--purple-800);
+  --color-group-triangle-secondary: var(--purple-900);
 
   --primary-group-color: var(--color-group-square-primary);
   --secondary-group-color: var(--color-group-square-secondary);
@@ -186,6 +186,10 @@ a {
 ol,
 ul {
   list-style: none;
+}
+
+svg {
+  user-select: none;
 }
 
 h1,
