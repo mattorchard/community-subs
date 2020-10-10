@@ -132,18 +132,29 @@ const Timeline: React.FC<{
   const handleDragStop = useCallback(() => {
     if (cueDragDetails) {
       const timelinePosition = Math.round(pointerXRef.current / scale);
+      const minDragAmount = 0.01;
       switch (cueDragDetails.type) {
         case "both":
           const offsetPosition = Math.round(cueDragDetails.offset / scale);
           const start = timelinePosition - offsetPosition;
           const end = start + (cueDragDetails.end - cueDragDetails.start);
-          updateCue({ id: cueDragDetails.id, start, end });
+
+          // No-need to check start and end, since both moved together
+          if (Math.abs(cueDragDetails.end - end) > minDragAmount) {
+            updateCue({ id: cueDragDetails.id, start, end });
+          }
           break;
         case "start":
-          updateCue({ id: cueDragDetails.id, start: timelinePosition });
+          if (
+            Math.abs(cueDragDetails.start - timelinePosition) > minDragAmount
+          ) {
+            updateCue({ id: cueDragDetails.id, start: timelinePosition });
+          }
           break;
         case "end":
-          updateCue({ id: cueDragDetails.id, end: timelinePosition });
+          if (Math.abs(cueDragDetails.end - timelinePosition) > minDragAmount) {
+            updateCue({ id: cueDragDetails.id, end: timelinePosition });
+          }
           break;
       }
       setCueDraggingDetails(null);
