@@ -64,6 +64,7 @@ export const CuesContextProvider: React.FC<{ transcriptId: string }> = ({
   const loadCuesFromStorage = useCallback(() => {
     setLoading(true);
     getCues(transcriptId).then((cues) => {
+      console.debug(`Loaded ${cues.length} cues`);
       setCues(cues.sort(cueComparator));
       setLoading(false);
     });

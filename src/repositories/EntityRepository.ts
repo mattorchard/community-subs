@@ -102,7 +102,7 @@ export const saveCues = async (cues: Cue[]) => {
     // Skip transaction logic
     return saveCue(cues[0]);
   }
-  const transaction = db.transaction("cues");
+  const transaction = db.transaction("cues", "readwrite");
   cues.forEach((cue) => transaction.objectStore("cues").put(cue));
   await transaction.done;
   return cues;
