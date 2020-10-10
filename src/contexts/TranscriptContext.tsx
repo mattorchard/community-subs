@@ -1,18 +1,17 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { v4 as uuidV4 } from "uuid";
 import { Transcript } from "../types/cue";
-import useAsRef from "../hooks/useAsRef";
 import {
   getTranscripts,
+  patchTranscript,
   putTranscript,
+  TranscriptPatch,
 } from "../repositories/EntityRepository";
-
-export type TranscriptUpdate = Partial<Transcript> & Pick<Transcript, "id">;
 
 const TranscriptsContext = React.createContext<Transcript[] | null>(null);
 const TranscriptActionsContext = React.createContext<{
   createTranscript: () => Promise<Transcript>;
-  updateTranscript: (t: TranscriptUpdate) => Promise<Transcript>;
+  updateTranscript: (transcriptPatch: TranscriptPatch) => Promise<Transcript>;
 }>({
   createTranscript: async () => {
     throw new Error(`Accessing actions outside context root`);
@@ -23,41 +22,27 @@ const TranscriptActionsContext = React.createContext<{
 });
 
 export const TranscriptContextProvider: React.FC = ({ children }) => {
-  const [state, setState] = useState<Transcript[] | null>(null);
-  const stateRef = useAsRef(state);
+  const [transcripts, setTranscripts] = useState<Transcript[] | null>(null);
 
   // Load initial transcripts
   useEffect(() => {
     getTranscripts()
-      .then((transcripts) => setState(transcripts))
+      .then((transcripts) => setTranscripts(transcripts))
       .catch((error) => console.error("Failed to load transcripts", error));
   }, []);
 
   const actions = useMemo(
     () => ({
-      updateTranscript: async (partialTranscript: TranscriptUpdate) => {
-        const oldTranscript = stateRef.current?.find(
-          (existingTranscript) => existingTranscript.id === partialTranscript.id
-        );
-
-        if (!oldTranscript) {
-          throw new Error(
-            `No transcript with ID ${partialTranscript.id} to update`
-          );
-        }
-        const savedTranscript = await putTranscript({
-          ...oldTranscript,
-          ...partialTranscript,
-        });
-
-        setState((state) =>
+      updateTranscript: async (transcriptPatch: TranscriptPatch) => {
+        const savedTranscript = await patchTranscript(transcriptPatch);
+        setTranscripts((state) =>
           state
             ? state.map((otherTranscript) =>
                 otherTranscript.id === savedTranscript.id
                   ? savedTranscript
                   : otherTranscript
               )
-            : [savedTranscript]
+            : null
         );
         return savedTranscript;
       },
@@ -68,18 +53,18 @@ export const TranscriptContextProvider: React.FC = ({ children }) => {
           createdAt: new Date(),
           accessedAt: new Date(),
         });
-        setState((transcripts) =>
+        setTranscripts((transcripts) =>
           transcripts ? [savedTranscript, ...transcripts] : [savedTranscript]
         );
         return savedTranscript;
       },
     }),
-    [setState, stateRef]
+    [setTranscripts]
   );
 
   return (
     <TranscriptActionsContext.Provider value={actions}>
-      <TranscriptsContext.Provider value={state}>
+      <TranscriptsContext.Provider value={transcripts}>
         {children}
       </TranscriptsContext.Provider>
     </TranscriptActionsContext.Provider>

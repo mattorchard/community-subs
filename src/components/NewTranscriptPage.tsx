@@ -1,15 +1,13 @@
 import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
-import {
-  TranscriptUpdate,
-  useTranscriptActions,
-} from "../contexts/TranscriptContext";
+import { useTranscriptActions } from "../contexts/TranscriptContext";
 import Spinner from "./Spinner";
 import DebouncedInput from "./DebouncedInput";
 import { toDateTimeString } from "../helpers/dateHelpers";
 import AddVideoForm from "./AddVideoForm";
 import "./NewTranscriptPage.css";
 import useTranscript from "../hooks/useTranscript";
+import { TranscriptPatch } from "../repositories/EntityRepository";
 
 const NewTranscriptPage = () => {
   const [isSaving, setIsSaving] = useState(false);
@@ -21,7 +19,7 @@ const NewTranscriptPage = () => {
   if (transcript.video) {
     return <Redirect to={`/transcript/${transcript.id}`} />;
   }
-  const handleSaveTranscript = async (transcript: TranscriptUpdate) => {
+  const handleSaveTranscript = async (transcript: TranscriptPatch) => {
     try {
       setIsSaving(true);
       await updateTranscript(transcript);

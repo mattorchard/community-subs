@@ -61,6 +61,22 @@ export const putTranscript = async (transcript: Transcript) => {
   return transcript;
 };
 
+export type TranscriptPatch = Partial<Transcript> & Pick<Transcript, "id">;
+
+export const patchTranscript = async (transcriptPatch: TranscriptPatch) => {
+  const db = await dbPromise;
+  const originalTranscript = await db.get("transcripts", transcriptPatch.id);
+  if (!originalTranscript) {
+    throw new Error(`No transcript with id ${transcriptPatch.id} to update`);
+  }
+  const fullTranscript = {
+    ...originalTranscript,
+    ...transcriptPatch,
+  };
+  await db.put("transcripts", fullTranscript);
+  return fullTranscript;
+};
+
 export const createFile = async (file: File) => {
   const db = await dbPromise;
   const completeFile = {
