@@ -64,7 +64,10 @@ const Studio = withStudioContextProviders(function Studio({ transcript }) {
       </button>
       <VideoPlayer video={transcript.video} />
       <CuePreview />
-      <ScriptEditor duration={transcript.video.duration} />
+      <ScriptEditor
+        duration={transcript.video.duration}
+        transcriptId={transcript.id}
+      />
       <div className="toolbar">
         <TimelineControls />
         <ZoomRange zoom={scale} onZoomChange={setScale} />

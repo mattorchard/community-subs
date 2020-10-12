@@ -19,6 +19,7 @@ import {
   useIsCueSelected,
 } from "../contexts/CueSelectionContext";
 import { useCuesContext } from "../contexts/CuesContext";
+import ImportCueArea from "./ImportCueArea";
 
 const TARGET_DURATION = 2500;
 const MIN_DURATION = 1000;
@@ -99,7 +100,8 @@ const getItemSize = (cue: Cue, isFirst: boolean) => {
 
 const ScriptEditor: React.FC<{
   duration: number;
-}> = ({ duration }) => {
+  transcriptId: string;
+}> = ({ duration, transcriptId }) => {
   const { cues, cueIndexById, createCue } = useCuesContext();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const listRef = useRef<VariableSizeList | null>(null);
@@ -173,7 +175,7 @@ const ScriptEditor: React.FC<{
   return (
     <section className="script-editor" ref={containerRef}>
       {cues.length === 0 ? (
-        <NoCuesMessage />
+        <NoCuesMessage transcriptId={transcriptId} />
       ) : (
         <VariableSizeList
           ref={listRef}
@@ -252,13 +254,24 @@ const Row = ({
   );
 };
 
-const NoCuesMessage = () => (
-  <Alert
-    className="script-editor__no-cues-message"
-    heading={<h3>New Transcript</h3>}
-    description="Add cues by double clicking the timeline below."
-    passive
-  />
+const NoCuesMessage: React.FC<{ transcriptId: string }> = ({
+  transcriptId,
+}) => (
+  <>
+    <Alert
+      className="script-editor__no-cues-message"
+      heading={<h3>New Transcript</h3>}
+      description={
+        <>
+          Add cues by double clicking the timeline below.
+          <br />
+          Or by importing an existing transcript.
+        </>
+      }
+      passive
+    />
+    <ImportCueArea transcriptId={transcriptId} />
+  </>
 );
 
 export default ScriptEditor;

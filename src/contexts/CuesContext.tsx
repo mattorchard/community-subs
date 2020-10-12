@@ -9,6 +9,7 @@ import { Cue } from "../types/cue";
 import {
   deleteCues as deleteCuesFromDb,
   getCues,
+  putCuesBulk,
   saveCue,
   saveCues,
 } from "../repositories/EntityRepository";
@@ -26,6 +27,7 @@ type CueContextActions = {
   updateCue: (cue: CuePatch) => void;
   updateCues: (cues: CuePatch[]) => void;
   deleteCues: (cues: Cue["id"][]) => void;
+  createCuesBulk: (cues: Cue[]) => Promise<void>;
 };
 
 type CuesContextType = {
@@ -69,7 +71,7 @@ export const CuesContextProvider: React.FC<{ transcriptId: string }> = ({
 
   const loadCuesFromStorage = useCallback(() => {
     setLoading(true);
-    getCues(transcriptId).then((cues) => {
+    return getCues(transcriptId).then((cues) => {
       console.debug(`Loaded ${cues.length} cues`);
       setCues(cues.sort(cueComparator));
       setLoading(false);
@@ -77,7 +79,7 @@ export const CuesContextProvider: React.FC<{ transcriptId: string }> = ({
   }, [transcriptId]);
 
   // Load initial cues
-  useEffect(loadCuesFromStorage, [loadCuesFromStorage]);
+  useEffect(() => void loadCuesFromStorage(), [loadCuesFromStorage]);
 
   const cueActions = useMemo<CueContextActions>(() => {
     const createCue = (newCue: NewCue) => {
@@ -143,7 +145,12 @@ export const CuesContextProvider: React.FC<{ transcriptId: string }> = ({
       );
     };
 
-    return { createCue, deleteCues, updateCue, updateCues };
+    const createCuesBulk = async (cues: Cue[]) => {
+      await putCuesBulk(cues);
+      await loadCuesFromStorage();
+    };
+
+    return { createCue, deleteCues, updateCue, updateCues, createCuesBulk };
   }, [transcriptId, cuesRef, cueIndexByIdRef, loadCuesFromStorage]);
 
   return (

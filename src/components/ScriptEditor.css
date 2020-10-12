@@ -36,3 +36,6 @@
   box-shadow: none;
   color: var(--color-focus);
 }
+.script-editor .import-cue-area {
+  margin-top: 1rem;
+}

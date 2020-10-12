@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Modal from "react-modal";
 import "./TopDrawer.css";
 import { Transcript } from "../types/cue";
@@ -6,10 +6,6 @@ import DebouncedInput from "./DebouncedInput";
 import { useTranscriptActions } from "../contexts/TranscriptContext";
 import Button from "./Button";
 import { toDateTimeString } from "../helpers/dateHelpers";
-import FileDropTarget from "./FileDropTarget";
-import { fromVtt } from "../helpers/importHelpers";
-import { readAsText } from "../helpers/fileHelpers";
-import { putCuesBulk } from "../repositories/EntityRepository";
 import { faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useAsyncSafeState from "../hooks/useAsyncSafeState";
@@ -32,43 +28,6 @@ const TranscriptNameInput: React.FC<{ transcript: Transcript }> = ({
         }
       }}
       className="input-flush xxxl"
-    />
-  );
-};
-
-const ImportCueArea: React.FC<{ transcriptId: string }> = ({
-  transcriptId,
-}) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | undefined>(
-    undefined
-  );
-  return (
-    <FileDropTarget
-      buttonLabel="Choose a transcript to import"
-      dropLabel="Or drag an drop one"
-      accept="text/*"
-      isLoading={isLoading}
-      errorMessage={errorMessage}
-      onDrop={async (files) => {
-        const [file] = files;
-        if (!file) {
-          return;
-        }
-        setErrorMessage("");
-        try {
-          setIsLoading(true);
-          const cues = fromVtt(transcriptId, await readAsText(file));
-          await putCuesBulk(cues);
-
-          // Todo: Fix this disgusting hack
-          window.location.reload();
-        } catch (error) {
-          setErrorMessage("Error loading file");
-        } finally {
-          setIsLoading(false);
-        }
-      }}
     />
   );
 };
@@ -112,7 +71,7 @@ const TopDrawer: React.FC<{
         Accessed {toDateTimeString(transcript.accessedAt)}
       </time>
 
-      <ImportCueArea transcriptId={transcript.id} />
+      {/* Todo: Add a way to import additional items, even if some cues are present */}
     </div>
   </Modal>
 );

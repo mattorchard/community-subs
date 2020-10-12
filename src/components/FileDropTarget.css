@@ -19,6 +19,7 @@
   height: var(--initial-height);
 }
 .file-drop-target--dragging > .file-drop-target__content {
+  z-index: 80;
   position: fixed;
   top: 1rem;
   left: 1rem;
