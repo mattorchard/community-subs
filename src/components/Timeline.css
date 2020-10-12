@@ -35,11 +35,12 @@
   background: repeating-linear-gradient(
     to right,
     transparent,
-    transparent calc(1px * var(--marker-spacing) * var(--timeline-scale)),
+    transparent
+      calc(1px * var(--marker-spacing) * var(--timeline-scale) - 0.25rem),
     var(--color-lighten)
-      calc(1px * var(--marker-spacing) * var(--timeline-scale)),
+      calc(1px * var(--marker-spacing) * var(--timeline-scale) - 0.25rem),
     var(--color-lighten)
-      calc(1px * var(--marker-spacing) * var(--timeline-scale) + 0.25rem)
+      calc(1px * var(--marker-spacing) * var(--timeline-scale))
   );
 }
 .timeline__layer {

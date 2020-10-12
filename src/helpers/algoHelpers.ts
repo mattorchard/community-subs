@@ -90,3 +90,6 @@ export const findPositionInSortedArray = <T>(
     0,
     array.length - 1
   );
+
+export const clamp = (value: number, min: number, max: number) =>
+  Math.min(max, Math.max(min, value));

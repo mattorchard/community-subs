@@ -21,6 +21,7 @@ import { useCuesContext } from "../contexts/CuesContext";
 import TimelineCue from "./TimelineCue";
 import { useLiveCallback } from "../hooks/useLiveCallback";
 import { useToolsContext } from "../contexts/ToolsContext";
+import { clamp } from "../helpers/algoHelpers";
 
 export type CueDragType = "start" | "end" | "both";
 export type CueDragDetails = {
@@ -94,7 +95,7 @@ const useCueLayers = (cues: Cue[]) =>
   }, [cues]);
 
 const roundToGrid = (value: number, scale: number) => {
-  const roundToNearest = 3 / scale;
+  const roundToNearest = 2.5 / scale;
   return Math.round(value / roundToNearest) * roundToNearest;
 };
 
@@ -164,35 +165,55 @@ const Timeline: React.FC<{
     }
     setCueDraggingDetails(null);
 
+    const minDuration = 250;
     const minDragAmount = 1;
     const { id, offset, type } = cueDragDetails;
     const timelinePosition = isSnapToGridEnabled
       ? roundToGrid(pointerXRef.current, scale) / scale
       : pointerXRef.current / scale;
 
+    const maximumStart = isSnapToGridEnabled
+      ? roundToGrid(cueDragDetails.end - minDuration, scale)
+      : cueDragDetails.end - minDuration;
+
+    const minimumEnd = isSnapToGridEnabled
+      ? roundToGrid(cueDragDetails.start + minDuration, scale)
+      : cueDragDetails.start + minDuration;
+
     switch (type) {
       case "start":
         if (
           Math.abs(cueDragDetails.start - timelinePosition) >= minDragAmount
         ) {
-          updateCue({ id, start: timelinePosition });
+          const start = Math.min(maximumStart, timelinePosition);
+          updateCue({ id, start: clamp(start, 0, duration) });
         }
         break;
+
       case "end":
         if (Math.abs(cueDragDetails.end - timelinePosition) >= minDragAmount) {
-          updateCue({ id, end: timelinePosition });
+          const end = Math.max(minimumEnd, timelinePosition);
+          updateCue({ id, end: clamp(end, 0, duration) });
         }
         break;
+
       case "both":
-        const start = isSnapToGridEnabled
-          ? roundToGrid(pointerXRef.current - offset, scale) / scale
-          : (pointerXRef.current - offset) / scale;
+        const start = Math.max(
+          0,
+          isSnapToGridEnabled
+            ? roundToGrid(pointerXRef.current - offset, scale) / scale
+            : (pointerXRef.current - offset) / scale
+        );
 
         const cueDuration = cueDragDetails.end - cueDragDetails.start;
         const end = start + cueDuration;
 
         if (Math.abs(cueDragDetails.start - start) >= minDragAmount) {
-          updateCue({ id, start, end });
+          updateCue({
+            id,
+            start: clamp(start, 0, duration),
+            end: clamp(end, 0, duration),
+          });
         }
         break;
     }
