@@ -57,6 +57,10 @@ const SelectionControls = () => {
     >
       <Button
         className="selection-controls__button"
+        aria-haspopup="menu"
+        aria-expanded={isMenuOpen}
+        aria-controls="selection-controls__menu"
+        id="selection-controls__menu-button"
         rightIcon
         disabled={selection.size === 0}
         onClick={(event) => {
@@ -68,7 +72,12 @@ const SelectionControls = () => {
         <FontAwesomeIcon icon={faCaretDown} />
       </Button>
       {isMenuOpen && (
-        <ul className="selection-controls__menu">
+        <ul
+          className="selection-controls__menu"
+          role="menu"
+          id="selection-controls__menu"
+          aria-labelledby="selection-controls__menu-button"
+        >
           <li className="menu-item">
             <button className="menu-item__button" onClick={deselectCues}>
               <FontAwesomeIcon icon={faTimesCircle} />
