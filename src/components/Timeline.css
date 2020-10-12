@@ -28,20 +28,7 @@
   grid-template-rows: repeat(3, minmax(0, 1fr));
   --timeline-scale: 0.1;
   --timeline-duration: 1000;
-  --marker-spacing: 0;
   width: calc(1px * var(--timeline-scale) * var(--timeline-duration));
-}
-.timeline__content {
-  background: repeating-linear-gradient(
-    to right,
-    transparent,
-    transparent
-      calc(1px * var(--marker-spacing) * var(--timeline-scale) - 0.25rem),
-    var(--color-lighten)
-      calc(1px * var(--marker-spacing) * var(--timeline-scale) - 0.25rem),
-    var(--color-lighten)
-      calc(1px * var(--marker-spacing) * var(--timeline-scale))
-  );
 }
 .timeline__layer {
   position: relative;

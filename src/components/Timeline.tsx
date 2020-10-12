@@ -9,7 +9,6 @@ import React, {
 import { Cue } from "../types/cue";
 import useWindowEvent from "../hooks/useWindowEvent";
 import { getClassName } from "../helpers/domHelpers";
-import useTimelineMarkerSpacing from "../helpers/useTimelineMarkerSpacing";
 import "./Timeline.css";
 import useBounds from "../hooks/useBounds";
 import {
@@ -22,6 +21,7 @@ import TimelineCue from "./TimelineCue";
 import { useLiveCallback } from "../hooks/useLiveCallback";
 import { useToolsContext } from "../contexts/ToolsContext";
 import { clamp } from "../helpers/algoHelpers";
+import TimelineMarkers from "./TimelineMarkers";
 
 export type CueDragType = "start" | "end" | "both";
 export type CueDragDetails = {
@@ -104,7 +104,6 @@ const Timeline: React.FC<{
   scale: number;
 }> = ({ duration, scale }) => {
   const { cues, updateCue, createCue } = useCuesContext();
-  const markerSpacing = useTimelineMarkerSpacing(scale);
   const layers = useCueLayers(cues);
   const cueSelection = useCueSelection();
   const selectionActions = useCueSelectionActions();
@@ -328,7 +327,6 @@ const Timeline: React.FC<{
             "--timeline-duration": duration,
             "--timeline-scale": scale,
             "--offset-x": dragDetails?.offset,
-            "--marker-spacing": markerSpacing,
           } as CSSProperties
         }
       >
@@ -353,6 +351,7 @@ const Timeline: React.FC<{
             )}
           </div>
         ))}
+        <TimelineMarkers {...viewportDetails} duration={duration} />
         <div className="play-head" />
       </section>
       <div className="timeline__bumper" />

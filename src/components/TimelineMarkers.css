@@ -1,0 +1,21 @@
+.timeline {
+  --time: 0;
+}
+.timeline-marker {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  transform: translateX(-50%)
+    translateX(calc(1px * var(--timeline-scale) * var(--time)));
+}
+.timeline-marker--label {
+  opacity: 0.5;
+  z-index: -1;
+}
+.timeline-marker--rule {
+  top: 0;
+  left: 0;
+  width: 0.25rem;
+  background-color: var(--color-lighten);
+  z-index: -2;
+}

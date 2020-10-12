@@ -30,7 +30,7 @@ export const toTimeCode = (millis: number): TimeCode => {
   return { hours, minutes, seconds, milliseconds };
 };
 
-export const timeCodeToString = ({
+export const timeCodeToShortString = ({
   minutes,
   seconds,
   milliseconds,
@@ -38,7 +38,12 @@ export const timeCodeToString = ({
   `${padZeros(minutes)}:${padZeros(seconds)}.${padZeros(milliseconds, 3)}`;
 
 export const timeCodeToFullString = (timeCode: TimeCode) =>
-  `${padZeros(timeCode.hours)}:${timeCodeToString(timeCode)}`;
+  `${padZeros(timeCode.hours)}:${timeCodeToShortString(timeCode)}`;
+
+export const timeCodeToString = (timeCode: TimeCode) =>
+  timeCode.hours > 0
+    ? timeCodeToFullString(timeCode)
+    : timeCodeToShortString(timeCode);
 
 export const toTimeRangeString = ({
   start,
@@ -47,6 +52,23 @@ export const toTimeRangeString = ({
   start: number;
   end: number;
 }) =>
-  `${timeCodeToString(toTimeCode(start))} - ${timeCodeToString(
+  `${timeCodeToShortString(toTimeCode(start))} - ${timeCodeToShortString(
     toTimeCode(end)
   )}`;
+
+export type TimeCodeFormat = {
+  hours: boolean;
+  milliseconds: boolean;
+};
+
+export const formatAsTimeCode = (time: number, format: TimeCodeFormat) => {
+  const timeCode = toTimeCode(time);
+  const prefix = format.hours ? `${padZeros(timeCode.hours)}:` : "";
+  const suffix = format.milliseconds
+    ? `.${padZeros(timeCode.milliseconds, 3)}`
+    : "";
+
+  return `${prefix}${padZeros(timeCode.minutes)}:${padZeros(
+    timeCode.seconds
+  )}${suffix}`;
+};
