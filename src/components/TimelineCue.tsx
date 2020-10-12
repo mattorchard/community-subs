@@ -1,6 +1,10 @@
 import React, { CSSProperties } from "react";
 import { Cue } from "../types/cue";
-import { getClassName, queryAncestor } from "../helpers/domHelpers";
+import {
+  getClassName,
+  getOffsetLeft,
+  queryAncestor,
+} from "../helpers/domHelpers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGripLinesVertical } from "@fortawesome/free-solid-svg-icons";
 import GroupIcon from "./GroupIcon";
@@ -49,10 +53,9 @@ const TimelineCue: React.FC<{
 
         if (type) {
           const offset =
-            event.nativeEvent.offsetX +
-            (target instanceof HTMLElement
-              ? target.offsetLeft
-              : target.parentElement!.offsetLeft);
+            type === "both"
+              ? event.nativeEvent.offsetX + getOffsetLeft(target)
+              : 0;
           onDragStart({
             type,
             id: cue.id,

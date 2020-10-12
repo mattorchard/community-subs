@@ -19,6 +19,8 @@ import {
 import { useSeekTo } from "../contexts/PlayerControlsContext";
 import { useCuesContext } from "../contexts/CuesContext";
 import TimelineCue from "./TimelineCue";
+import { useLiveCallback } from "../hooks/useLiveCallback";
+import { useToolsContext } from "../contexts/ToolsContext";
 
 export type CueDragType = "start" | "end" | "both";
 export type CueDragDetails = {
@@ -36,29 +38,30 @@ const useTimelinePointerX = (
 ) => {
   const clientXRef = useRef(0);
   const scrollLeftRef = useRef(0);
+  const onPointerXChangeLive = useLiveCallback(onPointerXChange);
 
   const onPointerMove = useCallback(
     (event: React.MouseEvent) => {
       clientXRef.current = event.clientX;
-      onPointerXChange(
+      onPointerXChangeLive(
         scrollLeftRef.current + clientXRef.current,
         scrollLeftRef.current,
         clientXRef.current
       );
     },
-    [onPointerXChange]
+    [onPointerXChangeLive]
   );
 
   const onScroll = useCallback(
     (event: React.UIEvent<HTMLElement>) => {
       scrollLeftRef.current = event.currentTarget.scrollLeft;
-      onPointerXChange(
+      onPointerXChangeLive(
         scrollLeftRef.current + clientXRef.current,
         scrollLeftRef.current,
         clientXRef.current
       );
     },
-    [onPointerXChange]
+    [onPointerXChangeLive]
   );
 
   return {
@@ -90,6 +93,11 @@ const useCueLayers = (cues: Cue[]) =>
     return layers;
   }, [cues]);
 
+const roundToGrid = (value: number, scale: number) => {
+  const roundToNearest = 3 / scale;
+  return Math.round(value / roundToNearest) * roundToNearest;
+};
+
 const Timeline: React.FC<{
   duration: number;
   scale: number;
@@ -100,8 +108,9 @@ const Timeline: React.FC<{
   const cueSelection = useCueSelection();
   const selectionActions = useCueSelectionActions();
   const seekTo = useSeekTo();
+  const { isSnapToGridEnabled } = useToolsContext();
 
-  const timelineRef = useRef<HTMLDivElement>(null);
+  const timelineRef = useRef<HTMLDivElement>(null!);
   const pointerXRef = useRef<number>(0);
   const hoveredLayerIdRef = useRef<number>(0);
 
@@ -115,56 +124,79 @@ const Timeline: React.FC<{
   const [isPanning, setIsPanning] = useState(false);
   const [isSeeking, setIsSeeking] = useState(false);
 
-  const containerProps = useTimelinePointerX(
-    useCallback((rawX, scrollX) => {
-      const x = rawX - 200; // Bumper width
-      pointerXRef.current = x;
-      timelineRef.current?.style.setProperty("--pointer-x", x.toString());
-      setScrollX(scrollX);
-    }, [])
-  );
+  const containerProps = useTimelinePointerX((rawX, scrollX) => {
+    const x = rawX - 200; // Bumper width
+    const xGrid = roundToGrid(x, scale);
+
+    pointerXRef.current = x;
+    timelineRef.current.style.setProperty("--pointer-x", x.toString());
+    timelineRef.current.style.setProperty("--pointer-x-grid", xGrid.toString());
+    if (cueDragDetails) {
+      timelineRef.current.style.setProperty(
+        "--pointer-x-grid-offset",
+        roundToGrid(x - cueDragDetails.offset, scale).toString()
+      );
+    }
+    setScrollX(scrollX);
+  });
+
+  const handleDragStart = (dragDetails: CueDragDetails) => {
+    timelineRef.current.style.setProperty(
+      "--pointer-x-grid-offset",
+      roundToGrid(pointerXRef.current - dragDetails.offset, scale).toString()
+    );
+    setCueDraggingDetails(dragDetails);
+  };
 
   // Maintain approximate scroll position through scale changes
   const lastScaleRef = useRef(scale);
   useEffect(() => {
     const scaleRatio = scale / lastScaleRef.current;
-    timelineRef.current!.scrollLeft *= scaleRatio;
+    timelineRef.current.scrollLeft *= scaleRatio;
     lastScaleRef.current = scale;
   }, [scale]);
 
-  const handleDragStop = useCallback(() => {
-    if (cueDragDetails) {
-      const timelinePosition = Math.round(pointerXRef.current / scale);
-      const minDragAmount = 0.01;
-      switch (cueDragDetails.type) {
-        case "both":
-          const offsetPosition = Math.round(cueDragDetails.offset / scale);
-          const start = timelinePosition - offsetPosition;
-          const end = start + (cueDragDetails.end - cueDragDetails.start);
-
-          // No-need to check start and end, since both moved together
-          if (Math.abs(cueDragDetails.end - end) > minDragAmount) {
-            updateCue({ id: cueDragDetails.id, start, end });
-          }
-          break;
-        case "start":
-          if (
-            Math.abs(cueDragDetails.start - timelinePosition) > minDragAmount
-          ) {
-            updateCue({ id: cueDragDetails.id, start: timelinePosition });
-          }
-          break;
-        case "end":
-          if (Math.abs(cueDragDetails.end - timelinePosition) > minDragAmount) {
-            updateCue({ id: cueDragDetails.id, end: timelinePosition });
-          }
-          break;
-      }
-      setCueDraggingDetails(null);
-    }
+  const handleDragStop = () => {
     setIsPanning(false);
     setIsSeeking(false);
-  }, [cueDragDetails, scale, updateCue]);
+    if (!cueDragDetails) {
+      return;
+    }
+    setCueDraggingDetails(null);
+
+    const minDragAmount = 1;
+    const { id, offset, type } = cueDragDetails;
+    const timelinePosition = isSnapToGridEnabled
+      ? roundToGrid(pointerXRef.current, scale) / scale
+      : pointerXRef.current / scale;
+
+    switch (type) {
+      case "start":
+        if (
+          Math.abs(cueDragDetails.start - timelinePosition) >= minDragAmount
+        ) {
+          updateCue({ id, start: timelinePosition });
+        }
+        break;
+      case "end":
+        if (Math.abs(cueDragDetails.end - timelinePosition) >= minDragAmount) {
+          updateCue({ id, end: timelinePosition });
+        }
+        break;
+      case "both":
+        const start = isSnapToGridEnabled
+          ? roundToGrid(pointerXRef.current - offset, scale) / scale
+          : (pointerXRef.current - offset) / scale;
+
+        const cueDuration = cueDragDetails.end - cueDragDetails.start;
+        const end = start + cueDuration;
+
+        if (Math.abs(cueDragDetails.start - start) >= minDragAmount) {
+          updateCue({ id, start, end });
+        }
+        break;
+    }
+  };
 
   useWindowEvent("pointerup", handleDragStop);
   useWindowEvent("pointerleave", handleDragStop);
@@ -212,8 +244,9 @@ const Timeline: React.FC<{
       {...containerProps}
       ref={timelineRef}
       className={getClassName("timeline", {
+        "snap-to-grid": isSnapToGridEnabled,
         "is-dragging": cueDragDetails,
-        "is-dragging-both": cueDragDetails?.start && cueDragDetails.end,
+        "is-dragging-both": cueDragDetails?.type === "both",
         "is-panning": isPanning,
         "is-seeking": isSeeking,
       })}
@@ -236,7 +269,7 @@ const Timeline: React.FC<{
         onPointerMove={
           isPanning
             ? (event) => {
-                timelineRef.current!.scrollLeft -= event.movementX;
+                timelineRef.current.scrollLeft -= event.movementX;
               }
             : undefined
         }
@@ -273,7 +306,7 @@ const Timeline: React.FC<{
                   dragDetails={
                     cue.id === cueDragDetails?.id ? cueDragDetails : null
                   }
-                  onDragStart={setCueDraggingDetails}
+                  onDragStart={handleDragStart}
                 />
               ) : null
             )}

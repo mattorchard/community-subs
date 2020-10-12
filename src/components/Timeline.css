@@ -4,7 +4,8 @@
   display: flex;
   --pointer-x: 0;
   --offset-x: 0;
-  --timeline-drag-start: 0;
+  --pointer-x-grid: 0;
+  --pointer-x-grid-offset: 0;
 }
 
 .timeline__bumper {
