@@ -47,11 +47,10 @@
   align-items: center;
   justify-content: center;
   transition: transform 0.3s ease-in-out;
-  --bs: 0 0.5rem 1rem 0.5rem var(--color-darken);
-  box-shadow: var(--bs);
+  box-shadow: var(--on-top-bs);
 }
 .studio__open-drawer-button:focus {
-  box-shadow: var(--focus-bs), var(--bs);
+  box-shadow: var(--focus-bs), var(--on-top-bs);
 }
 .studio__open-drawer-button--open {
   transform: rotateZ(-0.5turn);

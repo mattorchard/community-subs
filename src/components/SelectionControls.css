@@ -1,24 +1,40 @@
 .selection-controls {
-  padding-left: 1rem;
   grid-area: selection;
+  position: relative;
+  align-self: flex-start;
+  /* Ensures no resizing necessary when selection count updated*/
+  min-width: 21ch;
 }
-.selection-controls__label {
-  align-self: center;
-  display: inline-block;
-  min-width: 7.5rem;
+.selection-controls__menu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  z-index: 10;
+  background-color: var(--gray-700);
+  margin-top: 0.25rem;
+  box-shadow: var(--on-top-bs);
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.25rem;
+  overflow: hidden;
+}
+.selection-controls__menu .menu-item__button {
+  padding: 0.5rem;
+  width: 100%;
+  text-align: start;
+  transition: 0.2s ease-in-out background-color;
+}
+.selection-controls__menu .menu-item__button:hover {
+  background-color: var(--color-lighten);
+}
+.selection-controls__menu .menu-item__button:focus {
+  box-shadow: var(--focus-bs) inset;
+}
+.selection-controls__menu .menu-item__button > svg {
   margin-right: 0.5rem;
-  white-space: nowrap;
 }
-.selection-controls__button {
-  cursor: pointer;
-  width: 2.5rem;
-  transition: background-color 0.2s ease-in-out;
-}
-.selection-controls__button:focus,
-.selection-controls__button:hover {
-  background-color: var(--blue-600);
-}
-.selection-controls__button--deselect:focus,
-.selection-controls__button--deselect:hover {
-  background-color: var(--red-600);
+.selection-controls__menu .menu-item__button--danger:hover,
+.selection-controls__menu .menu-item__button--danger:focus {
+  background-color: var(--color-danger);
 }

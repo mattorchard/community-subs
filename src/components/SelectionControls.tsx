@@ -1,15 +1,20 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import {
   useCueSelection,
   useCueSelectionActions,
 } from "../contexts/CueSelectionContext";
 import "./SelectionControls.css";
 import {
-  faArrowsAltH,
-  faArrowsAltV,
+  faCaretDown,
+  faCompressArrowsAlt,
   faTimesCircle,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Button from "./Button";
+import useWindowEvent from "../hooks/useWindowEvent";
+import { getIsContainedBy } from "../helpers/domHelpers";
+import { useCuesContext } from "../contexts/CuesContext";
 
 const getSelectionMessage = (size: number) => {
   if (size === 0) {
@@ -24,34 +29,68 @@ const getSelectionMessage = (size: number) => {
 const SelectionControls = () => {
   const selection = useCueSelection();
   const { setSelection } = useCueSelectionActions();
+  const { deleteCues } = useCuesContext();
+
+  const containerRef = useRef<HTMLDivElement>(null!);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useWindowEvent("click", () => setIsMenuOpen(false));
+
+  const deselectCues = () => setSelection(new Set());
+
+  const scrollToSelection = () => {};
+
+  const deleteSelection = () => {
+    deleteCues([...selection]);
+    deselectCues();
+  };
 
   return (
-    <div className="selection-controls button-group with-dividers">
-      <span className="selection-controls__label">
-        {getSelectionMessage(selection.size)}
-      </span>
-      <button
-        className="selection-controls__button icon-button"
+    <div
+      className="selection-controls"
+      ref={containerRef}
+      onBlur={(event) => {
+        if (!getIsContainedBy(event.currentTarget, event.target)) {
+          setIsMenuOpen(false);
+        }
+      }}
+    >
+      <Button
+        rightIcon
         disabled={selection.size === 0}
-        title="Scroll to selection in Timeline"
+        onClick={(event) => {
+          event.stopPropagation();
+          setIsMenuOpen((isOpen) => !isOpen);
+        }}
       >
-        <FontAwesomeIcon icon={faArrowsAltH} />
-      </button>
-      <button
-        className="selection-controls__button icon-button"
-        disabled={selection.size === 0}
-        title="Scroll to selection in Script"
-      >
-        <FontAwesomeIcon icon={faArrowsAltV} />
-      </button>
-      <button
-        className="selection-controls__button icon-button selection-controls__button--deselect"
-        disabled={selection.size === 0}
-        title="Deselect"
-        onClick={() => setSelection(new Set())}
-      >
-        <FontAwesomeIcon icon={faTimesCircle} />
-      </button>
+        {getSelectionMessage(selection.size)}{" "}
+        <FontAwesomeIcon icon={faCaretDown} />
+      </Button>
+      {isMenuOpen && (
+        <ul className="selection-controls__menu">
+          <li className="menu-item">
+            <button className="menu-item__button" onClick={deselectCues}>
+              <FontAwesomeIcon icon={faTimesCircle} />
+              Deselect
+            </button>
+          </li>
+          <li className="menu-item">
+            <button className="menu-item__button" onClick={scrollToSelection}>
+              <FontAwesomeIcon icon={faCompressArrowsAlt} />
+              Scroll To
+            </button>
+          </li>
+          <li className="menu-item">
+            <button
+              className="menu-item__button menu-item__button--danger"
+              onClick={deleteSelection}
+            >
+              <FontAwesomeIcon icon={faTrash} />
+              Delete
+            </button>
+          </li>
+        </ul>
+      )}
     </div>
   );
 };

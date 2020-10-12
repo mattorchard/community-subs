@@ -11,6 +11,17 @@ export const queryAncestor = (node: Node, selector: string) => {
   return null;
 };
 
+export const getIsContainedBy = (container: Node, descendant: Node) => {
+  let currentNode: Node | HTMLElement | null = descendant;
+  while (currentNode) {
+    if (currentNode === container) {
+      return true;
+    }
+    currentNode = currentNode.parentElement;
+  }
+  return false;
+};
+
 export const getOffsetLeft = (node: Node) =>
   node instanceof HTMLElement
     ? node.offsetLeft

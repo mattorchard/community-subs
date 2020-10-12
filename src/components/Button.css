@@ -10,3 +10,9 @@
   white-space: nowrap;
   user-select: none;
 }
+.button--right-icon > svg {
+  margin-left: 0.5rem;
+}
+.button--left-icon > svg {
+  margin-right: 0.5rem;
+}
