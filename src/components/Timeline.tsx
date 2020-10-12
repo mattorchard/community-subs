@@ -165,7 +165,7 @@ const Timeline: React.FC<{
     setCueDraggingDetails(null);
 
     const minDuration = 250;
-    const snapToOthersThreshold = 500;
+    const snapToOthersThreshold = 50 / scale;
     const minDragAmount = 1;
     const { id, offset, type } = dragDetails;
     const timelinePosition = isSnapToGridEnabled
