@@ -109,7 +109,7 @@ const Timeline: React.FC<{
   const cueSelection = useCueSelection();
   const selectionActions = useCueSelectionActions();
   const seekTo = useSeekTo();
-  const { isSnapToGridEnabled } = useToolsContext();
+  const { isSnapToGridEnabled, isSnapToOthersEnabled } = useToolsContext();
 
   const timelineRef = useRef<HTMLDivElement>(null!);
   const pointerXRef = useRef<number>(0);
@@ -118,10 +118,9 @@ const Timeline: React.FC<{
   const [scrollX, setScrollX] = useState(0);
   const { width: timelineWidth } = useBounds(timelineRef);
 
-  const [
-    cueDragDetails,
-    setCueDraggingDetails,
-  ] = useState<CueDragDetails | null>(null);
+  const [dragDetails, setCueDraggingDetails] = useState<CueDragDetails | null>(
+    null
+  );
   const [isPanning, setIsPanning] = useState(false);
   const [isSeeking, setIsSeeking] = useState(false);
 
@@ -132,10 +131,10 @@ const Timeline: React.FC<{
     pointerXRef.current = x;
     timelineRef.current.style.setProperty("--pointer-x", x.toString());
     timelineRef.current.style.setProperty("--pointer-x-grid", xGrid.toString());
-    if (cueDragDetails) {
+    if (dragDetails) {
       timelineRef.current.style.setProperty(
         "--pointer-x-grid-offset",
-        roundToGrid(x - cueDragDetails.offset, scale).toString()
+        roundToGrid(x - dragDetails.offset, scale).toString()
       );
     }
     setScrollX(scrollX);
@@ -160,39 +159,62 @@ const Timeline: React.FC<{
   const handleDragStop = () => {
     setIsPanning(false);
     setIsSeeking(false);
-    if (!cueDragDetails) {
+    if (!dragDetails) {
       return;
     }
     setCueDraggingDetails(null);
 
     const minDuration = 250;
+    const snapToOthersThreshold = 500;
     const minDragAmount = 1;
-    const { id, offset, type } = cueDragDetails;
+    const { id, offset, type } = dragDetails;
     const timelinePosition = isSnapToGridEnabled
       ? roundToGrid(pointerXRef.current, scale) / scale
       : pointerXRef.current / scale;
 
     const maximumStart = isSnapToGridEnabled
-      ? roundToGrid(cueDragDetails.end - minDuration, scale)
-      : cueDragDetails.end - minDuration;
+      ? roundToGrid(dragDetails.end - minDuration, scale)
+      : dragDetails.end - minDuration;
 
     const minimumEnd = isSnapToGridEnabled
-      ? roundToGrid(cueDragDetails.start + minDuration, scale)
-      : cueDragDetails.start + minDuration;
+      ? roundToGrid(dragDetails.start + minDuration, scale)
+      : dragDetails.start + minDuration;
 
     switch (type) {
       case "start":
-        if (
-          Math.abs(cueDragDetails.start - timelinePosition) >= minDragAmount
-        ) {
-          const start = Math.min(maximumStart, timelinePosition);
+        if (Math.abs(dragDetails.start - timelinePosition) >= minDragAmount) {
+          let start = Math.min(maximumStart, timelinePosition);
+
+          if (isSnapToOthersEnabled) {
+            const cueToSnapTo = cues.find(
+              (otherCue) =>
+                otherCue.id !== id &&
+                Math.abs(otherCue.end - start) < snapToOthersThreshold
+            );
+            if (cueToSnapTo) {
+              start = cueToSnapTo.end;
+            }
+          }
+
           updateCue({ id, start: clamp(start, 0, duration) });
         }
         break;
 
       case "end":
-        if (Math.abs(cueDragDetails.end - timelinePosition) >= minDragAmount) {
-          const end = Math.max(minimumEnd, timelinePosition);
+        if (Math.abs(dragDetails.end - timelinePosition) >= minDragAmount) {
+          let end = Math.max(minimumEnd, timelinePosition);
+
+          if (isSnapToOthersEnabled) {
+            const cueToSnapTo = cues.find(
+              (otherCue) =>
+                otherCue.id !== id &&
+                Math.abs(otherCue.start - end) < snapToOthersThreshold
+            );
+            if (cueToSnapTo) {
+              end = cueToSnapTo.start;
+            }
+          }
+
           updateCue({ id, end: clamp(end, 0, duration) });
         }
         break;
@@ -205,10 +227,10 @@ const Timeline: React.FC<{
             : (pointerXRef.current - offset) / scale
         );
 
-        const cueDuration = cueDragDetails.end - cueDragDetails.start;
+        const cueDuration = dragDetails.end - dragDetails.start;
         const end = start + cueDuration;
 
-        if (Math.abs(cueDragDetails.start - start) >= minDragAmount) {
+        if (Math.abs(dragDetails.start - start) >= minDragAmount) {
           updateCue({
             id,
             start: clamp(start, 0, duration),
@@ -226,11 +248,11 @@ const Timeline: React.FC<{
     ({ currentTarget }) => {
       const layerId = parseInt(currentTarget.dataset.layerId!);
       hoveredLayerIdRef.current = layerId;
-      if (cueDragDetails) {
-        updateCue({ id: cueDragDetails.id, layer: layerId });
+      if (dragDetails) {
+        updateCue({ id: dragDetails.id, layer: layerId });
       }
     },
-    [cueDragDetails, updateCue]
+    [dragDetails, updateCue]
   );
 
   const addCue = (time: number) =>
@@ -266,8 +288,8 @@ const Timeline: React.FC<{
       ref={timelineRef}
       className={getClassName("timeline", {
         "snap-to-grid": isSnapToGridEnabled,
-        "is-dragging": cueDragDetails,
-        "is-dragging-both": cueDragDetails?.type === "both",
+        "is-dragging": dragDetails,
+        "is-dragging-both": dragDetails?.type === "both",
         "is-panning": isPanning,
         "is-seeking": isSeeking,
       })}
@@ -305,7 +327,7 @@ const Timeline: React.FC<{
           {
             "--timeline-duration": duration,
             "--timeline-scale": scale,
-            "--offset-x": cueDragDetails?.offset,
+            "--offset-x": dragDetails?.offset,
             "--marker-spacing": markerSpacing,
           } as CSSProperties
         }
@@ -324,9 +346,7 @@ const Timeline: React.FC<{
                   isSelected={cueSelection.has(cue.id)}
                   onSelect={handleSelect}
                   cue={cue}
-                  dragDetails={
-                    cue.id === cueDragDetails?.id ? cueDragDetails : null
-                  }
+                  dragDetails={cue.id === dragDetails?.id ? dragDetails : null}
                   onDragStart={handleDragStart}
                 />
               ) : null
