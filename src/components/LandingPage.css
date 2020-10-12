@@ -15,3 +15,11 @@
 .landing-page__transcript-section {
   margin-top: 3rem;
 }
+
+.unsupported-browser-alert {
+  margin-top: 1rem;
+}
+.unsupported-browser-alert a {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
