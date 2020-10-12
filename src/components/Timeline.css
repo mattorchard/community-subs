@@ -29,6 +29,7 @@
   --timeline-scale: 0.1;
   --timeline-duration: 1000;
   width: calc(1px * var(--timeline-scale) * var(--timeline-duration));
+  padding-bottom: 0.5rem;
 }
 .timeline__layer {
   position: relative;
