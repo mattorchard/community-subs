@@ -124,6 +124,14 @@ export const saveCues = async (cues: Cue[]) => {
   return cues;
 };
 
+export const deleteCues = async (cueIds: Cue["id"][]) => {
+  const db = await dbPromise;
+  const transaction = db.transaction("cues", "readwrite");
+  cueIds.forEach((cueIds) => transaction.objectStore("cues").delete(cueIds));
+  await transaction.done;
+  return cueIds;
+};
+
 export const putCuesBulk = async (cues: Cue[]) => {
   const db = await dbPromise;
   const transaction = db.transaction("cues", "readwrite");

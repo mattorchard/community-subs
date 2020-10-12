@@ -6,7 +6,12 @@ import React, {
   useState,
 } from "react";
 import { Cue } from "../types/cue";
-import { getCues, saveCue, saveCues } from "../repositories/EntityRepository";
+import {
+  deleteCues as deleteCuesFromDb,
+  getCues,
+  saveCue,
+  saveCues,
+} from "../repositories/EntityRepository";
 import useAsRef from "../hooks/useAsRef";
 import { defaultGroup } from "../types/Groups";
 import { v4 as uuidV4 } from "uuid";
@@ -20,6 +25,7 @@ type CueContextActions = {
   createCue: (cue: NewCue) => void;
   updateCue: (cue: CuePatch) => void;
   updateCues: (cues: CuePatch[]) => void;
+  deleteCues: (cues: Cue["id"][]) => void;
 };
 
 type CuesContextType = {
@@ -125,12 +131,31 @@ export const CuesContextProvider: React.FC<{ transcriptId: string }> = ({
 
     const updateCue = (CuePatch: CuePatch) => updateCues([CuePatch]);
 
-    return { createCue, updateCue, updateCues };
+    const deleteCues = (cueIds: Cue["id"][]) => {
+      if (!cuesRef.current) throw new Error("Cannot delete before cues loaded");
+
+      const deleteCuesPromise = deleteCuesFromDb(cueIds);
+      deleteCuesPromise.catch(loadCuesFromStorage);
+
+      const cuesToDelete = new Set(cueIds);
+      setCues((cues) =>
+        cues ? cues.filter((cue) => !cuesToDelete.has(cue.id)) : null
+      );
+    };
+
+    return { createCue, deleteCues, updateCue, updateCues };
   }, [transcriptId, cuesRef, cueIndexByIdRef, loadCuesFromStorage]);
 
   return (
     <CuesContext.Provider
-      value={{ cues, cueIndexById, loading, ...cueActions } as CuesContextType}
+      value={
+        {
+          cues,
+          cueIndexById,
+          loading,
+          ...cueActions,
+        } as CuesContextType
+      }
     >
       {children}
     </CuesContext.Provider>
