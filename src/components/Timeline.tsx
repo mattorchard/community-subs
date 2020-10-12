@@ -95,8 +95,8 @@ const useCueLayers = (cues: Cue[]) =>
   }, [cues]);
 
 const roundToGrid = (value: number, scale: number) => {
-  const roundToNearest = 2.5 / scale;
-  return Math.round(value / roundToNearest) * roundToNearest;
+  const roundToNearest = 250 * scale;
+  return Math.round(Math.round(value / roundToNearest) * roundToNearest);
 };
 
 const Timeline: React.FC<{
