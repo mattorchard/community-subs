@@ -1,9 +1,14 @@
 .selection-controls {
   grid-area: selection;
   position: relative;
-  align-self: flex-start;
   /* Ensures no resizing necessary when selection count updated*/
   min-width: 21ch;
+}
+.selection-controls__button {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .selection-controls__menu {
   position: absolute;
@@ -12,7 +17,6 @@
   top: 100%;
   z-index: 10;
   background-color: var(--gray-700);
-  margin-top: 0.25rem;
   box-shadow: var(--on-top-bs);
   display: flex;
   flex-direction: column;

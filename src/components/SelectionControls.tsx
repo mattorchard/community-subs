@@ -56,6 +56,7 @@ const SelectionControls = () => {
       }}
     >
       <Button
+        className="selection-controls__button"
         rightIcon
         disabled={selection.size === 0}
         onClick={(event) => {
