@@ -297,3 +297,7 @@ small {
 .with-dividers > *:first-child::before {
   content: unset;
 }
+.fallback-page {
+  max-width: 800px;
+  margin: 0 auto;
+}

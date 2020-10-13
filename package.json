@@ -29,7 +29,11 @@
     "react-modal": "^3.11.2",
     "@types/react-modal": "^3.10.6",
     "react-window": "^1.8.5",
-    "@types/react-window": "^1.8.2"
+    "@types/react-window": "^1.8.2",
+    "react-toastify": "^6.0.9",
+    "@types/react-toastify": "^4.1.0",
+    "@sentry/react": "^5.26.0",
+    "@sentry/tracing": "^5.26.0"
   },
   "prettier": {
     "tabWidth": 2,

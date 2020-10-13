@@ -71,6 +71,7 @@ export const CuesContextProvider: React.FC<{ transcriptId: string }> = ({
 
   const loadCuesFromStorage = useCallback(() => {
     setLoading(true);
+    // Todo: Performance monitoring
     return getCues(transcriptId).then((cues) => {
       console.debug(`Loaded ${cues.length} cues`);
       setCues(cues.sort(cueComparator));

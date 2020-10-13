@@ -25,6 +25,8 @@ export const TranscriptContextProvider: React.FC = ({ children }) => {
   const [transcripts, setTranscripts] = useState<Transcript[] | null>(null);
 
   // Load initial transcripts
+
+  // Todo: Toast
   useEffect(() => {
     getTranscripts()
       .then((transcripts) => setTranscripts(transcripts))
