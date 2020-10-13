@@ -7,6 +7,8 @@ import {
   putTranscript,
   TranscriptPatch,
 } from "../repositories/EntityRepository";
+import { captureException } from "../wrappers/sentryWrappers";
+import { toast } from "react-toastify";
 
 const TranscriptsContext = React.createContext<Transcript[] | null>(null);
 const TranscriptActionsContext = React.createContext<{
@@ -25,12 +27,13 @@ export const TranscriptContextProvider: React.FC = ({ children }) => {
   const [transcripts, setTranscripts] = useState<Transcript[] | null>(null);
 
   // Load initial transcripts
-
-  // Todo: Toast
   useEffect(() => {
     getTranscripts()
       .then((transcripts) => setTranscripts(transcripts))
-      .catch((error) => console.error("Failed to load transcripts", error));
+      .catch((error) => {
+        toast.error("Failed to load transcripts");
+        captureException(`Failed to load transcripts: ${error.message}`);
+      });
   }, []);
 
   const actions = useMemo(

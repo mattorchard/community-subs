@@ -8,6 +8,8 @@ import {
   useTranscripts,
 } from "../contexts/TranscriptContext";
 import "./TranscripttList.css";
+import { captureException } from "../wrappers/sentryWrappers";
+import { toast } from "react-toastify";
 
 const TranscriptList: React.FC = () => {
   const history = useHistory();
@@ -21,8 +23,8 @@ const TranscriptList: React.FC = () => {
       const transcript = await createTranscript();
       history.push(`/transcript/${transcript.id}/add-video`);
     } catch (error) {
-      // Todo: Toast
-      console.error("Create transcript failed", error);
+      toast.error("Failed to create transcript");
+      captureException(`Create transcript failed: ${error.message}`);
       setIsSaving(false);
     }
   };

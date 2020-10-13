@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Transcript } from "../types/cue";
-import { captureException } from "@sentry/react";
+import { captureException } from "../wrappers/sentryWrappers";
 
 const useTranscript = () => {
   const history = useHistory();
@@ -22,7 +22,7 @@ const useTranscript = () => {
     if (!transcript) {
       const errorMessage = `Error: No transcript with ID ${transcriptId}`;
       toast.error(errorMessage);
-      captureException(new Error(errorMessage));
+      captureException(errorMessage);
       history.push("/");
       return;
     }

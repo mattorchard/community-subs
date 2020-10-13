@@ -5,6 +5,7 @@ import Button from "./Button";
 import { Alert } from "./Alert";
 import "./AddYouTubeVideoForm.css";
 import { VideoMeta } from "../types/cue";
+import { captureException } from "../wrappers/sentryWrappers";
 
 const isValidVideoId = (value: string) => /^[A-Za-z0-9_-]{11}$/.test(value);
 
@@ -159,8 +160,9 @@ const AddYoutubeVideoForm: React.FC<{
                           setVideoDetails({ title, duration });
                         }
                       } catch (error) {
-                        // Todo: Toast
-                        console.error("Failed to load video details", error);
+                        captureException(
+                          `Failed to load video details: ${error.message}`
+                        );
                         setErrorMessage("Failed to load video details");
                       }
                     }}

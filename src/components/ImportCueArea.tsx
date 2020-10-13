@@ -3,12 +3,14 @@ import FileDropTarget from "./FileDropTarget";
 import { fromVtt } from "../helpers/importHelpers";
 import { readAsText } from "../helpers/fileHelpers";
 import { useCuesContext } from "../contexts/CuesContext";
+import { captureException } from "../wrappers/sentryWrappers";
+import useAsyncSafeState from "../hooks/useAsyncSafeState";
 
 const ImportCueArea: React.FC<{ transcriptId: string }> = ({
   transcriptId,
 }) => {
   const { createCuesBulk } = useCuesContext();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useAsyncSafeState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>(
     undefined
   );
@@ -30,8 +32,7 @@ const ImportCueArea: React.FC<{ transcriptId: string }> = ({
           const cues = fromVtt(transcriptId, await readAsText(file));
           await createCuesBulk(cues);
         } catch (error) {
-          // Todo: Toast
-          console.error("Failed to load file", error);
+          captureException(`Failed to load file: ${error.message}`);
           setErrorMessage("Error loading file");
         } finally {
           setIsLoading(false);

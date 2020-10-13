@@ -9,6 +9,7 @@ import { VideoMeta } from "../types/cue";
 import "./AddUploadVideoForm.css";
 import { createFile } from "../repositories/EntityRepository";
 import useAsyncSafeState from "../hooks/useAsyncSafeState";
+import { captureException } from "../wrappers/sentryWrappers";
 
 const AddUploadVideoForm: React.FC<{
   onSubmit: (video: VideoMeta) => void;
@@ -57,8 +58,7 @@ const AddUploadVideoForm: React.FC<{
               createdAt: new Date(),
             });
           } catch (error) {
-            // Todo: Toast
-            console.error("Failed to get video details", error);
+            captureException(`Failed to get video details: ${error.message}`);
             setErrorMessage("Failed to load video details");
           } finally {
             setIsLoading(false);
