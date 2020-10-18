@@ -12,10 +12,12 @@ import { toast } from "react-toastify";
 import useContextSafe from "../hooks/useContextSafe";
 
 const TranscriptsContext = React.createContext<Transcript[] | null>(null);
+TranscriptsContext.displayName = "TranscriptsContext";
 const TranscriptActionsContext = React.createContext<{
   createTranscript: () => Promise<Transcript>;
   updateTranscript: (transcriptPatch: TranscriptPatch) => Promise<Transcript>;
 } | null>(null);
+TranscriptActionsContext.displayName = "TranscriptActionsContext";
 
 export const TranscriptContextProvider: React.FC = ({ children }) => {
   const [transcripts, setTranscripts] = useState<Transcript[] | null>(null);

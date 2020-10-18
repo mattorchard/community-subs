@@ -12,6 +12,7 @@ type ToolsContextType = {
 };
 
 const ToolsContext = React.createContext<ToolsContextType | null>(null);
+ToolsContext.displayName = "ToolsContext";
 
 export const ToolsContextProvider: React.FC = ({ children }) => {
   const [selectedGroup, setSelectedGroup] = useState<GroupName>(defaultGroup);

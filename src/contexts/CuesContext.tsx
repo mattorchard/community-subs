@@ -39,6 +39,7 @@ type CuesContextType = {
   );
 
 const CuesContext = React.createContext<CuesContextType | null>(null);
+CuesContext.displayName = "CuesContext";
 
 const cueComparator = (a: Cue, b: Cue) => {
   if (a.start !== b.start) {

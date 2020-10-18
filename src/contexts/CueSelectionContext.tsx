@@ -18,6 +18,7 @@ type CueSelectionActions = {
 const CueSelectionContext = React.createContext<CueSelectionContextValue | null>(
   null
 );
+CueSelectionContext.displayName = "CueSelectionContext";
 
 export const CueSelectionProvider: React.FC = ({ children }) => {
   const [state, setState] = useState<Set<string>>(new Set());

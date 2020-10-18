@@ -10,6 +10,7 @@ const StudioScrollContext = React.createContext<{
   scrollToIndexObservable: Observable<number>;
   scrollToTimeObservable: Observable<number>;
 } | null>(null);
+StudioScrollContext.displayName = "StudioScrollContext";
 
 export const StudioScrollContextProvider: React.FC = ({ children }) => {
   const scrollToIndexObservableRef = useRef(new Observable<number>());

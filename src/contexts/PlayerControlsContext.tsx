@@ -14,6 +14,7 @@ type PlayerControlsContextValue = {
 const PlayerControlsContext = React.createContext<PlayerControlsContextValue | null>(
   null
 );
+PlayerControlsContext.displayName = "PlayerControlsContext";
 
 export const PlayerControlsContextProvider: React.FC = ({ children }) => {
   const [isPlaying, setIsPlaying] = useState(false);

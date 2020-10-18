@@ -10,6 +10,7 @@ const ModifierKeysContext = React.createContext<{
   observer: Observable<ModifierKeys>;
   valueRef: { current: ModifierKeys };
 } | null>(null);
+ModifierKeysContext.displayName = "ModifierKeysContext";
 
 const initialValues = {
   alt: false,
