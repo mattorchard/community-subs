@@ -23,6 +23,8 @@ const TimelineCue: React.FC<{
       className={getClassName("timeline-cue", {
         dragging: dragDetails,
         "is-selected": isSelected,
+        "is-bold": cue.isBold,
+        "is-italics": cue.isItalics,
         "dragging-start": dragDetails?.type === "start",
         "dragging-end": dragDetails?.type === "end",
         "dragging-both": dragDetails?.type === "both",

@@ -21,6 +21,12 @@
   height: 1rem;
   margin-bottom: 0.5rem;
 }
+.cue-editor--is-bold .cue-editor__textarea {
+  font-weight: bold;
+}
+.cue-editor--is-italics .cue-editor__textarea {
+  font-style: italic;
+}
 .cue-editor__textarea:focus {
   box-shadow: none;
 }

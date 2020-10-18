@@ -21,6 +21,12 @@
 .timeline-cue--is-selected {
   background-color: var(--primary-group-color);
 }
+.timeline-cue--is-bold {
+  font-weight: bold;
+}
+.timeline-cue--is-italics {
+  font-style: italic;
+}
 .timeline-cue--dragging {
   z-index: 3;
   transform: translateY(-0.5rem);

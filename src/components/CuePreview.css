@@ -6,3 +6,9 @@
   white-space: pre;
   background-color: var(--gray-900);
 }
+.cue-preview__cue--is-bold {
+  font-weight: bold;
+}
+.cue-preview__cue--is-italics {
+  font-style: italic;
+}

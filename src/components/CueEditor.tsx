@@ -93,7 +93,11 @@ const CueEditor: React.FC<{
 
     return (
       <label
-        className={getClassName("cue-editor", { "is-selected": isSelected })}
+        className={getClassName("cue-editor", {
+          "is-selected": isSelected,
+          "is-bold": cue.isBold,
+          "is-italics": cue.isItalics,
+        })}
         style={
           {
             "--primary-group-color": `var(--color-group-${cue.group}-primary)`,

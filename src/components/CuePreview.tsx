@@ -4,6 +4,7 @@ import { useOnPlayerTimeChange } from "../contexts/PlayerControlsContext";
 import "./CuePreview.css";
 import { arraysAreEqual } from "../helpers/algoHelpers";
 import { useCuesContext } from "../contexts/CuesContext";
+import { getClassName } from "../helpers/domHelpers";
 
 const isCueOngoing = (currentTime: number, cue: Cue) =>
   cue.start <= currentTime && currentTime <= cue.end;
@@ -67,7 +68,17 @@ const CuePreview: React.FC = () => {
   return (
     <div className="cue-preview">
       {cuesToShow.map((cue) => (
-        <div className="cue-preview__cue xl ellipses" key={cue.id}>
+        <div
+          className={getClassName(
+            "cue-preview__cue",
+            {
+              "is-bold": cue.isBold,
+              "is-italics": cue.isItalics,
+            },
+            "xl"
+          )}
+          key={cue.id}
+        >
           {cue.text}
         </div>
       ))}
