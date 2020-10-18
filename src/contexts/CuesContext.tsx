@@ -5,7 +5,7 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { Cue } from "../types/cue";
+import { Cue, cueDefaults } from "../types/cue";
 import {
   deleteCues as deleteCuesFromDb,
   getCues,
@@ -14,7 +14,6 @@ import {
   saveCues,
 } from "../repositories/EntityRepository";
 import useAsRef from "../hooks/useAsRef";
-import { defaultGroup } from "../types/Groups";
 import { v4 as uuidV4 } from "uuid";
 import { spliceIntoSortedArray } from "../helpers/algoHelpers";
 
@@ -86,9 +85,7 @@ export const CuesContextProvider: React.FC<{ transcriptId: string }> = ({
     const createCue = (newCue: NewCue) => {
       if (!cuesRef.current) throw new Error("Cannot create before cues loaded");
       const fullCue = {
-        group: defaultGroup,
-        layer: 0,
-        text: "",
+        ...cueDefaults,
         ...newCue,
         transcriptId,
         id: uuidV4(),

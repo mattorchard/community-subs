@@ -9,16 +9,61 @@ import { getClassName } from "../helpers/domHelpers";
 import { useCueSelection } from "../contexts/CueSelectionContext";
 import { useCuesContext } from "../contexts/CuesContext";
 import useShortcut from "../hooks/useShortcut";
+import { Cue } from "../types/cue";
+
+const getSelectedCues = (
+  cueSelection: Set<string>,
+  cues: Cue[],
+  cueIndexById: Map<string, number>
+) => {
+  const selectedCues: Cue[] = [];
+  cueSelection.forEach((cueId) => {
+    selectedCues.push(cues[cueIndexById.get(cueId)!]);
+  });
+  return selectedCues;
+};
 
 const FormatControls = () => {
   const { selectedGroup, setSelectedGroup } = useToolsContext();
   const cueSelection = useCueSelection();
-  const { updateCues } = useCuesContext();
+  const { updateCues, cues, cueIndexById } = useCuesContext();
+
+  const toggleBold = () => {
+    const selectedCues = getSelectedCues(cueSelection, cues, cueIndexById);
+    const allBold = selectedCues.every((cue) => cue.isBold);
+    updateCues(selectedCues.map((cue) => ({ id: cue.id, isBold: !allBold })));
+  };
+  const toggleItalics = () => {
+    const selectedCues = getSelectedCues(cueSelection, cues, cueIndexById);
+    const allItalics = selectedCues.every((cue) => cue.isItalics);
+    updateCues(
+      selectedCues.map((cue) => ({ id: cue.id, isItalics: !allItalics }))
+    );
+  };
 
   const setGroup = (group: GroupName) => {
     setSelectedGroup(group);
     updateCues([...cueSelection].map((id) => ({ id, group })));
   };
+
+  useShortcut(
+    "b",
+    (event) => {
+      event.preventDefault();
+      toggleBold();
+    },
+    { ctrl: true }
+  );
+
+  useShortcut(
+    "i",
+    (event) => {
+      event.preventDefault();
+      toggleItalics();
+    },
+    { ctrl: true }
+  );
+
   useShortcut(
     "!", // 1, with shift
     (event) => {
@@ -46,10 +91,18 @@ const FormatControls = () => {
 
   return (
     <div role="group" className="format-controls button-group with-dividers">
-      <button className="icon-button">
+      <button
+        className="icon-button"
+        onClick={toggleBold}
+        aria-label="Bold selected"
+      >
         <FontAwesomeIcon icon={faBold} />
       </button>
-      <button className="icon-button">
+      <button
+        className="icon-button"
+        onClick={toggleItalics}
+        aria-label="Italicize selected"
+      >
         <FontAwesomeIcon icon={faItalic} />
       </button>
 

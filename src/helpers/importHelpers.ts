@@ -1,7 +1,6 @@
-import { Cue } from "../types/cue";
+import { Cue, cueDefaults } from "../types/cue";
 import { v4 as uuidV4 } from "uuid";
 import { timeCodeToMillis } from "./timeCodeHelpers";
-import { defaultGroup } from "../types/Groups";
 
 export const fromVtt = (transcriptId: string, rawVtt: string): Cue[] =>
   rawVtt
@@ -14,11 +13,10 @@ export const fromVtt = (transcriptId: string, rawVtt: string): Cue[] =>
     )
     .map(parseCue)
     .map((partial) => ({
+      ...cueDefaults,
       ...partial,
       transcriptId,
       id: uuidV4(),
-      layer: 0,
-      group: defaultGroup,
     }));
 
 const getBlockType = (block: string) => {

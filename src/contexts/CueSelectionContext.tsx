@@ -60,17 +60,15 @@ const NO_PROVIDER_ERROR = "Tried to use CueSelectionContext outside Provider";
 
 export const useCueSelectionActions = () => {
   const context = useContext(CueSelectionContext);
-  if (!context) {
-    throw new Error(NO_PROVIDER_ERROR);
-  }
+  if (!context) throw new Error(NO_PROVIDER_ERROR);
+
   return context.actions;
 };
 
 export const useCueSelection = () => {
   const context = useContext(CueSelectionContext);
-  if (!context) {
-    throw new Error(NO_PROVIDER_ERROR);
-  }
+  if (!context) throw new Error(NO_PROVIDER_ERROR);
+
   return context.state;
 };
 

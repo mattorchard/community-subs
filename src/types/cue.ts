@@ -1,5 +1,5 @@
 // Takes the form ###%
-import { GroupName } from "./Groups";
+import { defaultGroup, GroupName } from "./Groups";
 
 type Percentage = string;
 
@@ -19,7 +19,17 @@ export type Cue = {
   text: string;
   layer: number;
   group: GroupName;
+  isBold: boolean;
+  isItalics: boolean;
   settings?: CueSettings;
+};
+
+export const cueDefaults = {
+  group: defaultGroup,
+  layer: 0,
+  text: "",
+  isBold: false,
+  isItalics: false,
 };
 
 export type Transcript = {
