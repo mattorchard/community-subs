@@ -92,7 +92,7 @@ const CueEditor: React.FC<{
     );
 
     return (
-      <label
+      <div
         className={getClassName("cue-editor", {
           "is-selected": isSelected,
           "is-bold": cue.isBold,
@@ -108,6 +108,9 @@ const CueEditor: React.FC<{
         <textarea
           id={cue.id}
           ref={textAreaRef}
+          aria-label={`Cue text${cue.isBold ? ", bolded" : ""}${
+            cue.isItalics ? ", italicized" : ""
+          }`}
           onChange={handleChange}
           onBlur={handleBlur}
           onFocus={() => {
@@ -123,7 +126,7 @@ const CueEditor: React.FC<{
         />
         <small className="cue-editor__footer">{toTimeRangeString(cue)}</small>
         <GroupIcon className="cue-editor__group" groupName={cue.group} />
-      </label>
+      </div>
     );
   },
   (oldProps, newProps) =>
