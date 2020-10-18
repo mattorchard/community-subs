@@ -94,14 +94,14 @@ const FormatControls = () => {
       <button
         className="icon-button"
         onClick={toggleBold}
-        aria-label="Bold selected"
+        title="Bold selected"
       >
         <FontAwesomeIcon icon={faBold} />
       </button>
       <button
         className="icon-button"
         onClick={toggleItalics}
-        aria-label="Italicize selected"
+        title="Italicize selected"
       >
         <FontAwesomeIcon icon={faItalic} />
       </button>
