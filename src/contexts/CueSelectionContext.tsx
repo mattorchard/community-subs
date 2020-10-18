@@ -66,18 +66,18 @@ export const useCueSelectionActions = () => {
   return context.actions;
 };
 
-// Todo: Rename to useSelectedCueIds
-export const useCueSelection = () => {
+export const useSelectedCueIds = () => {
   const context = useContext(CueSelectionContext);
   if (!context) throw new Error(NO_PROVIDER_ERROR);
 
   return context.state;
 };
 
-export const useIsCueSelected = (cueId: string) => useCueSelection().has(cueId);
+export const useIsCueSelected = (cueId: string) =>
+  useSelectedCueIds().has(cueId);
 
 export const useSelectedCueIndexes = () => {
-  const selectedCueIds = useCueSelection();
+  const selectedCueIds = useSelectedCueIds();
   const { cueIndexById } = useCuesContext();
   return useMemo(
     () => [...selectedCueIds].map((cueId) => cueIndexById.get(cueId)!),

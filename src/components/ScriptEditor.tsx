@@ -15,8 +15,8 @@ import useBounds from "../hooks/useBounds";
 import { Alert } from "./Alert";
 
 import {
-  useCueSelection,
   useIsCueSelected,
+  useSelectedCueIds,
 } from "../contexts/CueSelectionContext";
 import { useCuesContext } from "../contexts/CuesContext";
 import ImportCueArea from "./ImportCueArea";
@@ -53,7 +53,7 @@ const useCueFocus = (
   );
 
   // Focus when selection is only one item
-  const selection = useCueSelection();
+  const selection = useSelectedCueIds();
   useEffect(() => {
     if (selection.size === 1) {
       const [selectedCueId] = selection.keys();

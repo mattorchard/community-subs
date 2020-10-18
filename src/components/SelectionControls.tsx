@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import {
-  useCueSelection,
   useCueSelectionActions,
+  useSelectedCueIds,
 } from "../contexts/CueSelectionContext";
 import "./SelectionControls.css";
 import {
@@ -28,7 +28,7 @@ const getSelectionMessage = (size: number) => {
 };
 
 const SelectionControls = () => {
-  const selection = useCueSelection();
+  const selection = useSelectedCueIds();
   const { setSelection } = useCueSelectionActions();
   const { deleteCues } = useCuesContext();
   const scrollToSelection = useScrollToSelection();

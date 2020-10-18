@@ -6,7 +6,7 @@ import GroupIcon from "./GroupIcon";
 import { useToolsContext } from "../contexts/ToolsContext";
 import { GroupName } from "../types/Groups";
 import { getClassName } from "../helpers/domHelpers";
-import { useCueSelection } from "../contexts/CueSelectionContext";
+import { useSelectedCueIds } from "../contexts/CueSelectionContext";
 import { useCuesContext } from "../contexts/CuesContext";
 import useShortcut from "../hooks/useShortcut";
 import { Cue } from "../types/cue";
@@ -25,7 +25,7 @@ const getSelectedCues = (
 
 const FormatControls = () => {
   const { selectedGroup, setSelectedGroup } = useToolsContext();
-  const cueSelection = useCueSelection();
+  const cueSelection = useSelectedCueIds();
   const { updateCues, cues, cueIndexById } = useCuesContext();
 
   const toggleBold = () => {

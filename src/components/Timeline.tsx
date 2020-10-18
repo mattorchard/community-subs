@@ -12,8 +12,8 @@ import { getClassName } from "../helpers/domHelpers";
 import "./Timeline.css";
 import useBounds from "../hooks/useBounds";
 import {
-  useCueSelection,
   useCueSelectionActions,
+  useSelectedCueIds,
 } from "../contexts/CueSelectionContext";
 import { useSeekTo } from "../contexts/PlayerControlsContext";
 import { useCuesContext } from "../contexts/CuesContext";
@@ -106,7 +106,7 @@ const Timeline: React.FC<{
 }> = ({ duration, scale }) => {
   const { cues, updateCue, createCue } = useCuesContext();
   const layers = useCueLayers(cues);
-  const cueSelection = useCueSelection();
+  const cueSelection = useSelectedCueIds();
   const selectionActions = useCueSelectionActions();
   const seekTo = useSeekTo();
   const { isSnapToGridEnabled, isSnapToOthersEnabled } = useToolsContext();
