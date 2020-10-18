@@ -1,12 +1,7 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import useAsRef from "../hooks/useAsRef";
 import { Observable } from "../helpers/observableHelpers";
+import useContextSafe from "../hooks/useContextSafe";
 
 type PlayerControlsContextValue = {
   isPlaying: boolean;
@@ -56,13 +51,8 @@ export const PlayerControlsContextProvider: React.FC = ({ children }) => {
   );
 };
 
-const NO_PROVIDER_ERROR = "Cannot use VideoTimeContext outside of provider";
-
 export const useOnPlayerTimeChange = (onChange: (time: number) => void) => {
-  const context = useContext(PlayerControlsContext);
-  if (!context) throw new Error(NO_PROVIDER_ERROR);
-
-  const currentTimeObserver = context.currentTimeObserver;
+  const { currentTimeObserver } = useContextSafe(PlayerControlsContext);
   const onChangeRef = useAsRef(onChange);
   useEffect(
     () => currentTimeObserver.subscribe((time) => onChangeRef.current(time)),
@@ -71,25 +61,16 @@ export const useOnPlayerTimeChange = (onChange: (time: number) => void) => {
 };
 
 export const usePlayerTimePublisher = () => {
-  const context = useContext(PlayerControlsContext);
-  if (!context) throw new Error(NO_PROVIDER_ERROR);
-
+  const context = useContextSafe(PlayerControlsContext);
   const currentTimeObserver = context.currentTimeObserver;
   return useCallback(currentTimeObserver.publish, [currentTimeObserver]);
 };
 
-export const useSeekTo = () => {
-  const context = useContext(PlayerControlsContext);
-  if (!context) throw new Error(NO_PROVIDER_ERROR);
-
-  return context.seekObserver.publish;
-};
+export const useSeekTo = () =>
+  useContextSafe(PlayerControlsContext).seekObserver.publish;
 
 export const useOnSeekTo = (onSeekTo: (time: number) => void) => {
-  const context = useContext(PlayerControlsContext);
-  if (!context) throw new Error(NO_PROVIDER_ERROR);
-
-  const seekObserver = context.seekObserver;
+  const { seekObserver } = useContextSafe(PlayerControlsContext);
   const onSeekToRef = useAsRef(onSeekTo);
   useEffect(() => seekObserver.subscribe((time) => onSeekToRef.current(time)), [
     seekObserver,
@@ -101,15 +82,8 @@ export const useIsPlayingState = (): [
   boolean,
   (isPlaying: boolean) => void
 ] => {
-  const context = useContext(PlayerControlsContext);
-  if (!context) throw new Error(NO_PROVIDER_ERROR);
-
-  const { isPlaying, setIsPlaying } = context;
+  const { isPlaying, setIsPlaying } = useContextSafe(PlayerControlsContext);
   return [isPlaying, setIsPlaying];
 };
 
-export const useSeekStep = () => {
-  const context = useContext(PlayerControlsContext);
-  if (!context) throw new Error(NO_PROVIDER_ERROR);
-  return context.seekStep;
-};
+export const useSeekStep = () => useContextSafe(PlayerControlsContext).seekStep;

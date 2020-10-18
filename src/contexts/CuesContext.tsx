@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Cue, cueDefaults } from "../types/cue";
 import {
   deleteCues as deleteCuesFromDb,
@@ -16,6 +10,7 @@ import {
 import useAsRef from "../hooks/useAsRef";
 import { v4 as uuidV4 } from "uuid";
 import { spliceIntoSortedArray } from "../helpers/algoHelpers";
+import useContextSafe from "../hooks/useContextSafe";
 
 type CuePatch = Partial<Cue> & Pick<Cue, "id">;
 type NewCue = Partial<Omit<Cue, "id" | "transcriptId">> &
@@ -167,20 +162,12 @@ export const CuesContextProvider: React.FC<{ transcriptId: string }> = ({
   );
 };
 
-const NO_PROVIDER_ERROR_MESSAGE = `Cannot use CuesContext outside provider`;
-
 type CuesContextTypeSafe = Omit<CuesContextType, "cues"> & { cues: Cue[] };
 
-export const useCuesContextUnsafe = () => {
-  const context = useContext(CuesContext);
-  if (!context) throw new Error(NO_PROVIDER_ERROR_MESSAGE);
-  return context;
-};
+export const useCuesContextUnsafe = () => useContextSafe(CuesContext);
 
 export const useCuesContext = () => {
-  const context = useContext(CuesContext);
-  if (!context) throw new Error(NO_PROVIDER_ERROR_MESSAGE);
-
+  const context = useContextSafe(CuesContext);
   if (!context.cues) throw new Error(`Cues failed to load`);
   return context as CuesContextTypeSafe;
 };

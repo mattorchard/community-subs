@@ -1,9 +1,10 @@
-import React, { useCallback, useContext, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { Observable } from "../helpers/observableHelpers";
 import useBodyEvent from "../hooks/useBodyEvent";
 import { objectsAreEqual } from "../helpers/algoHelpers";
 import useAsRef from "../hooks/useAsRef";
 import { getModifierKeys, ModifierKeys } from "../helpers/domHelpers";
+import useContextSafe from "../hooks/useContextSafe";
 
 const ModifierKeysContext = React.createContext<{
   observer: Observable<ModifierKeys>;
@@ -42,24 +43,13 @@ export const ModifierKeysContextProvider: React.FC = ({ children }) => {
   );
 };
 
-const NO_PROVIDER_ERROR = "Cannot use ModifierKeysContext outside of provider";
-
-export const useModifierKeys = () => {
-  const context = useContext(ModifierKeysContext);
-  if (!context) {
-    throw new Error(NO_PROVIDER_ERROR);
-  }
-  return context.valueRef;
-};
+export const useModifierKeys = () =>
+  useContextSafe(ModifierKeysContext).valueRef;
 
 export const useOnModifierKeysChange = (
   onChange: (keys: ModifierKeys) => void
 ) => {
-  const context = useContext(ModifierKeysContext);
-  if (!context) {
-    throw new Error(NO_PROVIDER_ERROR);
-  }
-  const { observer } = context;
+  const { observer } = useContextSafe(ModifierKeysContext);
   const onChangeRef = useAsRef(onChange);
   useEffect(() => observer.subscribe((keys) => onChangeRef.current(keys)), [
     observer,

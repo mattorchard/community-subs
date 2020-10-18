@@ -9,19 +9,13 @@ import {
 } from "../repositories/EntityRepository";
 import { captureException } from "../wrappers/sentryWrappers";
 import { toast } from "react-toastify";
+import useContextSafe from "../hooks/useContextSafe";
 
 const TranscriptsContext = React.createContext<Transcript[] | null>(null);
 const TranscriptActionsContext = React.createContext<{
   createTranscript: () => Promise<Transcript>;
   updateTranscript: (transcriptPatch: TranscriptPatch) => Promise<Transcript>;
-}>({
-  createTranscript: async () => {
-    throw new Error(`Accessing actions outside context root`);
-  },
-  updateTranscript: async () => {
-    throw new Error(`Accessing actions outside context root`);
-  },
-});
+} | null>(null);
 
 export const TranscriptContextProvider: React.FC = ({ children }) => {
   const [transcripts, setTranscripts] = useState<Transcript[] | null>(null);
@@ -78,4 +72,5 @@ export const TranscriptContextProvider: React.FC = ({ children }) => {
 
 export const useTranscripts = () => useContext(TranscriptsContext);
 
-export const useTranscriptActions = () => useContext(TranscriptActionsContext);
+export const useTranscriptActions = () =>
+  useContextSafe(TranscriptActionsContext);

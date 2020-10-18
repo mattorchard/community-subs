@@ -1,5 +1,6 @@
-import React, { Dispatch, SetStateAction, useContext, useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { defaultGroup, GroupName } from "../types/Groups";
+import useContextSafe from "../hooks/useContextSafe";
 
 type ToolsContextType = {
   selectedGroup: GroupName;
@@ -33,8 +34,4 @@ export const ToolsContextProvider: React.FC = ({ children }) => {
   );
 };
 
-export const useToolsContext = () => {
-  const context = useContext(ToolsContext);
-  if (!context) throw new Error("Cannot use ToolsContext outside of provider");
-  return context;
-};
+export const useToolsContext = () => useContextSafe(ToolsContext);

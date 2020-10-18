@@ -1,6 +1,7 @@
-import React, { useCallback, useContext, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import useAsRef from "../hooks/useAsRef";
 import { useCuesContext } from "./CuesContext";
+import useContextSafe from "../hooks/useContextSafe";
 
 type CueSelectionContextValue = {
   state: Set<string>;
@@ -57,21 +58,11 @@ export const CueSelectionProvider: React.FC = ({ children }) => {
   );
 };
 
-const NO_PROVIDER_ERROR = "Tried to use CueSelectionContext outside Provider";
+export const useCueSelectionActions = () =>
+  useContextSafe(CueSelectionContext).actions;
 
-export const useCueSelectionActions = () => {
-  const context = useContext(CueSelectionContext);
-  if (!context) throw new Error(NO_PROVIDER_ERROR);
-
-  return context.actions;
-};
-
-export const useSelectedCueIds = () => {
-  const context = useContext(CueSelectionContext);
-  if (!context) throw new Error(NO_PROVIDER_ERROR);
-
-  return context.state;
-};
+export const useSelectedCueIds = () =>
+  useContextSafe(CueSelectionContext).state;
 
 export const useIsCueSelected = (cueId: string) =>
   useSelectedCueIds().has(cueId);
