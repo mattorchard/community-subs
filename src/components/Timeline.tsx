@@ -22,6 +22,7 @@ import { useLiveCallback } from "../hooks/useLiveCallback";
 import { useToolsContext } from "../contexts/ToolsContext";
 import { clamp } from "../helpers/algoHelpers";
 import TimelineMarkers from "./TimelineMarkers";
+import { useOnScrollRequest } from "../contexts/StudioScrollContext";
 
 export type CueDragType = "start" | "end" | "both";
 export type CueDragDetails = {
@@ -139,13 +140,10 @@ const Timeline: React.FC<{
     setScrollX(scrollX);
   });
 
-  const handleDragStart = (dragDetails: CueDragDetails) => {
-    timelineRef.current.style.setProperty(
-      "--pointer-x-grid-offset",
-      roundToGrid(pointerXRef.current - dragDetails.offset, scale).toString()
-    );
-    setCueDraggingDetails(dragDetails);
-  };
+  useOnScrollRequest(
+    (index) => timelineRef.current.scroll({ left: cues[index].start * scale }),
+    (time) => timelineRef.current.scroll({ left: time * scale })
+  );
 
   // Maintain approximate scroll position through scale changes
   const lastScaleRef = useRef(scale);
@@ -154,6 +152,14 @@ const Timeline: React.FC<{
     timelineRef.current.scrollLeft *= scaleRatio;
     lastScaleRef.current = scale;
   }, [scale]);
+
+  const handleDragStart = (dragDetails: CueDragDetails) => {
+    timelineRef.current.style.setProperty(
+      "--pointer-x-grid-offset",
+      roundToGrid(pointerXRef.current - dragDetails.offset, scale).toString()
+    );
+    setCueDraggingDetails(dragDetails);
+  };
 
   const handleDragStop = () => {
     setIsPanning(false);
@@ -352,7 +358,7 @@ const Timeline: React.FC<{
           </div>
         ))}
         <TimelineMarkers {...viewportDetails} duration={duration} />
-        <div className="play-head" />
+        <div className="playhead" />
       </section>
       <div className="timeline__bumper" />
     </div>

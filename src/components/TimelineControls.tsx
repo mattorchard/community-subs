@@ -1,8 +1,13 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnet, faRulerCombined } from "@fortawesome/free-solid-svg-icons";
+import {
+  faMagnet,
+  faMapMarkerAlt,
+  faRulerCombined,
+} from "@fortawesome/free-solid-svg-icons";
 import "./TimelineControls.css";
 import { useToolsContext } from "../contexts/ToolsContext";
+import { useScrollToPlayhead } from "../contexts/StudioScrollContext";
 
 const TimelineControls = () => {
   const {
@@ -11,6 +16,7 @@ const TimelineControls = () => {
     setIsSnapToOthersEnabled,
     setIsSnapToGridEnabled,
   } = useToolsContext();
+  const scrollToPlayhead = useScrollToPlayhead();
   return (
     <div role="group" className="timeline-controls button-group with-dividers">
       <button
@@ -28,6 +34,14 @@ const TimelineControls = () => {
         onClick={() => setIsSnapToGridEnabled((enabled) => !enabled)}
       >
         <FontAwesomeIcon icon={faRulerCombined} />
+      </button>
+
+      <button
+        onClick={scrollToPlayhead}
+        title="Scroll to playhead"
+        className="icon-button"
+      >
+        <FontAwesomeIcon icon={faMapMarkerAlt} />
       </button>
     </div>
   );

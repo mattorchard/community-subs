@@ -1,5 +1,6 @@
 import React, { useCallback, useContext, useMemo, useState } from "react";
 import useAsRef from "../hooks/useAsRef";
+import { useCuesContext } from "./CuesContext";
 
 type CueSelectionContextValue = {
   state: Set<string>;
@@ -65,6 +66,7 @@ export const useCueSelectionActions = () => {
   return context.actions;
 };
 
+// Todo: Rename to useSelectedCueIds
 export const useCueSelection = () => {
   const context = useContext(CueSelectionContext);
   if (!context) throw new Error(NO_PROVIDER_ERROR);
@@ -73,3 +75,21 @@ export const useCueSelection = () => {
 };
 
 export const useIsCueSelected = (cueId: string) => useCueSelection().has(cueId);
+
+export const useSelectedCueIndexes = () => {
+  const selectedCueIds = useCueSelection();
+  const { cueIndexById } = useCuesContext();
+  return useMemo(
+    () => [...selectedCueIds].map((cueId) => cueIndexById.get(cueId)!),
+    [selectedCueIds, cueIndexById]
+  );
+};
+
+export const useSelectedCues = () => {
+  const selectedCueIndexes = useSelectedCueIndexes();
+  const { cues } = useCuesContext();
+  return useMemo(() => selectedCueIndexes.map((index) => cues[index]), [
+    selectedCueIndexes,
+    cues,
+  ]);
+};

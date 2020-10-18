@@ -6,6 +6,7 @@ import { CuesContextProvider } from "../contexts/CuesContext";
 import useTranscript from "../hooks/useTranscript";
 import Spinner from "./Spinner";
 import { Transcript } from "../types/cue";
+import { StudioScrollContextProvider } from "../contexts/StudioScrollContext";
 
 const withStudioContextProviders = (
   component: React.FC<{ transcript: Transcript }>
@@ -19,11 +20,13 @@ const withStudioContextProviders = (
     return (
       <PlayerControlsContextProvider>
         <ToolsContextProvider>
-          <CueSelectionProvider>
-            <CuesContextProvider transcriptId={transcript.id}>
-              <NeedsProviders transcript={transcript} />
-            </CuesContextProvider>
-          </CueSelectionProvider>
+          <StudioScrollContextProvider>
+            <CueSelectionProvider>
+              <CuesContextProvider transcriptId={transcript.id}>
+                <NeedsProviders transcript={transcript} />
+              </CuesContextProvider>
+            </CueSelectionProvider>
+          </StudioScrollContextProvider>
         </ToolsContextProvider>
       </PlayerControlsContextProvider>
     );

@@ -6,6 +6,7 @@
   --offset-x: 0;
   --pointer-x-grid: 0;
   --pointer-x-grid-offset: 0;
+  scroll-behavior: smooth;
 }
 
 .timeline__bumper {
@@ -67,7 +68,7 @@
   transform: translateX(calc(1px * var(--pointer-x) - 50%));
 }
 
-.play-head {
+.playhead {
   position: absolute;
   top: 0;
   bottom: 0;

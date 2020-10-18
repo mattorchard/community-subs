@@ -1,4 +1,4 @@
-import React, { CSSProperties, useEffect } from "react";
+import React, { CSSProperties, useEffect, useRef } from "react";
 import { Cue } from "../types/cue";
 import { debounce } from "../helpers/timingHelpers";
 import { getClassName, matchScrollHeight } from "../helpers/domHelpers";
@@ -42,20 +42,25 @@ const CueEditor: React.FC<{
     const modifierKeysRef = useModifierKeys();
     const { setSelection, addToSelection } = useCueSelectionActions();
     const { id } = cue;
-    const textAreaRef = React.useRef<HTMLTextAreaElement>(null);
+    const textAreaRef = React.useRef<HTMLTextAreaElement>(null!);
     const { updateCue } = useCuesContext();
+    const lastShouldFocus = useRef<number | null>(null);
 
     useEffect(() => {
-      textAreaRef.current!.value = cue.text || "";
-      matchScrollHeight(textAreaRef.current!);
+      textAreaRef.current.value = cue.text || "";
+      matchScrollHeight(textAreaRef.current);
       // Only intended to run on mount
       // eslint-disable-next-line
     }, []);
 
     useEffect(() => {
-      if (shouldFocus) {
-        textAreaRef.current!.focus();
+      if (
+        shouldFocus &&
+        (!lastShouldFocus || shouldFocus !== lastShouldFocus.current)
+      ) {
+        textAreaRef.current.focus();
       }
+      lastShouldFocus.current = shouldFocus;
     }, [shouldFocus]);
 
     const {
@@ -66,22 +71,22 @@ const CueEditor: React.FC<{
         debounce(() => {
           updateCue({
             id,
-            text: textAreaRef.current!.value,
+            text: textAreaRef.current.value,
           });
         }, 2500),
       [id, updateCue]
     );
 
     const handleChange = () => {
-      if (getLineCount(textAreaRef.current!.value) !== getLineCount(cue.text)) {
-        matchScrollHeight(textAreaRef.current!);
+      if (getLineCount(textAreaRef.current.value) !== getLineCount(cue.text)) {
+        matchScrollHeight(textAreaRef.current);
         saveImmediate();
       } else {
         saveTextDebounced();
       }
     };
     const handleBlur = () => {
-      if (textAreaRef.current!.value !== cue.text) {
+      if (textAreaRef.current.value !== cue.text) {
         saveImmediate();
       }
     };
@@ -104,6 +109,7 @@ const CueEditor: React.FC<{
             "--secondary-group-color": `var(--color-group-${cue.group}-secondary)`,
           } as CSSProperties
         }
+        onClick={() => textAreaRef.current.focus()}
       >
         <textarea
           id={cue.id}

@@ -20,6 +20,8 @@ import {
 } from "../contexts/CueSelectionContext";
 import { useCuesContext } from "../contexts/CuesContext";
 import ImportCueArea from "./ImportCueArea";
+import { useOnScrollRequest } from "../contexts/StudioScrollContext";
+import { getIndexOfFirstCueAfter } from "../helpers/cueHelpers";
 
 const TARGET_DURATION = 2500;
 const MIN_DURATION = 1000;
@@ -111,6 +113,12 @@ const ScriptEditor: React.FC<{
     (index: number) => listRef.current?.scrollToItem(index),
     []
   );
+
+  useOnScrollRequest(scrollToCue, (time) => {
+    const index = getIndexOfFirstCueAfter(time, cues);
+    if (index === -1) return;
+    scrollToCue(Math.max(0, index - 1));
+  });
 
   const { cueToFocus, focusNextCue, focusPreviousCue } = useCueFocus(
     cues,

@@ -15,6 +15,7 @@ import Button from "./Button";
 import useWindowEvent from "../hooks/useWindowEvent";
 import { getIsContainedBy } from "../helpers/domHelpers";
 import { useCuesContext } from "../contexts/CuesContext";
+import { useScrollToSelection } from "../contexts/StudioScrollContext";
 
 const getSelectionMessage = (size: number) => {
   if (size === 0) {
@@ -30,6 +31,7 @@ const SelectionControls = () => {
   const selection = useCueSelection();
   const { setSelection } = useCueSelectionActions();
   const { deleteCues } = useCuesContext();
+  const scrollToSelection = useScrollToSelection();
 
   const containerRef = useRef<HTMLDivElement>(null!);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -37,8 +39,6 @@ const SelectionControls = () => {
   useWindowEvent("click", () => setIsMenuOpen(false));
 
   const deselectCues = () => setSelection(new Set());
-
-  const scrollToSelection = () => {};
 
   const deleteSelection = () => {
     deleteCues([...selection]);
