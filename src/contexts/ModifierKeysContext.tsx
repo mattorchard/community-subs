@@ -2,9 +2,9 @@ import React, { useCallback, useEffect, useRef } from "react";
 import { Observable } from "../helpers/observableHelpers";
 import useBodyEvent from "../hooks/useBodyEvent";
 import { objectsAreEqual } from "../helpers/algoHelpers";
-import useAsRef from "../hooks/useAsRef";
 import { getModifierKeys, ModifierKeys } from "../helpers/domHelpers";
 import useContextSafe from "../hooks/useContextSafe";
+import { useLiveCallback } from "../hooks/useLiveCallback";
 
 const ModifierKeysContext = React.createContext<{
   observer: Observable<ModifierKeys>;
@@ -51,9 +51,6 @@ export const useOnModifierKeysChange = (
   onChange: (keys: ModifierKeys) => void
 ) => {
   const { observer } = useContextSafe(ModifierKeysContext);
-  const onChangeRef = useAsRef(onChange);
-  useEffect(() => observer.subscribe((keys) => onChangeRef.current(keys)), [
-    observer,
-    onChangeRef,
-  ]);
+  const onChangeLive = useLiveCallback(onChange);
+  useEffect(() => observer.subscribe(onChangeLive), [observer, onChangeLive]);
 };

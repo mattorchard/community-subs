@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import useAsRef from "../hooks/useAsRef";
 import { Observable } from "../helpers/observableHelpers";
 import useContextSafe from "../hooks/useContextSafe";
+import { useLiveCallback } from "../hooks/useLiveCallback";
 
 type PlayerControlsContextValue = {
   isPlaying: boolean;
@@ -54,11 +55,11 @@ export const PlayerControlsContextProvider: React.FC = ({ children }) => {
 
 export const useOnPlayerTimeChange = (onChange: (time: number) => void) => {
   const { currentTimeObserver } = useContextSafe(PlayerControlsContext);
-  const onChangeRef = useAsRef(onChange);
-  useEffect(
-    () => currentTimeObserver.subscribe((time) => onChangeRef.current(time)),
-    [currentTimeObserver, onChangeRef]
-  );
+  const onChangeLive = useLiveCallback(onChange);
+  useEffect(() => currentTimeObserver.subscribe(onChangeLive), [
+    currentTimeObserver,
+    onChangeLive,
+  ]);
 };
 
 export const usePlayerTimePublisher = () => {

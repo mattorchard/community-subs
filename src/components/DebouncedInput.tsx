@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { debounce } from "../helpers/timingHelpers";
 import useAsRef from "../hooks/useAsRef";
+import { useLiveCallback } from "../hooks/useLiveCallback";
 
 type InputProps = React.DetailedHTMLProps<
   React.InputHTMLAttributes<HTMLInputElement>,
@@ -15,19 +16,17 @@ const DebouncedInput: React.FC<
   }
 > = ({ initialValue, onValueChange, delayAmount = 2500, ...inputProps }) => {
   const ref = useRef<HTMLInputElement>(null);
-
-  // Ref invoked on value change
-  const valueChangeRef = useAsRef(onValueChange);
+  const initialValueRef = useAsRef(initialValue);
+  const valueChangeLive = useLiveCallback(onValueChange);
 
   const { immediate: handleBlur, debounced: handleChange } = React.useMemo(
     () =>
       debounce(() => {
-        if (ref.current && ref.current.value !== initialValue) {
-          valueChangeRef.current(ref.current.value);
+        if (ref.current && ref.current.value !== initialValueRef.current) {
+          valueChangeLive(ref.current.value);
         }
       }, delayAmount),
-    // eslint-disable-next-line
-    []
+    [valueChangeLive, delayAmount, initialValueRef]
   );
 
   // Sets inputs initial value
