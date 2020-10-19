@@ -11,6 +11,7 @@ import useAsRef from "../hooks/useAsRef";
 import { v4 as uuidV4 } from "uuid";
 import { spliceIntoSortedArray } from "../helpers/algoHelpers";
 import useContextSafe from "../hooks/useContextSafe";
+import { cueComparator } from "../helpers/cueHelpers";
 
 type CuePatch = Partial<Cue> & Pick<Cue, "id">;
 type NewCue = Partial<Omit<Cue, "id" | "transcriptId">> &
@@ -40,13 +41,6 @@ type CuesContextType = {
 
 const CuesContext = React.createContext<CuesContextType | null>(null);
 CuesContext.displayName = "CuesContext";
-
-const cueComparator = (a: Cue, b: Cue) => {
-  if (a.start !== b.start) {
-    return a.start - b.start;
-  }
-  return a.id.localeCompare(b.id);
-};
 
 export const CuesContextProvider: React.FC<{ transcriptId: string }> = ({
   transcriptId,

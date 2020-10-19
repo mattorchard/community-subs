@@ -25,9 +25,8 @@ const getSelectedCues = (
 
 const FormatControls = () => {
   const { selectedGroup, setSelectedGroup } = useToolsContext();
-  const cueSelection = useSelectedCueIds();
+  const cueSelection = useSelectedCueIds(); // Switch to more specific selection hook
   const { updateCues, cues, cueIndexById } = useCuesContext();
-
   const toggleBold = () => {
     const selectedCues = getSelectedCues(cueSelection, cues, cueIndexById);
     const allBold = selectedCues.every((cue) => cue.isBold);

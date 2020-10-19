@@ -10,4 +10,30 @@ export const getIndexOfFirstCueAfter = (time: number, cues: Cue[]) => {
   return -1;
 };
 
-// Todo: Move other cue helpers (like comparator) here
+const isCueOngoing = (currentTime: number, cue: Cue) =>
+  cue.start <= currentTime && currentTime <= cue.end;
+
+export const getOngoingCues = (
+  currentTime: number,
+  cues: Cue[],
+  startIndex = 0
+) => {
+  const filteredItems: Cue[] = [];
+  for (let index = startIndex; index < cues.length; index++) {
+    const cue = cues[index];
+    if (isCueOngoing(currentTime, cue)) {
+      filteredItems.push(cue);
+    } else if (cue.start > currentTime) {
+      // Early return once no more cues will ever be ongoing
+      return filteredItems;
+    }
+  }
+  return filteredItems;
+};
+
+export const cueComparator = (a: Cue, b: Cue) => {
+  if (a.start !== b.start) {
+    return a.start - b.start;
+  }
+  return a.id.localeCompare(b.id);
+};

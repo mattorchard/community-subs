@@ -5,23 +5,7 @@ import "./CuePreview.css";
 import { arraysAreEqual } from "../helpers/algoHelpers";
 import { useCuesContext } from "../contexts/CuesContext";
 import { getClassName } from "../helpers/domHelpers";
-
-const isCueOngoing = (currentTime: number, cue: Cue) =>
-  cue.start <= currentTime && currentTime <= cue.end;
-
-const filterCues = (currentTime: number, cues: Cue[], startIndex = 0) => {
-  const filteredItems: Cue[] = [];
-  for (let index = startIndex; index < cues.length; index++) {
-    const cue = cues[index];
-    if (isCueOngoing(currentTime, cue)) {
-      filteredItems.push(cue);
-    } else if (cue.start > currentTime) {
-      // Early return once no more cues will ever be ongoing
-      return filteredItems;
-    }
-  }
-  return filteredItems;
-};
+import { getOngoingCues } from "../helpers/cueHelpers";
 
 const CuePreview: React.FC = () => {
   const [cuesToShow, setCuesToShow] = useState<Cue[]>([]);
@@ -29,7 +13,7 @@ const CuePreview: React.FC = () => {
   const { cues, cueIndexById } = useCuesContext();
 
   const updateCuesToShow = useCallback(() => {
-    const newCuesToShow = filterCues(lastTimeRef.current, cues);
+    const newCuesToShow = getOngoingCues(lastTimeRef.current, cues);
 
     setCuesToShow((oldCuesToShow) =>
       arraysAreEqual(oldCuesToShow, newCuesToShow)
@@ -52,7 +36,11 @@ const CuePreview: React.FC = () => {
       if (startIndex === undefined) {
         return;
       }
-      const newCuesToShow = filterCues(lastTimeRef.current, cues, startIndex);
+      const newCuesToShow = getOngoingCues(
+        lastTimeRef.current,
+        cues,
+        startIndex
+      );
 
       setCuesToShow((oldCuesToShow) =>
         arraysAreEqual(oldCuesToShow, newCuesToShow)
