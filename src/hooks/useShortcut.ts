@@ -8,8 +8,8 @@ import useAsRef from "./useAsRef";
 import { useCallback } from "react";
 import { throttle } from "../helpers/timingHelpers";
 
-const isWithinTextInput = ({ target }: KeyboardEvent) =>
-  queryAncestor(target as Node, "input,textarea");
+const isWithinTextInput = (target: Node) =>
+  Boolean(queryAncestor(target, "input,textarea"));
 
 const matchesModifierKeys = (
   expectedModifierKeys: Partial<ModifierKeys>,
@@ -22,6 +22,12 @@ const matchesModifierKeys = (
       expectedValue
   );
 };
+
+const justShift = (modifierKeys: Partial<ModifierKeys>) =>
+  modifierKeys.shift &&
+  !modifierKeys.ctrl &&
+  !modifierKeys.alt &&
+  !modifierKeys.meta;
 
 const useShortcut = (
   key: string,
@@ -39,11 +45,16 @@ const useShortcut = (
       // Not the right button, just ignore
       return;
     }
-    if (modifierKeys) {
-      if (matchesModifierKeys(modifierKeys, event)) {
-        throttledCallback(event);
-      }
-    } else if (!isWithinTextInput(event)) {
+
+    const isTargetAgnostic = modifierKeys && !justShift(modifierKeys);
+
+    const isValidTarget =
+      isTargetAgnostic || !isWithinTextInput(event.target as Node);
+
+    const matchesNeededKeys =
+      !modifierKeys || matchesModifierKeys(modifierKeys, event);
+
+    if (isValidTarget && matchesNeededKeys) {
       throttledCallback(event);
     }
   });

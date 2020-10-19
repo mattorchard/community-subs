@@ -8,6 +8,7 @@ import {
 import "./TimelineControls.css";
 import { useToolsContext } from "../contexts/ToolsContext";
 import { useScrollToPlayhead } from "../contexts/StudioScrollContext";
+import useShortcut from "../hooks/useShortcut";
 
 const TimelineControls = () => {
   const {
@@ -17,28 +18,37 @@ const TimelineControls = () => {
     setIsSnapToGridEnabled,
   } = useToolsContext();
   const scrollToPlayhead = useScrollToPlayhead();
+
+  const toggleSnapToOthers = () =>
+    setIsSnapToOthersEnabled((enabled) => !enabled);
+  const toggleSnapToGrid = () => setIsSnapToGridEnabled((enabled) => !enabled);
+
+  useShortcut("p", scrollToPlayhead, { shift: true });
+  useShortcut("o", toggleSnapToOthers, { shift: true });
+  useShortcut("g", toggleSnapToGrid, { shift: true });
+
   return (
     <div role="group" className="timeline-controls button-group with-dividers">
       <button
-        title="Snap to others"
+        title="Snap to others (shift + O)"
         className="icon-button timeline__toggle-button"
         aria-pressed={isSnapToOthersEnabled}
-        onClick={() => setIsSnapToOthersEnabled((enabled) => !enabled)}
+        onClick={toggleSnapToOthers}
       >
         <FontAwesomeIcon icon={faMagnet} />
       </button>
       <button
-        title="Snap to grid"
+        title="Snap to grid (shift + G)"
         className="icon-button timeline__toggle-button"
         aria-pressed={isSnapToGridEnabled}
-        onClick={() => setIsSnapToGridEnabled((enabled) => !enabled)}
+        onClick={toggleSnapToGrid}
       >
         <FontAwesomeIcon icon={faRulerCombined} />
       </button>
 
       <button
         onClick={scrollToPlayhead}
-        title="Scroll to playhead"
+        title="Scroll to playhead (shift + P)"
         className="icon-button"
       >
         <FontAwesomeIcon icon={faMapMarkerAlt} />

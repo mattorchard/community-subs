@@ -77,14 +77,14 @@ const FormatControls = () => {
       <button
         className="icon-button"
         onClick={toggleBold}
-        title="Bold selected"
+        title="Bold (ctrl + B)"
       >
         <FontAwesomeIcon icon={faBold} />
       </button>
       <button
         className="icon-button"
         onClick={toggleItalics}
-        title="Italicize selected"
+        title="Italicize (ctrl + I)"
       >
         <FontAwesomeIcon icon={faItalic} />
       </button>
