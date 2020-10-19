@@ -6,43 +6,27 @@ import GroupIcon from "./GroupIcon";
 import { useToolsContext } from "../contexts/ToolsContext";
 import { GroupName } from "../types/Groups";
 import { getClassName } from "../helpers/domHelpers";
-import { useSelectedCueIds } from "../contexts/CueSelectionContext";
+import { useSelectedCues } from "../contexts/CueSelectionContext";
 import { useCuesContext } from "../contexts/CuesContext";
 import useShortcut from "../hooks/useShortcut";
-import { Cue } from "../types/cue";
-
-const getSelectedCues = (
-  cueSelection: Set<string>,
-  cues: Cue[],
-  cueIndexById: Map<string, number>
-) => {
-  const selectedCues: Cue[] = [];
-  cueSelection.forEach((cueId) => {
-    selectedCues.push(cues[cueIndexById.get(cueId)!]);
-  });
-  return selectedCues;
-};
 
 const FormatControls = () => {
   const { selectedGroup, setSelectedGroup } = useToolsContext();
-  const cueSelection = useSelectedCueIds(); // Switch to more specific selection hook
-  const { updateCues, cues, cueIndexById } = useCuesContext();
+  const selectedCues = useSelectedCues();
+  const { updateCues } = useCuesContext();
+
   const toggleBold = () => {
-    const selectedCues = getSelectedCues(cueSelection, cues, cueIndexById);
     const allBold = selectedCues.every((cue) => cue.isBold);
     updateCues(selectedCues.map((cue) => ({ id: cue.id, isBold: !allBold })));
   };
   const toggleItalics = () => {
-    const selectedCues = getSelectedCues(cueSelection, cues, cueIndexById);
     const allItalics = selectedCues.every((cue) => cue.isItalics);
-    updateCues(
-      selectedCues.map((cue) => ({ id: cue.id, isItalics: !allItalics }))
-    );
+    updateCues(selectedCues.map(({ id }) => ({ id, isItalics: !allItalics })));
   };
 
   const setGroup = (group: GroupName) => {
     setSelectedGroup(group);
-    updateCues([...cueSelection].map((id) => ({ id, group })));
+    updateCues(selectedCues.map(({ id }) => ({ id, group })));
   };
 
   useShortcut(
