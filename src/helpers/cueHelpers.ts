@@ -35,5 +35,11 @@ export const cueComparator = (a: Cue, b: Cue) => {
   if (a.start !== b.start) {
     return a.start - b.start;
   }
+  if (a.layer !== b.layer) {
+    return a.layer - b.layer;
+  }
+  if (a.end !== b.end) {
+    return a.end - b.end;
+  }
   return a.id.localeCompare(b.id);
 };
