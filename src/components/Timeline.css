@@ -8,6 +8,9 @@
   --pointer-x-grid-offset: 0;
   scroll-behavior: smooth;
 }
+.modifier-key--shift .timeline {
+  scroll-behavior: unset;
+}
 
 .timeline__bumper {
   background-color: var(--gray-900);
