@@ -32,25 +32,28 @@ const waitForMediaEvent = (
 
 const getVideoDuration = async (video: HTMLVideoElement) => {
   if (!video.duration || video.duration === Infinity) {
-    const durationLoadedPromise = waitForMediaEvent(video, "durationchange", 10000);
+    const durationLoadedPromise = waitForMediaEvent(
+      video,
+      "durationchange",
+      10000
+    );
     // Duration won't load until video is completed
     video.currentTime = (99 * HOUR) / 1000; // Measured in seconds
     await durationLoadedPromise;
   }
 
-   // Raw is in seconds
+  // Raw is in seconds
   return video.duration * 1000;
 };
 
-const getVideoThumbnail = async (video: HTMLVideoElement, whenToCapture: number) => {
+const getVideoThumbnail = async (
+  video: HTMLVideoElement,
+  whenToCapture: number
+) => {
   const seekedPromise = waitForMediaEvent(video, "seeked", 3000);
   video.currentTime = whenToCapture;
   await seekedPromise;
-  return captureImageToDataUrl(
-    video,
-    "image/jpeg",
-    "0.85"
-  );
+  return captureImageToDataUrl(video, "image/jpeg", "0.85");
 };
 
 export const getVideoFileDetails = async (file: File) => {
@@ -70,18 +73,10 @@ export const getVideoFileDetails = async (file: File) => {
   }
 };
 
-
-const videoTypes = [
-  "webm",
-  "mp4",
-  "h264",
-  "vp9",
-  "hls",
-  "ogg",
-]
-export const getSupportedVideoTypes = (optimistic=true) => {
+const videoTypes = ["webm", "mp4", "h264", "vp9", "hls", "ogg"];
+export const getSupportedVideoTypes = (optimistic = true) => {
   const video = document.createElement("video");
-  return videoTypes.filter(type => {
+  return videoTypes.filter((type) => {
     const canPlay = video.canPlayType(`video/${type}`);
     if (canPlay === "probably") {
       return true;
@@ -89,5 +84,5 @@ export const getSupportedVideoTypes = (optimistic=true) => {
       return true;
     }
     return false;
-  })
-}
+  });
+};
