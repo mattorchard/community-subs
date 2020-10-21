@@ -21,13 +21,13 @@
   display: flex;
   flex-direction: column;
   border-radius: 0.25rem;
-  overflow: hidden;
 }
 .selection-controls__menu .menu-item__button {
   padding: 0.5rem;
   width: 100%;
   text-align: start;
   transition: 0.2s ease-in-out background-color;
+  border-radius: 0.25rem;
 }
 .selection-controls__menu .menu-item__button:hover {
   background-color: var(--color-lighten);
@@ -41,4 +41,13 @@
 .selection-controls__menu .menu-item__button--danger:hover,
 .selection-controls__menu .menu-item__button--danger:focus {
   background-color: var(--color-danger);
+}
+.selection-controls__menu::before {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  right: 1rem;
+  border: 0.5rem solid transparent;
+  border-bottom-color: var(--gray-700);
+  transform: translateX(3px);
 }

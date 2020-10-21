@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React from "react";
 import {
   useCueSelectionActions,
   useSelectedCueIds,
@@ -12,10 +12,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Button from "./Button";
-import useWindowEvent from "../hooks/useWindowEvent";
-import { getIsContainedBy } from "../helpers/domHelpers";
 import { useCuesContext } from "../contexts/CuesContext";
 import { useScrollToSelection } from "../contexts/StudioScrollContext";
+import { useMenu } from "../hooks/useMenu";
 
 const getSelectionMessage = (size: number) => {
   if (size === 0) {
@@ -32,11 +31,7 @@ const SelectionControls = () => {
   const { setSelection } = useCueSelectionActions();
   const { deleteCues } = useCuesContext();
   const scrollToSelection = useScrollToSelection();
-
-  const containerRef = useRef<HTMLDivElement>(null!);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  useWindowEvent("click", () => setIsMenuOpen(false));
+  const { isMenuOpen, buttonProps, popupProps, containerProps } = useMenu();
 
   const deselectCues = () => setSelection(new Set());
 
@@ -46,38 +41,18 @@ const SelectionControls = () => {
   };
 
   return (
-    <div
-      className="selection-controls"
-      ref={containerRef}
-      onBlur={(event) => {
-        if (!getIsContainedBy(event.currentTarget, event.target)) {
-          setIsMenuOpen(false);
-        }
-      }}
-    >
+    <div {...containerProps} className="selection-controls">
       <Button
+        {...buttonProps}
         className="selection-controls__button"
-        aria-haspopup="menu"
-        aria-expanded={isMenuOpen}
-        aria-controls="selection-controls__menu"
-        id="selection-controls__menu-button"
         rightIcon
         disabled={selection.size === 0}
-        onClick={(event) => {
-          event.stopPropagation();
-          setIsMenuOpen((isOpen) => !isOpen);
-        }}
       >
         {getSelectionMessage(selection.size)}{" "}
         <FontAwesomeIcon icon={faCaretDown} />
       </Button>
       {isMenuOpen && (
-        <ul
-          className="selection-controls__menu"
-          role="menu"
-          id="selection-controls__menu"
-          aria-labelledby="selection-controls__menu-button"
-        >
+        <ul {...popupProps} className="selection-controls__menu">
           <li className="menu-item">
             <button className="menu-item__button" onClick={deselectCues}>
               <FontAwesomeIcon icon={faTimesCircle} />
