@@ -63,7 +63,7 @@ const CuePreview: React.FC = () => {
               "is-bold": cue.isBold,
               "is-italics": cue.isItalics,
             },
-            "xl"
+            `xl justify-${cue.settings?.justify}`
           )}
           key={cue.id}
         >

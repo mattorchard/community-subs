@@ -37,7 +37,9 @@
   user-select: none;
   opacity: 0.5;
 }
-.cue-editor__group {
+.cue-editor__format-info {
+  display: flex;
+  gap: 0.5rem;
   position: absolute;
   bottom: 0.5rem;
   right: 0.5rem;

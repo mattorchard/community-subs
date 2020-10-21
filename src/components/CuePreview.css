@@ -12,3 +12,9 @@
 .cue-preview__cue--is-italics {
   font-style: italic;
 }
+.cue-preview__cue.justify-start {
+  text-align: start;
+}
+.cue-preview__cue.justify-end {
+  text-align: end;
+}

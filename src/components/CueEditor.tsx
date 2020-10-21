@@ -9,6 +9,7 @@ import { useCueSelectionActions } from "../contexts/CueSelectionContext";
 import { useModifierKeys } from "../contexts/ModifierKeysContext";
 import { useCuesContext } from "../contexts/CuesContext";
 import GroupIcon from "./GroupIcon";
+import PlacementIcon from "./PlacementIcon";
 
 type KE = React.KeyboardEvent<HTMLTextAreaElement>;
 
@@ -30,6 +31,14 @@ const onArrowOut = (onUp: (event: KE) => void, onDown: (event: KE) => void) => (
     return onDown(event);
   }
 };
+
+const isCustomPlacement = ({
+  align,
+  justify,
+}: {
+  align: string;
+  justify: string;
+}) => align !== "end" || justify !== "center";
 
 const CueEditor: React.FC<{
   cue: Cue;
@@ -131,7 +140,15 @@ const CueEditor: React.FC<{
           placeholder="Blank"
         />
         <small className="cue-editor__footer">{toTimeRangeString(cue)}</small>
-        <GroupIcon className="cue-editor__group" groupName={cue.group} />
+        <div className="cue-editor__format-info">
+          {cue.settings && isCustomPlacement(cue.settings) && (
+            <PlacementIcon
+              justify={cue.settings.justify}
+              align={cue.settings.align}
+            />
+          )}
+          <GroupIcon groupName={cue.group} />
+        </div>
       </div>
     );
   },
