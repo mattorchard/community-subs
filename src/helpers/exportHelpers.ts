@@ -39,7 +39,26 @@ const formatTimeRange = ({ start, end }: { start: number; end: number }) =>
     toTimeCode(end)
   )}`;
 
-const formatSettings = (settings: CueSettings) =>
-  Object.entries(settings)
+const asSettings = (object: { [key: string]: string | undefined | null }) =>
+  Object.entries(object)
+    .filter(([, value]) => Boolean(value))
     .map(([setting, value]) => `${setting}:${value}`)
     .join(" ");
+
+const justifyToPosition = {
+  start: "20%",
+  center: null,
+  end: "80%",
+};
+const alignToLine = {
+  start: "0%",
+  center: "50%",
+  end: null,
+};
+
+const formatSettings = (settings: CueSettings) =>
+  asSettings({
+    align: settings.justify, // Text-alignment is horizontal
+    position: justifyToPosition[settings.justify],
+    line: alignToLine[settings.align],
+  });

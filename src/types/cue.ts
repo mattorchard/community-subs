@@ -1,15 +1,13 @@
 // Takes the form ###%
 import { defaultGroup, GroupName } from "./Groups";
 
-type Percentage = string;
+export type Alignment = "start" | "center" | "end";
 
-export type CueSettings = Partial<{
-  vertical: "rl" | "lr";
-  line: number | Percentage;
-  position: Percentage;
-  size: Percentage;
-  align: "start" | "middle" | "end";
-}>;
+// https://www.w3.org/TR/webvtt1/#cue-settings
+export type CueSettings = {
+  align: Alignment;
+  justify: Alignment;
+};
 
 export type Cue = {
   transcriptId: string;
