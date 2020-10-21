@@ -39,3 +39,48 @@
 .color-button--triangle {
   --selection-color: var(--color-group-triangle-primary);
 }
+
+.format-controls__placement-button {
+  height: 100%;
+}
+.text-position-menu {
+  position: relative;
+}
+.text-position-menu__items {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: grid;
+  place-items: center;
+  grid-template-columns: repeat(3, 1.75rem);
+  background-color: var(--gray-700);
+  border-radius: 0.25rem;
+  margin-top: 0.5rem;
+  z-index: 2;
+}
+.text-position-menu__items > li:nth-child(-n + 3) svg {
+  transform: scaleY(-1);
+}
+.text-position-menu__items button {
+  padding: 0.5rem;
+  transition: background-color 0.3s ease-in-out;
+  border-radius: 0.25rem;
+}
+.text-position-menu__items button:hover {
+  background-color: var(--color-lighten);
+}
+.text-position-menu__items button:focus {
+  box-shadow: var(--focus-bs) inset;
+}
+.text-position-menu__items::before {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  border: 0.5rem solid transparent;
+  border-bottom-color: var(--gray-700);
+  left: 50%;
+  box-sizing: border-box;
+  transform: translateX(-50%);
+  z-index: -1;
+}
