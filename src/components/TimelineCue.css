@@ -16,6 +16,7 @@
   transition-timing-function: ease-in-out;
   transition-duration: 0.2s;
   transition-property: transform, filter, background-color;
+  transition-delay: 0.1s;
   opacity: 0.85;
 }
 .timeline-cue--is-selected {
