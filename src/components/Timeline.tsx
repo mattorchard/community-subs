@@ -141,8 +141,13 @@ const Timeline: React.FC<{
   });
 
   useOnScrollRequest(
-    (index) => timelineRef.current.scroll({ left: cues[index].start * scale }),
-    (time) => timelineRef.current.scroll({ left: time * scale })
+    (index) =>
+      timelineRef.current.scroll({
+        left: cues[index].start * scale,
+        behavior: "smooth",
+      }),
+    (time) =>
+      timelineRef.current.scroll({ left: time * scale, behavior: "smooth" })
   );
 
   // Maintain approximate scroll position through scale changes

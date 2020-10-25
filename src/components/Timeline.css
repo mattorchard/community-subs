@@ -6,12 +6,7 @@
   --offset-x: 0;
   --pointer-x-grid: 0;
   --pointer-x-grid-offset: 0;
-  scroll-behavior: smooth;
 }
-.modifier-key--shift .timeline {
-  scroll-behavior: unset;
-}
-
 .timeline__bumper {
   background-color: var(--gray-900);
   width: 200px;
