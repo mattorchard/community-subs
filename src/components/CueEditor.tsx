@@ -1,4 +1,4 @@
-import React, { CSSProperties, useEffect, useRef } from "react";
+import React, { CSSProperties, useEffect } from "react";
 import { Cue } from "../types/cue";
 import { debounce } from "../helpers/timingHelpers";
 import { getClassName, matchScrollHeight } from "../helpers/domHelpers";
@@ -53,7 +53,6 @@ const CueEditor: React.FC<{
     const { id } = cue;
     const textAreaRef = React.useRef<HTMLTextAreaElement>(null!);
     const { updateCue } = useCuesContext();
-    const lastShouldFocus = useRef<number | null>(null);
 
     useEffect(() => {
       textAreaRef.current.value = cue.text || "";
@@ -63,13 +62,9 @@ const CueEditor: React.FC<{
     }, []);
 
     useEffect(() => {
-      if (
-        shouldFocus &&
-        (!lastShouldFocus || shouldFocus !== lastShouldFocus.current)
-      ) {
-        textAreaRef.current.focus();
+      if (shouldFocus) {
+        textAreaRef.current.focus({ preventScroll: true });
       }
-      lastShouldFocus.current = shouldFocus;
     }, [shouldFocus]);
 
     const {
