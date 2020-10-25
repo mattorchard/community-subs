@@ -1,5 +1,5 @@
 .timeline-controls {
-  grid-area: timeline;
+  /*grid-area: timeline;*/
 }
 .timeline__toggle-button {
   transition-property: background-color, border-color;

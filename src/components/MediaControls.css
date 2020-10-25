@@ -2,6 +2,7 @@
   display: flex;
   align-items: center;
   grid-area: media;
+  justify-content: center;
 }
 .media-controls__play-pause {
   transform: scale(2);

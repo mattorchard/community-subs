@@ -13,9 +13,7 @@
 .toolbar {
   grid-area: toolbar;
   display: flex;
-  justify-items: center;
   justify-content: space-around;
-  gap: 1rem;
   padding: 1rem;
   background-color: var(--gray-900);
 }

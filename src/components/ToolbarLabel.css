@@ -1,0 +1,14 @@
+.toolbar-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+.toolbar-label--has-separators {
+  border-left: 0.25rem solid var(--color-lighten);
+  border-right: 0.25rem solid var(--color-lighten);
+}
+.toolbar-label__label {
+  opacity: 0.8;
+  margin-top: 0.5rem;
+}

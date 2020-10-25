@@ -22,6 +22,7 @@ import { useCuesContextUnsafe } from "../contexts/CuesContext";
 import ScrollControls from "./ScrollControls";
 import useShortcut from "../hooks/useShortcut";
 import { useCueSelectionActions } from "../contexts/CueSelectionContext";
+import ToolbarLabel from "./ToolbarLabel";
 
 const useDeselectShortcut = () => {
   const { clearSelection } = useCueSelectionActions();
@@ -77,11 +78,21 @@ const Studio = withStudioContextProviders(function Studio({ transcript }) {
         transcriptId={transcript.id}
       />
       <div className="toolbar">
-        <TimelineControls />
-        <ZoomRange zoom={scale} onZoomChange={setScale} />
+        <ToolbarLabel labelText="Snap" gridArea="timeline">
+          <TimelineControls />
+        </ToolbarLabel>
+        <ToolbarLabel labelText="Zoom" gridArea="zoom" hasSeparators>
+          <ZoomRange zoom={scale} onZoomChange={setScale} />
+        </ToolbarLabel>
+
         <MediaControls />
-        <FormatControls />
-        <ScrollControls />
+
+        <ToolbarLabel labelText="Format" gridArea="format" hasSeparators>
+          <FormatControls />
+        </ToolbarLabel>
+        <ToolbarLabel labelText="Scroll" gridArea="scroll">
+          <ScrollControls />
+        </ToolbarLabel>
       </div>
       <Timeline duration={transcript.video.duration} scale={scale} />
     </div>
