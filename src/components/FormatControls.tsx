@@ -5,13 +5,13 @@ import {
   faBold,
   faItalic,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSelectedCues } from "../contexts/CueSelectionContext";
 import { useCuesContext } from "../contexts/CuesContext";
 import useShortcut from "../hooks/useShortcut";
 import { useMenu } from "../hooks/useMenu";
 import { Alignment } from "../types/cue";
 import PlacementIcon from "./PlacementIcon";
+import IconButton from "./IconButton";
 
 const placementOptions: {
   justify: Alignment;
@@ -80,29 +80,21 @@ const FormatControls = () => {
 
   return (
     <div role="group" className="format-controls button-group with-dividers">
-      <button
-        className="icon-button"
-        onClick={toggleBold}
-        title="Bold (ctrl + B)"
-      >
-        <FontAwesomeIcon icon={faBold} />
-      </button>
-      <button
-        className="icon-button"
-        onClick={toggleItalics}
+      <IconButton title="Bold (ctrl + B)" icon={faBold} onClick={toggleBold} />
+
+      <IconButton
         title="Italicize (ctrl + I)"
-      >
-        <FontAwesomeIcon icon={faItalic} />
-      </button>
+        icon={faItalic}
+        onClick={toggleItalics}
+      />
 
       <div {...placementMenu.containerProps} className="text-position-menu">
-        <button
+        <IconButton
           {...placementMenu.buttonProps}
-          className="icon-button format-controls__placement-button"
+          className="format-controls__placement-button"
           title="Placement"
-        >
-          <FontAwesomeIcon icon={faArrowsAlt} />
-        </button>
+          icon={faArrowsAlt}
+        />
         {placementMenu.isMenuOpen && (
           <ol
             {...placementMenu.popupProps}

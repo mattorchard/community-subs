@@ -1,9 +1,9 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnet, faRulerCombined } from "@fortawesome/free-solid-svg-icons";
 import "./TimelineControls.css";
 import { useToolsContext } from "../contexts/ToolsContext";
 import useShortcut from "../hooks/useShortcut";
+import IconButton from "./IconButton";
 
 const TimelineControls = () => {
   const {
@@ -22,22 +22,20 @@ const TimelineControls = () => {
 
   return (
     <div role="group" className="timeline-controls button-group with-dividers">
-      <button
+      <IconButton
         title="Snap to others (shift + O)"
-        className="icon-button timeline__toggle-button"
+        icon={faMagnet}
+        className="timeline__toggle-button"
         aria-pressed={isSnapToOthersEnabled}
         onClick={toggleSnapToOthers}
-      >
-        <FontAwesomeIcon icon={faMagnet} />
-      </button>
-      <button
+      />
+      <IconButton
         title="Snap to grid (shift + G)"
-        className="icon-button timeline__toggle-button"
+        icon={faRulerCombined}
+        className="timeline__toggle-button"
         aria-pressed={isSnapToGridEnabled}
         onClick={toggleSnapToGrid}
-      >
-        <FontAwesomeIcon icon={faRulerCombined} />
-      </button>
+      />
     </div>
   );
 };

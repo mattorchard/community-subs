@@ -19,6 +19,7 @@
   border-radius: 0.25rem;
   margin-top: 0.5rem;
   z-index: 2;
+  box-shadow: var(--on-top-bs);
 }
 .text-position-menu__items > li:nth-child(-n + 3) svg {
   transform: scaleY(-1);
