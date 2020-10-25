@@ -19,18 +19,12 @@
   padding: 1rem;
   background-color: var(--gray-900);
 }
-@media only screen and (min-width: 1500px) {
+@media only screen and (min-width: 1200px) {
   .toolbar {
     display: grid;
     grid-template:
-      "timeline zoom media selection format"
-      / minmax(0, 1fr) minmax(0, 1fr) auto minmax(0, 1fr) minmax(0, 1fr);
-  }
-  .toolbar > :first-child {
-    justify-self: end;
-  }
-  .toolbar > :last-child {
-    justify-self: start;
+      "timeline zoom media format scroll"
+      / minmax(0, 1fr) minmax(0, 1fr) minmax(auto, 1fr) minmax(0, 1fr) minmax(0, 1fr);
   }
 }
 

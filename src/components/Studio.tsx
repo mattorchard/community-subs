@@ -15,17 +15,25 @@ import Timeline from "./Timeline";
 import { useOnPlayerTimeChange } from "../contexts/PlayerControlsContext";
 import CuePreview from "./CuePreview";
 import withStudioContextProviders from "./WithStudioContextProviders";
-import SelectionControls from "./SelectionControls";
 import MediaControls from "./MediaControls";
 import FormatControls from "./FormatControls";
 import TimelineControls from "./TimelineControls";
 import { useCuesContextUnsafe } from "../contexts/CuesContext";
+import ScrollControls from "./ScrollControls";
+import useShortcut from "../hooks/useShortcut";
+import { useCueSelectionActions } from "../contexts/CueSelectionContext";
+
+const useDeselectShortcut = () => {
+  const { clearSelection } = useCueSelectionActions();
+  useShortcut("escape", clearSelection);
+};
 
 const Studio = withStudioContextProviders(function Studio({ transcript }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0.1);
   const [isTopDrawerOpen, setIsTopDrawerOpen] = useState(false);
   const { cues } = useCuesContextUnsafe();
+  useDeselectShortcut();
 
   useOnPlayerTimeChange((time: number) =>
     containerRef.current?.style?.setProperty("--player-time", time.toString())
@@ -72,8 +80,8 @@ const Studio = withStudioContextProviders(function Studio({ transcript }) {
         <TimelineControls />
         <ZoomRange zoom={scale} onZoomChange={setScale} />
         <MediaControls />
-        <SelectionControls />
         <FormatControls />
+        <ScrollControls />
       </div>
       <Timeline duration={transcript.video.duration} scale={scale} />
     </div>

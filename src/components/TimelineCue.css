@@ -16,7 +16,7 @@
   transition-timing-function: ease-in-out;
   transition-duration: 0.2s;
   transition-property: transform, filter, background-color;
-  transition-delay: 0.1s;
+  transition-delay: 0s;
   opacity: 0.85;
 }
 .timeline-cue--is-selected {
@@ -32,7 +32,7 @@
   z-index: 3;
   transform: translateY(-0.5rem);
   filter: drop-shadow(0 0 0.5rem var(--gray-900));
-  transition-delay: 0s;
+  transition-delay: 0.1s;
 }
 .timeline-cue--dragging-start {
   left: calc(1px * var(--pointer-x));

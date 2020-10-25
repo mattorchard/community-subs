@@ -46,7 +46,8 @@ const useShortcut = (
       return;
     }
 
-    const isTargetAgnostic = modifierKeys && !justShift(modifierKeys);
+    const isTargetAgnostic =
+      key.length > 1 || (modifierKeys && !justShift(modifierKeys));
 
     const isValidTarget =
       isTargetAgnostic || !isWithinTextInput(event.target as Node);
