@@ -1,6 +1,3 @@
-// Takes the form ###%
-import { defaultGroup, GroupName } from "./Groups";
-
 export type Alignment = "start" | "center" | "end";
 
 // https://www.w3.org/TR/webvtt1/#cue-settings
@@ -16,14 +13,12 @@ export type Cue = {
   end: number;
   text: string;
   layer: number;
-  group: GroupName;
   isBold: boolean;
   isItalics: boolean;
   settings?: CueSettings;
 };
 
 export const cueDefaults = {
-  group: defaultGroup,
   layer: 0,
   text: "",
   isBold: false,

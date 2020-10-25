@@ -7,7 +7,6 @@ import {
 } from "../helpers/domHelpers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGripLinesVertical } from "@fortawesome/free-solid-svg-icons";
-import GroupIcon from "./GroupIcon";
 import { CueDragDetails, CueDragType, SelectionActions } from "./Timeline";
 import "./TimelineCue.css";
 
@@ -34,8 +33,6 @@ const TimelineCue: React.FC<{
           "--cue-start": cue.start,
           "--cue-end": cue.end,
           "--cue-duration": cue.end - cue.start,
-          "--primary-group-color": `var(--color-group-${cue.group}-primary)`,
-          "--secondary-group-color": `var(--color-group-${cue.group}-secondary)`,
         } as CSSProperties
       }
       data-cue-id={cue.id}
@@ -91,7 +88,6 @@ const TimelineCue: React.FC<{
         <span className="timeline-cue__body__text ellipses">
           {cue.text || "Blank"}
         </span>
-        <GroupIcon className="timeline-cue__group" groupName={cue.group} />
       </button>
       <button
         type="button"

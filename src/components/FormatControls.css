@@ -1,47 +1,6 @@
 .format-controls {
   grid-area: format;
-  display: flex;
-  gap: 1rem;
 }
-.color-button {
-  background-color: transparent;
-  transition-property: color, background-color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease-in-out;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.color-button > input {
-  width: 0;
-  height: 0;
-  overflow: hidden;
-}
-.color-button > input:focus {
-  box-shadow: none;
-}
-.color-button--is-selected > svg,
-.color-button:hover > svg {
-  color: currentColor;
-}
-.color-button--is-selected,
-.color-button:hover {
-  color: white;
-  background-color: var(--selection-color);
-}
-.color-button:focus-within {
-  box-shadow: var(--focus-bs) inset;
-}
-.color-button--square {
-  --selection-color: var(--color-group-square-primary);
-}
-.color-button--circle {
-  --selection-color: var(--color-group-circle-primary);
-}
-.color-button--triangle {
-  --selection-color: var(--color-group-triangle-primary);
-}
-
 .format-controls__placement-button {
   height: 100%;
 }

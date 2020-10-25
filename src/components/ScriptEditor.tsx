@@ -141,7 +141,6 @@ const ScriptEditor: React.FC<{
         start: Math.max(0, cueBefore.start - TARGET_DURATION),
         end: cueBefore.start,
         layer: cueBefore.layer,
-        group: cueBefore.group,
       });
     }
   };
@@ -156,7 +155,6 @@ const ScriptEditor: React.FC<{
         start: cueBefore.end,
         end: Math.min(cueBefore.end + TARGET_DURATION, duration - MIN_DURATION),
         layer: cueBefore.layer,
-        group: cueBefore.group,
       });
     } else if (cueAfter.start - cueBefore.end < MIN_DURATION) {
       alert("No room to add in a cue between");
@@ -166,7 +164,6 @@ const ScriptEditor: React.FC<{
         end: cueAfter.start,
         text: "",
         layer: cueBefore.layer,
-        group: cueBefore.group,
       });
     }
   };

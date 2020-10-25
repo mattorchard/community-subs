@@ -20,6 +20,6 @@
   margin-top: 1rem;
 }
 .unsupported-browser-alert a {
-  color: var(--color-primary);
+  color: var(--blue-500);
   text-decoration: underline;
 }

@@ -1,4 +1,4 @@
-import React, { CSSProperties, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Cue } from "../types/cue";
 import { debounce } from "../helpers/timingHelpers";
 import { getClassName, matchScrollHeight } from "../helpers/domHelpers";
@@ -8,7 +8,6 @@ import { getLineCount } from "../helpers/textHelpers";
 import { useCueSelectionActions } from "../contexts/CueSelectionContext";
 import { useModifierKeys } from "../contexts/ModifierKeysContext";
 import { useCuesContext } from "../contexts/CuesContext";
-import GroupIcon from "./GroupIcon";
 import PlacementIcon from "./PlacementIcon";
 
 type KE = React.KeyboardEvent<HTMLTextAreaElement>;
@@ -107,12 +106,6 @@ const CueEditor: React.FC<{
           "is-bold": cue.isBold,
           "is-italics": cue.isItalics,
         })}
-        style={
-          {
-            "--primary-group-color": `var(--color-group-${cue.group}-primary)`,
-            "--secondary-group-color": `var(--color-group-${cue.group}-secondary)`,
-          } as CSSProperties
-        }
         onClick={() => textAreaRef.current.focus()}
       >
         <textarea
@@ -142,7 +135,6 @@ const CueEditor: React.FC<{
               align={cue.settings.align}
             />
           )}
-          <GroupIcon groupName={cue.group} />
         </div>
       </div>
     );

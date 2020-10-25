@@ -1,10 +1,7 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
-import { defaultGroup, GroupName } from "../types/Groups";
 import useContextSafe from "../hooks/useContextSafe";
 
 type ToolsContextType = {
-  selectedGroup: GroupName;
-  setSelectedGroup: Dispatch<SetStateAction<GroupName>>;
   isSnapToOthersEnabled: boolean;
   setIsSnapToOthersEnabled: Dispatch<SetStateAction<boolean>>;
   isSnapToGridEnabled: boolean;
@@ -15,15 +12,12 @@ const ToolsContext = React.createContext<ToolsContextType | null>(null);
 ToolsContext.displayName = "ToolsContext";
 
 export const ToolsContextProvider: React.FC = ({ children }) => {
-  const [selectedGroup, setSelectedGroup] = useState<GroupName>(defaultGroup);
   const [isSnapToOthersEnabled, setIsSnapToOthersEnabled] = useState(false);
   const [isSnapToGridEnabled, setIsSnapToGridEnabled] = useState(false);
 
   return (
     <ToolsContext.Provider
       value={{
-        selectedGroup,
-        setSelectedGroup,
         isSnapToOthersEnabled,
         setIsSnapToOthersEnabled,
         isSnapToGridEnabled,
