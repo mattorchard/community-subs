@@ -114,64 +114,70 @@ const FormatControls = () => {
   );
 
   return (
-    <div role="group" className="format-controls button-group with-dividers">
-      <button
-        className="icon-button"
-        onClick={toggleBold}
-        title="Bold (ctrl + B)"
-      >
-        <FontAwesomeIcon icon={faBold} />
-      </button>
-      <button
-        className="icon-button"
-        onClick={toggleItalics}
-        title="Italicize (ctrl + I)"
-      >
-        <FontAwesomeIcon icon={faItalic} />
-      </button>
-
-      <div {...placementMenu.containerProps} className="text-position-menu">
+    <div className="format-controls">
+      <div role="group" className="button-group with-dividers">
         <button
-          {...placementMenu.buttonProps}
-          className="icon-button format-controls__placement-button"
-          title="Placement"
+          className="icon-button"
+          onClick={toggleBold}
+          title="Bold (ctrl + B)"
         >
-          <FontAwesomeIcon icon={faArrowsAlt} />
+          <FontAwesomeIcon icon={faBold} />
         </button>
-        {placementMenu.isMenuOpen && (
-          <ol
-            {...placementMenu.popupProps}
-            className="text-position-menu__items"
-          >
-            {placementOptions.map((place, index) => (
-              <li key={index}>
-                <button onClick={() => setPlacement(place)}>
-                  <PlacementIcon justify={place.justify} align={place.align} />
-                </button>
-              </li>
-            ))}
-          </ol>
-        )}
-      </div>
+        <button
+          className="icon-button"
+          onClick={toggleItalics}
+          title="Italicize (ctrl + I)"
+        >
+          <FontAwesomeIcon icon={faItalic} />
+        </button>
 
-      <SelectGroupButton
-        title="Set group to Square (ctrl + shift + 1)"
-        group="square"
-        selectedGroup={selectedGroup}
-        onChange={setGroup}
-      />
-      <SelectGroupButton
-        title="Set group to Circle (ctrl + shift + 2)"
-        group="circle"
-        selectedGroup={selectedGroup}
-        onChange={setGroup}
-      />
-      <SelectGroupButton
-        title="Set group to Triangle (ctrl + shift + 3)"
-        group="triangle"
-        selectedGroup={selectedGroup}
-        onChange={setGroup}
-      />
+        <div {...placementMenu.containerProps} className="text-position-menu">
+          <button
+            {...placementMenu.buttonProps}
+            className="icon-button format-controls__placement-button"
+            title="Placement"
+          >
+            <FontAwesomeIcon icon={faArrowsAlt} />
+          </button>
+          {placementMenu.isMenuOpen && (
+            <ol
+              {...placementMenu.popupProps}
+              className="text-position-menu__items"
+            >
+              {placementOptions.map((place, index) => (
+                <li key={index}>
+                  <button onClick={() => setPlacement(place)}>
+                    <PlacementIcon
+                      justify={place.justify}
+                      align={place.align}
+                    />
+                  </button>
+                </li>
+              ))}
+            </ol>
+          )}
+        </div>
+      </div>
+      <div role="group" className="button-group with-dividers">
+        <SelectGroupButton
+          title="Set group to Square (ctrl + shift + 1)"
+          group="square"
+          selectedGroup={selectedGroup}
+          onChange={setGroup}
+        />
+        <SelectGroupButton
+          title="Set group to Circle (ctrl + shift + 2)"
+          group="circle"
+          selectedGroup={selectedGroup}
+          onChange={setGroup}
+        />
+        <SelectGroupButton
+          title="Set group to Triangle (ctrl + shift + 3)"
+          group="triangle"
+          selectedGroup={selectedGroup}
+          onChange={setGroup}
+        />
+      </div>
     </div>
   );
 };

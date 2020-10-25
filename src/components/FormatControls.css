@@ -1,5 +1,7 @@
 .format-controls {
   grid-area: format;
+  display: flex;
+  gap: 1rem;
 }
 .color-button {
   background-color: transparent;
