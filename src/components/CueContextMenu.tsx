@@ -17,6 +17,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getIsContainedBy } from "../helpers/domHelpers";
 import { useCuesContext } from "../contexts/CuesContext";
 import useSeekToCue from "../contexts/useSeekToCue";
+import useShortcut from "../hooks/useShortcut";
 
 const CueContextMenu: React.FC<{
   cueId: string;
@@ -35,6 +36,8 @@ const CueContextMenu: React.FC<{
   const { deleteCues } = useCuesContext();
   const seekToCue = useSeekToCue();
   const menuRef = useRef<HTMLUListElement>(null!);
+
+  useShortcut("escape", onRequestClose);
 
   useEffect(() => {
     menuRef.current.focus();
