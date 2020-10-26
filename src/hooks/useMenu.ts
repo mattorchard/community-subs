@@ -20,7 +20,10 @@ export const useMenu = () => {
     }
   });
   const onBlur = (event: React.FocusEvent) => {
-    if (!getIsContainedBy(event.currentTarget, event.target))
+    if (
+      !event.relatedTarget ||
+      !getIsContainedBy(event.currentTarget, event.relatedTarget as Node)
+    )
       setIsMenuOpen(false);
   };
 

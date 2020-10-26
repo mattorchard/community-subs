@@ -1,0 +1,38 @@
+.cue-context-menu {
+  position: absolute;
+  background-color: var(--gray-700);
+  box-shadow: var(--on-top-bs);
+  z-index: 30;
+  border-radius: 0.25rem;
+  overflow: hidden;
+  animation: cue-context-menu__reveal 0.1s ease-in-out 1;
+}
+@keyframes cue-context-menu__reveal {
+  from {
+    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+  }
+  to {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+}
+.cue-context-menu__item__button {
+  width: 100%;
+  padding: 0.5rem;
+  transition: background-color 0.2s ease-in-out;
+  text-align: start;
+}
+.cue-context-menu__item__button:focus {
+  box-shadow: var(--focus-bs) inset;
+}
+.cue-context-menu__item__button:hover {
+  background-color: var(--color-lighten);
+}
+.cue-context-menu__item__button:active {
+  background-color: var(--color-darken);
+}
+.cue-context-menu__item__button--danger:hover {
+  background-color: var(--color-danger);
+}
+.cue-context-menu__item__button > svg {
+  margin-right: 0.5rem;
+}

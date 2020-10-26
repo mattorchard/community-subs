@@ -1,7 +1,11 @@
 import React, { useEffect } from "react";
 import { Cue } from "../types/cue";
 import { debounce } from "../helpers/timingHelpers";
-import { getClassName, matchScrollHeight } from "../helpers/domHelpers";
+import {
+  getClassName,
+  matchScrollHeight,
+  queryAncestor,
+} from "../helpers/domHelpers";
 import "./CueEditor.css";
 import { toTimeRangeString } from "../helpers/timeCodeHelpers";
 import { getLineCount } from "../helpers/textHelpers";
@@ -9,6 +13,7 @@ import { useCueSelectionActions } from "../contexts/CueSelectionContext";
 import { useModifierKeys } from "../contexts/ModifierKeysContext";
 import { useCuesContext } from "../contexts/CuesContext";
 import PlacementIcon from "./PlacementIcon";
+import useCueContextMenu from "../hooks/useCueContextMenu";
 
 type KE = React.KeyboardEvent<HTMLTextAreaElement>;
 
@@ -52,6 +57,32 @@ const CueEditor: React.FC<{
     const { id } = cue;
     const textAreaRef = React.useRef<HTMLTextAreaElement>(null!);
     const { updateCue } = useCuesContext();
+    const { contextMenu, openContextMenu } = useCueContextMenu();
+
+    const onContextMenu = (event: React.MouseEvent) => {
+      event.preventDefault();
+      const cueElement = queryAncestor(event.target as Node, "[data-cue-id]");
+
+      const cueId = cueElement?.dataset.cueId;
+      if (!cueId) return;
+
+      const { width: cueEditorWidth } = cueElement!.getBoundingClientRect();
+      const offsetX = event.nativeEvent.offsetX;
+      const isClickOnLeft = offsetX < cueEditorWidth / 2;
+      if (isClickOnLeft) {
+        openContextMenu({
+          left: offsetX,
+          top: event.nativeEvent.offsetY,
+          cueId,
+        });
+      } else {
+        openContextMenu({
+          right: cueEditorWidth - offsetX,
+          top: event.nativeEvent.offsetY,
+          cueId,
+        });
+      }
+    };
 
     useEffect(() => {
       textAreaRef.current.value = cue.text || "";
@@ -106,8 +137,11 @@ const CueEditor: React.FC<{
           "is-bold": cue.isBold,
           "is-italics": cue.isItalics,
         })}
+        data-cue-id={cue.id}
         onClick={() => textAreaRef.current.focus()}
+        onContextMenu={onContextMenu}
       >
+        {contextMenu}
         <textarea
           id={cue.id}
           ref={textAreaRef}

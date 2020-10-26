@@ -120,6 +120,7 @@
   --focus-bs-thin: 0 0 0 0.0625rem var(--color-focus);
   --scroll-track: var(--gray-900);
   --scroll-thumb: var(--color-focus);
+  --triangle-color: var(--gray-700);
 
   --on-top-bs: 0 0.5rem 1rem 0.5rem var(--color-darken);
 }
@@ -297,4 +298,14 @@ small {
 .fallback-page {
   max-width: 800px;
   margin: 0 auto;
+}
+.triangle-top::before {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  border: 0.5rem solid transparent;
+  border-bottom-color: var(--triangle-color);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: -1;
 }

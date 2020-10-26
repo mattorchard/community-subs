@@ -73,7 +73,7 @@
   width: 0.25rem;
   background-color: var(--yellow-400);
   left: 0;
-  transform: translateX(0.125rem)
+  transform: translateX(-0.125rem)
     translateX(calc(1px * var(--timeline-scale) * var(--player-time)));
   pointer-events: none;
 }

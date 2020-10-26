@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { Cue } from "../types/cue";
 import useWindowEvent from "../hooks/useWindowEvent";
-import { getClassName } from "../helpers/domHelpers";
+import { getClassName, queryAncestor } from "../helpers/domHelpers";
 import "./Timeline.css";
 import useBounds from "../hooks/useBounds";
 import {
@@ -23,6 +23,7 @@ import { useToolsContext } from "../contexts/ToolsContext";
 import { clamp } from "../helpers/algoHelpers";
 import TimelineMarkers from "./TimelineMarkers";
 import { useOnScrollRequest } from "../contexts/StudioScrollContext";
+import useCueContextMenu from "../hooks/useCueContextMenu";
 
 export type CueDragType = "start" | "end" | "both";
 export type CueDragDetails = {
@@ -110,6 +111,7 @@ const Timeline: React.FC<{
   const selectionActions = useCueSelectionActions();
   const seekTo = useSeekTo();
   const { isSnapToGridEnabled, isSnapToOthersEnabled } = useToolsContext();
+  const { contextMenu, openContextMenu } = useCueContextMenu();
 
   const timelineRef = useRef<HTMLDivElement>(null!);
   const pointerXRef = useRef<number>(0);
@@ -313,6 +315,7 @@ const Timeline: React.FC<{
           }
         }}
         onPointerDown={(event) => {
+          if (event.button !== 0) return;
           if (event.shiftKey) {
             setIsPanning(true);
           } else if (isTargetBackground(event)) {
@@ -326,12 +329,30 @@ const Timeline: React.FC<{
               }
             : undefined
         }
-        onPointerUp={() => {
+        onPointerUp={(event) => {
+          if (event.button !== 0) return;
           if (isSeeking) {
             seekTo(pointerXRef.current / scale);
           }
           setIsPanning(false);
           setIsSeeking(false);
+        }}
+        onContextMenu={(event) => {
+          event.preventDefault();
+          const target = event.target as Node;
+          const cueElement = queryAncestor(target, "[data-cue-id]");
+
+          const cueId = cueElement?.dataset.cueId;
+          if (!cueId) return;
+
+          const layer = queryAncestor(target, "[data-layer-id]");
+          if (!layer) return;
+
+          openContextMenu({
+            left: pointerXRef.current,
+            top: layer.offsetTop,
+            cueId,
+          });
         }}
         style={
           {
@@ -362,6 +383,7 @@ const Timeline: React.FC<{
             )}
           </div>
         ))}
+        {contextMenu}
         <TimelineMarkers {...viewportDetails} duration={duration} />
         <div className="playhead" />
       </section>

@@ -98,7 +98,7 @@ const FormatControls = () => {
         {placementMenu.isMenuOpen && (
           <ol
             {...placementMenu.popupProps}
-            className="text-position-menu__items"
+            className="text-position-menu__items triangle-top"
           >
             {placementOptions.map((place, index) => (
               <li key={index}>
