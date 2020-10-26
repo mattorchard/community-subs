@@ -36,6 +36,7 @@
 .cue-editor__footer {
   user-select: none;
   opacity: 0.5;
+  pointer-events: none;
 }
 .cue-editor__format-info {
   display: flex;
@@ -44,4 +45,5 @@
   bottom: 0.5rem;
   right: 0.5rem;
   opacity: 0.5;
+  pointer-events: none;
 }

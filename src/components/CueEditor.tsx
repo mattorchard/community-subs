@@ -157,6 +157,9 @@ const CueEditor: React.FC<{
               setSelection(cue.id);
             }
           }}
+          onPointerDown={(event) => {
+            if (event.button === 2) event.preventDefault();
+          }}
           onKeyDown={onKeyDown}
           className="cue-editor__textarea"
           placeholder="Blank"
