@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import CueContextMenu from "../components/CueContextMenu";
 
-type MenuDetails = {
+export type MenuDetails = {
   top: number;
   cueId: string;
 } & ({ left: number } | { right: number });

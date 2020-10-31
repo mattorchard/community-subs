@@ -8,3 +8,14 @@ export const getLineCount = (text: string) => {
   }
   return count;
 };
+
+export const replaceSubstring = (
+  text: string,
+  replacement: string,
+  start: number,
+  end: number
+) => {
+  const prefix = text.substring(0, start);
+  const suffix = text.substring(end, text.length);
+  return `${prefix}${replacement}${suffix}`;
+};
